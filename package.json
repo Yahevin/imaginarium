@@ -1,0 +1,49 @@
+{
+  "name": "imaginarium",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --open",
+    "server": "node server.js",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yahevin/imaginarium.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yahevin/imaginarium/issues"
+  },
+  "homepage": "https://github.com/Yahevin/imaginarium#readme",
+  "devDependencies": {
+    "@vue/cli": "^3.12.0",
+    "babel-loader": "^8.0.6",
+    "browser-sync": "^2.26.3",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.2.0",
+    "express": "^4.17.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-rename": "^1.4.0",
+    "html-webpack-plugin": "^3.2.0",
+    "lodash": "^4.17.15",
+    "mini-css-extract-plugin": "^0.8.0",
+    "postcss": "^7.0.18",
+    "postcss-assets": "^5.0.0",
+    "postcss-nested": "^4.1.0",
+    "postcss-preset-env": "^6.4.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.8.2"
+  },
+  "dependencies": {
+    "postcss-short": "^5.0.0"
+  },
+  "description": ""
+}
