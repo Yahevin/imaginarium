@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --open",
-    "server": "node server.js",
-    "build": "webpack"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
+    "staging": "cross-env NODE_ENV=staging webpack",
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "repository": {
     "type": "git",
@@ -21,28 +20,38 @@
   "devDependencies": {
     "@vue/cli": "^3.12.0",
     "babel-loader": "^8.0.6",
-    "browser-sync": "^2.26.3",
+    "browser-sync": "^2.26.7",
+    "browser-sync-webpack-plugin": "^2.2.2",
     "clean-webpack-plugin": "^3.0.0",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "express": "^4.17.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.4.0",
-    "html-webpack-plugin": "^3.2.0",
+    "helpers": "0.0.6",
+    "html-webpack-plugin": "3.2.0",
     "lodash": "^4.17.15",
     "mini-css-extract-plugin": "^0.8.0",
+    "node-sass": "^4.13.0",
     "postcss": "^7.0.18",
     "postcss-assets": "^5.0.0",
     "postcss-nested": "^4.1.0",
     "postcss-preset-env": "^6.4.0",
+    "sass-loader": "^8.0.0",
+    "scss-loader": "0.0.1",
     "style-loader": "^1.0.0",
+    "vue-loader": "^15.7.2",
+    "vue-template-compiler": "^2.6.10",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.8.2"
+    "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "postcss-short": "^5.0.0"
   },
   "description": ""
