@@ -1,18 +1,24 @@
 <template>
 	<section>
-		<h1>GO</h1>
-		<div v-for='note in notes'>
-			{{ note.text }}
-		</div>
-		<button @click='addNew'>Добавить заметку</button>
+		<surface></surface>
+		<dungeon></dungeon>
+		<game-play></game-play>
 	</section>
 </template>
 
 <script>
-	import {store} from '../js/store/index'
+	import {store} from '../js/store/index';
+	import Surface from './Surface';
+	import Dungeon from './Dungeon';
+	import GamePlay from './GamePlay';
 	
 	export default {
 	  name: "Main",
+	  component: {
+        Surface,
+        Dungeon,
+        GamePlay,
+	  },
 	  store,
       computed: {
         notes() {
