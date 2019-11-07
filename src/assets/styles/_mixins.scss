@@ -1,0 +1,40 @@
+//Start fonts
+.font-small {
+  font-size: $font-size-small-desc;
+  line-height: $line-height-small-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-small-pad;
+    line-height: $line-height-small-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-small-phone;
+    line-height: $line-height-small-phone;
+  }
+}
+
+.font-base {
+  font-size: $font-size-base-desc;
+  line-height: $line-height-base-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-base-pad;
+    line-height: $line-height-base-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-base-phone;
+    line-height: $line-height-base-phone;
+  }
+}
+
+.font-big {
+  font-size: $font-size-big-desc;
+  line-height: $line-height-big-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-big-pad;
+    line-height: $line-height-big-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-big-phone;
+    line-height: $line-height-big-phone;
+  }
+}
+//End fonts
