@@ -1,5 +1,7 @@
 <template>
 	<section>
+		<h1>Hello World</h1>
+		
 		<surface></surface>
 		<dungeon></dungeon>
 		<game-play></game-play>
@@ -14,7 +16,7 @@
 	
 	export default {
 	  name: "Main",
-	  component: {
+	  components: {
         Surface,
         Dungeon,
         GamePlay,
