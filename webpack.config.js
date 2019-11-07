@@ -32,6 +32,16 @@ module.exports = {
           use: ['css-loader','sass-loader'],
         }),
       },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'fonts'
+          },
+        }],
+      },
     ],
   },
   resolve: {
