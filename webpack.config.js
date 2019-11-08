@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const WebpackProvideGlobalPlugin = require("webpack-provide-global-plugin");
 
 module.exports = {
   mode: 'development',
@@ -49,6 +50,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.runtime.js',
       '@': path.resolve(__dirname, 'src'),
+      jquery: "jquery/src/jquery",
     }
   },
 
@@ -73,7 +75,11 @@ module.exports = {
     new BrowserSyncPlugin({
       host: 'localhost',
       port: 8000,
-    })
+    }),
+    new WebpackProvideGlobalPlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    }),
   ],
 
   output: {
