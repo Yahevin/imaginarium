@@ -18,6 +18,7 @@
   import NewCards from './parts/NewCards';
   import MineCards from  './parts/MineCards';
   import LeaderBoard from './parts/LeaderBoard';
+  import toggle from '@/assets/js/mixins/templateToggle';
   
   export default {
     name: "GamePlay",
@@ -29,13 +30,11 @@
       LeaderBoard,
     },
     store,
+	  mixins: [toggle],
+	  
 	  data() {
     	return {
 		    unknownPlayer: true,
-		    tableShown: false,
-		    newShown: false,
-		    myCardsShown: false,
-		    boardShown: false,
 	    }
 	  },
 	  computed: {
@@ -55,7 +54,6 @@
 		  // }, 1000);
 	  },
 	  mounted() {
-   
 	  },
 	  methods: {
 		  async startGame() {
@@ -102,31 +100,6 @@
 				  }
 			  });
 		  },
-		  
-		  showNew() {
-			  this.newShown = true;
-			  this.tableShown = false;
-			  this.myCardsShown = false;
-			  this.boardShown = false;
-		  },
-		  showMyCards() {
-			  this.myCardsShown = true;
-			  this.newShown = false;
-			  this.tableShown = false;
-			  this.boardShown = false;
-		  },
-		  showTable() {
-			  this.tableShown = true;
-			  this.newShown = false;
-			  this.myCardsShown = false;
-			  this.boardShown = false;
-		  },
-		  showBoard() {
-			  this.boardShown = true;
-			  this.newShown = false;
-			  this.tableShown = false;
-			  this.myCardsShown = false;
-		  }
 	  }
   }
 </script>
