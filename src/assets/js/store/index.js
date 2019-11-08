@@ -25,6 +25,11 @@ export const store = new Vuex.Store({
       hasMarker: false,
       playerStyle: ''
     }],
+    newCards:[{
+      img: 'url',
+      hasMarker: false,
+      playerStyle: ''
+    }],
     
   },
   actions: {
@@ -55,7 +60,7 @@ export const store = new Vuex.Store({
       // .success( start commit)
       // cards = response;
   
-      let cards;
+      let cards=[];
       
       commit('GET_NEW_CARDS', cards)
     },
@@ -64,7 +69,7 @@ export const store = new Vuex.Store({
       // .success( start commit)
       // cards = response;
       
-      let cards;
+      let cards=[];
       
       commit('GET_TABLE_CARDS', cards)
     }
@@ -86,10 +91,11 @@ export const store = new Vuex.Store({
       state.game.run = true;
     },
     GET_TABLE_CARDS(state, cards) {
-      state.tableCards.push(cards);
+      state.tableCards.push(...cards);
     },
     GET_NEW_CARDS(state, cards) {
-      state.handCards.push(cards);
+      state.handCards.push(...cards);
+      state.newCards = cards;
     },
   },
   getters: {
@@ -107,6 +113,9 @@ export const store = new Vuex.Store({
     },
     handCards(state) {
       return state.handCards
+    },
+    newCards(state) {
+      return state.newCards
     },
   },
   modules: {}
