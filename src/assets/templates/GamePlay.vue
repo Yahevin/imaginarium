@@ -1,5 +1,7 @@
 <template>
-	
+	<section>
+		<join @start="startGame"></join>
+	</section>
 </template>
 
 <script>
@@ -18,6 +20,11 @@
       LeaderBoard,
     },
     store,
+	  methods: {
+		  startGame() {
+		    console.log('go')
+		  }
+	  }
   }
 </script>
 
