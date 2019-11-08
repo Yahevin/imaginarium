@@ -6,7 +6,8 @@
 					@endRound="getNewCards"></play-table>
 		<new-cards v-show="newShown"
 					@enough="newRound"></new-cards>
-		<mine-cards v-show="myCardsShown"></mine-cards>
+		<mine-cards v-show="myCardsShown"
+					@cardSetDone=""></mine-cards>
 		<leader-board v-show="boardShown"></leader-board>
 	</section>
 </template>
@@ -66,14 +67,14 @@
 		    if (!this.game.run) {
 		    	this.getNewCards();
 		    } else {
-			    this.$store.dispatch('getTableCards');
+			    await this.$store.dispatch('getTableCards');
 		    	
 			    this.showTable();
 		    }
 		  },
 		  async getNewCards() {
 			  this.$store.dispatch('setPlayerStatus', 'looting');
-			  this.$store.dispatch('getNewCards');
+			  await this.$store.dispatch('getNewCards');
 			
 			  this.showNew();
 		  },
@@ -82,7 +83,17 @@
 		  	
 			  this.showMyCards();
 		  },
-		  
+		  async startGuess() {
+			  if(this.myTurn) {
+				  this.$store.dispatch('setPlayerStatus', 'waitingForGuess');
+			  } else {
+				  this.$store.dispatch('setPlayerStatus', 'readyToGuess');
+			  }
+			
+			  await this.$store.dispatch('getTableCards');
+			  
+			  this.showTable();
+		  },
 		  
 	    ping() {
 		    let data = {
@@ -97,6 +108,12 @@
 				  data: data,
 				  success: function (resp){
 				    console.log(resp)
+					  if (resp.game.myTurn && !this.myTurn) {
+						  this.$store.dispatch('myTurnStart');
+					  }
+					  if (!resp.game.myTurn && this.myTurn) {
+						  this.$store.dispatch('myTurnEnd');
+					  }
 				  }
 			  });
 		  },

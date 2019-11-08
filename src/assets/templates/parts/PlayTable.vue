@@ -18,7 +18,7 @@
 			v-if="view !== null">
 			<img class=""
         :src="view.img"
-				@click="cardChosen">
+				@click="cardGuessed">
 			<div class=""
 				@click="closeView"></div>
 		</article>
@@ -57,7 +57,7 @@
 		  	return this.$store.getters.tableCards;
 		  },
 		  allDone() {
-			  return this.game.action === 'allDone';
+			  return this.game.action === 'allDoneGuess';
 		  },
 		  player() {
 			  return this.$store.getters.player;
@@ -67,7 +67,10 @@
 		  },
 		  iAmGameMaster() {
 		  	return this.player.gameMaster;
-		  }
+		  },
+		  canGuess() {
+		  	return this.game.action === 'guessCard';
+		  },
 	  },
 	  methods: {
 		  cardView(card) {
@@ -76,14 +79,19 @@
 		  closeView() {
 			  this.view = null;
 		  },
-		  cardChosen() {
+		  cardGuessed() {
+		  	
+		  	if(!this.canGuess) {
+		  		return;
+			  }
+		  	
 		    // ajax set chosen card
 				// .success:
 			  // close view
 			  // set status
 			
 			  this.view = null;
-			  this.$store.dispatch('setPlayerStatus', 'chooseDone');
+			  this.$store.dispatch('setPlayerStatus', 'guessDone');
 		  },
 		  endRound() {
 		    this.$emit('endRound');
