@@ -89,13 +89,18 @@
 	    enterGame() {
 	    //  ajax
 		  //  if (success)
+		    this.setPlayer();
 		    this.$emit('start');
 	    },
 	    createGame() {
 		    //  ajax
 		    //  if (success)
+		    this.setPlayer();
 		    this.$emit('start');
 	    },
+	    setPlayer(data) {
+		    this.$store.dispatch('setPlayer', data);
+	    }
     },
   }
 </script>

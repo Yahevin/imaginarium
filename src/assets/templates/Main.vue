@@ -22,15 +22,11 @@
         GamePlay,
 	  },
 	  store,
-      computed: {
-        notes() {
-          return this.$store.getters.notes;
-        }
-      },
-      methods: {
-        addNew() {
-          this.$store.dispatch('addNote', { text: 'новая заметка' })
-        }
-      }
+    computed: {
+	  	
+    },
+    methods: {
+	  	
+    },
 	}
 </script>
