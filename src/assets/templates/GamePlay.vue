@@ -2,11 +2,11 @@
 	<section>
 		<join v-show="unknownPlayer"
 					@start="startGame"></join>
-		<play-table v-show="showTable"></play-table>
-		<new-cards v-show="showNew"
+		<play-table v-show="tableShown"></play-table>
+		<new-cards v-show="newShown"
 					@enough="enough"></new-cards>
-		<mine-cards v-show="showMyCards"></mine-cards>
-		<leader-board v-show="showBoard"></leader-board>
+		<mine-cards v-show="myCardsShown"></mine-cards>
+		<leader-board v-show="boardShown"></leader-board>
 	</section>
 </template>
 
@@ -31,10 +31,10 @@
 	  data() {
     	return {
 		    unknownPlayer: true,
-		    showTable: false,
-		    showNew: false,
-		    showMyCards: false,
-		    showBoard: false,
+		    tableShown: false,
+		    newShown: false,
+		    myCardsShown: false,
+		    boardShown: false,
 	    }
 	  },
 	  computed: {
@@ -89,18 +89,46 @@
 			  });
 		  },
 		  getNewCards() {
-		  	this.showNew = true;
+			  this.showNew();
 			
 			  this.$store.dispatch('getCards');
 		  },
 		  enough() {
-			  this.showNew = false;
-			  
+
 			  if(!this.myTurn) {
-			  	this.showTable = true;
+			  	this.showTable();
 			  } else {
-			  	this.showMyCards = true;
+			  	this.showMyCards();
 			  }
+		  },
+		  
+		  
+		  
+		  
+		  
+		  showNew() {
+			  this.newShown = true;
+			  this.tableShown = false;
+			  this.myCardsShown = false;
+			  this.boardShown = false;
+		  },
+		  showMyCards() {
+			  this.myCardsShown = true;
+			  this.newShown = false;
+			  this.tableShown = false;
+			  this.boardShown = false;
+		  },
+		  showTable() {
+			  this.tableShown = true;
+			  this.newShown = false;
+			  this.myCardsShown = false;
+			  this.boardShown = false;
+		  },
+		  showBoard() {
+			  this.boardShown = true;
+			  this.newShown = false;
+			  this.tableShown = false;
+			  this.myCardsShown = false;
 		  }
 	  }
   }
