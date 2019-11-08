@@ -73,7 +73,8 @@
 			    this.showTable();
 		    }
 		  },
-		  getNewCards() {
+		  async getNewCards() {
+			  this.$store.dispatch('setPlayerStatus', 'looting');
 			  this.$store.dispatch('getNewCards');
 			
 			  this.showNew();

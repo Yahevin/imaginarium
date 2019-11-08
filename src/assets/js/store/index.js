@@ -15,14 +15,16 @@ export const store = new Vuex.Store({
       run: false,
       action: '',
     },
-    
-    handCards: [],
-    tableCards: [],
-    // {
-    //   img: 'url',
-    //   hasMarker: false,
-    //   playerStyle: ''
-    // }
+    handCards: [{
+      img: 'url',
+      hasMarker: false,
+      playerStyle: ''
+    }],
+    tableCards: [{
+      img: 'url',
+      hasMarker: false,
+      playerStyle: ''
+    }],
     
   },
   actions: {

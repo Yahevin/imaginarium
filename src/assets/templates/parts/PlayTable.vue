@@ -15,7 +15,7 @@
 		
 		<!--scaled card-->
 		<article class=""
-			v-show="view !== null">
+			v-if="view !== null">
 			<img class=""
         :src="view.img"
 				@click="cardChosen">
@@ -45,7 +45,7 @@
   import {store} from '../../js/store/index';
   
   export default {
-    name: "Table",
+    name: "PlayTable",
     store,
 	  data() {
 		  return {
