@@ -2,9 +2,10 @@
 	<section>
 		<join v-show="unknownPlayer"
 					@start="startGame"></join>
-		<play-table v-show="tableShown"></play-table>
+		<play-table v-show="tableShown"
+					@endRound="getNewCards"></play-table>
 		<new-cards v-show="newShown"
-					@enough="enough"></new-cards>
+					@enough="newRound"></new-cards>
 		<mine-cards v-show="myCardsShown"></mine-cards>
 		<leader-board v-show="boardShown"></leader-board>
 	</section>
@@ -47,9 +48,6 @@
 		  game() {
 			  return this.$store.getters.game;
 		  },
-		  isStarted() {
-			  return this.game.run;
-		  }
 	  },
 	  created() {
 		  // setInterval(()=>{
@@ -63,48 +61,46 @@
 		  async startGame() {
 		    this.unknownPlayer = false;
 		    
-		    // know the game status and
-			  // set the player's action
+		    // know the game action and
+			  // set the player's status
 			  // await this.ping();
 		    
 		    if (!this.game.run) {
 		    	this.getNewCards();
+		    } else {
+			    this.$store.dispatch('getTableCards');
+		    	
+			    this.showTable();
 		    }
 		  },
-		   ping() {
-		  	let data = {
-		  		run: this.isStarted,
+		  getNewCards() {
+			  this.$store.dispatch('getNewCards');
+			
+			  this.showNew();
+		  },
+		  newRound() {
+			  this.$store.dispatch('setPlayerStatus', 'readyToSetCard');
+		  	
+			  this.showMyCards();
+		  },
+		  
+		  
+	    ping() {
+		    let data = {
 				  id: this.player.id,
 				  round: this.game.round,
-				  action: this.game.action,
+				  status: this.player.status,
 			  };
 			
 			  $.ajax({
-				  type: 'POST',
+				  type: 'GET',
 				  url: '/',
 				  data: data,
 				  success: function (resp){
-				  	console.log(resp)
+				    console.log(resp)
 				  }
 			  });
 		  },
-		  getNewCards() {
-			  this.showNew();
-			
-			  this.$store.dispatch('getCards');
-		  },
-		  enough() {
-
-			  if(!this.myTurn) {
-			  	this.showTable();
-			  } else {
-			  	this.showMyCards();
-			  }
-		  },
-		  
-		  
-		  
-		  
 		  
 		  showNew() {
 			  this.newShown = true;
