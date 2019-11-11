@@ -19,6 +19,9 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         include: path.resolve(__dirname, 'src/assets'),
+        options: {
+          scss: ['vue-style-loader','css-loader','sass-loader'],
+        }
       },
       {
         test: /\.js$/,
@@ -27,9 +30,9 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        include: path.resolve(__dirname, 'src/assets/styles'),
+        include: path.resolve(__dirname, 'src/assets'),
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
+          fallback: 'vue-style-loader',
           use: ['css-loader','sass-loader'],
         }),
       },
