@@ -8,7 +8,12 @@
 					@enough="newRound"></new-cards>
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone=""></mine-cards>
+		
+		<button @click="boardShown = true"></button>
+		
+		
 		<leader-board v-show="boardShown"></leader-board>
+		
 	</section>
 </template>
 

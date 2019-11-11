@@ -30,7 +30,12 @@ export const store = new Vuex.Store({
       hasMarker: false,
       playerStyle: ''
     }],
-    
+    party: [{
+      id: 237,
+      position: 0,
+      nickName: 'Horror House',
+      playerStyle: ''
+    }],
   },
   actions: {
     setPlayer({commit}) {
@@ -72,6 +77,13 @@ export const store = new Vuex.Store({
       let cards=[];
       
       commit('GET_TABLE_CARDS', cards)
+    },
+    getPartyResults({commit}, data) {
+      // ajax get leader board
+      
+      let results = data;
+      
+      commit('GET_PARTY_RESULTS', results)
     }
   },
   mutations: {
@@ -97,6 +109,9 @@ export const store = new Vuex.Store({
       state.handCards.push(...cards);
       state.newCards = cards;
     },
+    GET_PARTY_RESULTS(state,results) {
+      state.party = results;
+    }
   },
   getters: {
     player(state) {
@@ -117,6 +132,9 @@ export const store = new Vuex.Store({
     newCards(state) {
       return state.newCards
     },
+    party(state) {
+      return state.party
+    }
   },
   modules: {}
 });
