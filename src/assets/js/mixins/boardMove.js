@@ -7,17 +7,11 @@ class Figure {
 		this.el = iniData.el;
 		this.row = 10;
 		this.col = 9;
+		this.duration = 1000;
 	}
 	
 	shiftResolve(newPosition) {
-		
-		console.log('this.position',this.position);
-		console.log('newPosition',newPosition);
-		
 		let journey = this.twists.filter((twist,index)=>{
-			
-			console.log('twist.position',twist.position);
-			
 				if (this.position < twist.position &&  twist.position < newPosition) {
 					return twist;
 				}
@@ -26,7 +20,7 @@ class Figure {
 			journey.push({
 				direction: 'next',
 				position: newPosition,
-			})
+			});
 			this.setLongJourney(journey);
 		} else {
 			let way = {
@@ -40,12 +34,7 @@ class Figure {
 	}
 	async directionResolve(way) {
 		let step = way.position - this.position;
-		
 
-		console.log('directResolve - step',step);
-		console.log('directResolve - way', way);
-		console.log('directResolve - pos', this.position);
-		
 		switch (this.direction) {
 			case 'top':
 				await this.moveTop(step);
@@ -64,10 +53,7 @@ class Figure {
 		this.direction = way.direction === 'next' ? this.direction : way.direction;
 	}
 	moveTop(step) {
-		
-		console.log('moveTop');
-		
-		let time = Math.abs(step )*1000,
+		let time = Math.abs(step )*this.duration,
 				z = this;
 		
 		this.row -= step;
@@ -85,9 +71,7 @@ class Figure {
 		})
 	}
 	moveRight(step) {
-		console.log('moveRight')
-		
-		let time = Math.abs(step)*1000,
+		let time = Math.abs(step)*this.duration,
 			z = this;
 		
 		this.col += step;
@@ -98,19 +82,14 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				
 				z.position += step
 				$(z.el).removeClass('player--move_right')
-				
-				console.log('endRight')
 				resolve();
 			}, time)
 		})
 	}
 	moveBottom(step) {
-		console.log('moveBottom')
-		
-		let time = Math.abs(step)*1000,
+		let time = Math.abs(step)*this.duration,
 			z = this;
 		
 		this.row += step;
@@ -121,20 +100,14 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				
 				z.position += step
 				$(z.el).removeClass('player--move_bottom')
-				
-				console.log('endBottom')
 				resolve();
 			}, time)
 		})
 	}
 	moveLeft(step) {
-		
-		console.log('moveLeft')
-		
-		let time = Math.abs(step)*1000,
+		let time = Math.abs(step)*this.duration,
 			z = this;
 		
 		this.col -= step;
@@ -145,20 +118,13 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				
 				z.position += step
 				$(z.el).removeClass('player--move_left')
-				
-				console.log('endLeft')
 				resolve();
 			}, time)
 		})
 	}
-	
 	async setLongJourney(journey) {
-		
-		console.log('setLongJourney',journey)
-		
 		for (const way of journey) {
 			await this.directionResolve(way);
 		}
