@@ -2,109 +2,14 @@
 	<section class="">
 		<div class="perspective">
 			<div class="grid">
-			<span class="player"
-			      v-for="gamer in party"
-			      :ref="gamer.id"></span>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
-				<div class="cell"></div>
+				<span class="player"
+			      v-for="partyMember in party"
+			      :id="'ref_' + partyMember.id">
+				</span>
+				<div class="cell"
+						v-for="(cell, index) in cells">
+					{{ index + 1 }}
+				</div>
 			</div>
 		</div>
 		
@@ -115,13 +20,18 @@
 
 <script>
   import {store} from '../../js/store/index';
+  import boardTwists from '@/assets/js/mixins/boardTwists';
+  import Figure from '@/assets/js/mixins/boardMove';
   
   export default {
     name: "LeaderBoard",
     store,
+	  mixins: [boardTwists],
 	  data() {
     	return {
-				
+		    cells: [].length = 100,
+		    figures: [],
+		    figureSet: new Set(),
 	    }
 	  },
 	  computed: {
@@ -133,57 +43,81 @@
 		  },
 		  party() {
 		    return this.$store.getters.party;
+		  },
+		  partySize() {
+		  	return this.figures.length;
 		  }
+	  },
+	  created() {
+		  this.party.forEach((partyMember)=>{
+			  this.addNewFigure(partyMember);
+		  });
 	  },
 	  watch: {
       party: function (newParty, oldParty) {
       	
-	      newParty.forEach((newVal)=>{
-	      	
-	      	let oldPosition = oldParty.map((oldVal, index)=>{
-		          if(oldVal.id === newVal.id ) {
-					      return oldVal.position
+      	if (newParty.length > this.partySize) {
+      		if (this.partySize === 0) {
+      			newParty.forEach((partyMember)=>{
+      				this.addNewFigure(partyMember);
+			      })
+		      } else {
+			      newParty.forEach((partyMember) => {
+				      if (!this.figureSet.has(partyMember.id)) {
+					      this.addNewFigure(partyMember);
 				      }
-			      }),
-			      shift = newVal.position - oldPosition;
-		      
-	      	this.resolveShift(oldPosition, shift, newVal.id)
+			      });
+		      }
+	      };
+	
+	      newParty.forEach((newVal)=>{
+		      this.figures.forEach((figure)=>{
+		      	if(figure.id === newVal.id) {
+				      figure.shiftResolve(newVal.position);
+		      		return;
+			      }
+		      });
 	      });
       },
 	  },
 	  methods: {
+		  addNewFigure(partyMember) {
+			  let figure = new Figure({
+				  id: partyMember.id,
+				  nickName: partyMember.nickName,
+				  playerStyle: partyMember.playerStyle,
+				  position: partyMember.position,
+				  twists: this.twists,
+				  el: '#ref_' + partyMember.id,
+			  });
+			
+			  this.figures.push(figure);
+			  this.figureSet.add(figure.id);
+		  },
+    	
+    	
       start() {
       	let $player= $(this.$refs.player),
 		      data = [{
 			      id: 237,
-			      position: 2,
+			      position: 41,
 			      nickName: 'Horror House',
 			      playerStyle: ''
 		      }];
       	
       	this.$store.dispatch('getPartyResults', data);
-	      
-	      // $player.addClass('player--move_top');
-	      // $player.css('--row','6/7');
-	      // console.log(this.$refs)
       },
-		  resolveShift(start,shift,id) {
-    
-		  }
+		  
 	  },
   }
 </script>
 
 <style lang="scss" scoped>
 	
-	body {
-		background-color: grey
-	}
-	
 	.player {
-		--row: 8/9;
-		--col: 2/3;
-		--step: 2;
+		--row: 10/11;
+		--col: 9/10;
+		--step: 1;
 		
 		grid-column: var(--col);
 		grid-row: var(--row);
@@ -206,39 +140,6 @@
 		}
 	}
 	
-	@keyframes move_top {
-		0% {
-			transform: translateY(calc(100% * var(--step)));
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
-	@keyframes move_right {
-		0% {
-			transform: translateX(calc(100% * var(--step)));
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
-	@keyframes move_bottom {
-		0% {
-			transform: translateY(calc(-100% * var(--step)));
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
-	@keyframes move_left {
-		0% {
-			transform: translateX(calc(-100% * var(--step)));
-		}
-		100% {
-			transform: translateY(0);
-		}
-	}
-	
 	.perspective {
 		perspective: 1000px;
 		transform-style: flat;
@@ -258,7 +159,6 @@
 		transform: rotateX(45deg) rotateZ(45deg);
 		margin: 0 auto;
 	}
-	
 	.cell {
 		width: 100%;
 		height: 100%;
@@ -308,15 +208,38 @@
 		{
 			background-color: #34d9e2;
 		}
-		
 	}
-		
-	@for $i from 1 through 100 {
-		.cell:nth-of-type(#{$i}) {
-			&::before {
-				content: '#{$i}';
-			}
+	
+	@keyframes move_top {
+		0% {
+			transform: translateY(calc(100% * var(--step)));
+		}
+		100% {
+			transform: translateY(0);
 		}
 	}
-		
+	@keyframes move_right {
+		0% {
+			transform: translateX(calc(-100% * var(--step)));
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+	@keyframes move_bottom {
+		0% {
+			transform: translateY(calc(-100% * var(--step)));
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+	@keyframes move_left {
+		0% {
+			transform: translateX(calc(100% * var(--step)));
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
 </style>
