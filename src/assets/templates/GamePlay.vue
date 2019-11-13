@@ -103,7 +103,6 @@
 	    ping() {
 		    let data = {
 				  id: this.player.id,
-				  round: this.game.round,
 				  status: this.player.status,
 			  };
 			
