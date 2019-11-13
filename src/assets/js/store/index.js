@@ -10,14 +10,12 @@ export const store = new Vuex.Store({
       status: '',
       gameMaster: false,
     },
-    myTurn: false,
     game: {
       run: false,
       action: '',
     },
     handCards: [{
       img: 'url',
-      hasMarker: false,
       playerStyle: ''
     }],
     tableCards: [{
@@ -27,7 +25,6 @@ export const store = new Vuex.Store({
     }],
     newCards:[{
       img: 'url',
-      hasMarker: false,
       playerStyle: ''
     }],
     party: [{
@@ -94,10 +91,10 @@ export const store = new Vuex.Store({
       state.player.status = status;
     },
     MY_TURN_START(state) {
-      state.myTurn = true;
+      state.player.gameMaster = true;
     },
     MY_TURN_END(state) {
-      state.myTurn = false;
+      state.player.gameMaster = false;
     },
     GAME_START(state) {
       state.game.run = true;
@@ -116,9 +113,6 @@ export const store = new Vuex.Store({
   getters: {
     player(state) {
       return state.player
-    },
-    ownTurn(state) {
-      return state.ownTurn
     },
     game(state) {
       return state.game

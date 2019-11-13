@@ -9,7 +9,7 @@
 				<input class=""
 			        type="text"
 			        placeholder="Никнейм"
-			        v-model="nickname"
+			        v-model="nickName"
 				>
 				<div>
 					<div>
@@ -54,7 +54,7 @@
     store,
     data() {
       return {
-        nickname: '',
+        nickName: '',
         roomId: null,
         gameJoin: false,
 	      formSubmitted: false,
@@ -62,7 +62,7 @@
     },
 	  computed: {
 		  nickEmpty() {
-		  	return this.formSubmitted && this.nickname.length === 0;
+		  	return this.formSubmitted && this.nickName.length === 0;
 		  },
 		  roomEmpty() {
 			  return this.formSubmitted
@@ -89,14 +89,24 @@
 	    enterGame() {
 	    //  ajax
 		  //  if (success)
-		    this.setPlayer();
-		    this.$emit('start');
+		  //  this.setPlayer();
+		  //  this.$emit('start');
 	    },
-	    createGame() {
-		    //  ajax
-		    //  if (success)
-		    this.setPlayer();
-		    this.$emit('start');
+	    async createGame() {
+	    	
+		    await $.ajax({
+			    type: "POST",
+			    url: '/party-create',
+			    data: {
+			    	nickName: this.nickName,
+			    },
+			    success: function (resp) {
+				    console.log(resp)
+			    }
+		    });
+		    
+		    // this.setPlayer();
+		    // this.$emit('start');
 	    },
 	    setPlayer(data) {
 		    this.$store.dispatch('setPlayer', data);

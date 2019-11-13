@@ -9,7 +9,10 @@
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone=""></mine-cards>
 		
-		<button @click="boardShown = true"></button>
+		<button @click="boardShown = true">show table</button>
+		
+		
+		<button @click="getPlayers()">get players</button>
 		
 		
 		<leader-board v-show="boardShown"></leader-board>
@@ -62,9 +65,19 @@
 	  mounted() {
 	  },
 	  methods: {
+    	async getPlayers() {
+		    await $.ajax({
+			    type: "GET",
+			    url: '/all',
+			    success: function (resp) {
+				    console.log(resp)
+			    }
+		    });
+	    },
+		  
 		  async startGame() {
 		    this.unknownPlayer = false;
-		    
+			  	
 		    // know the game action and
 			  // set the player's status
 			  // await this.ping();

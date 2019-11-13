@@ -11,44 +11,81 @@ conn = mysql.createConnection({
 conn.connect(function(err,result) {
 	if (err) throw err;
 	
-	console.log("Connected!");
+	let row1 = "CREATE TABLE IF NOT EXISTS users" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" nick_name VARCHAR(255), " +
+		" game_master BOOLEAN, " +
+		" status VARCHAR(255), " +
+		" PRIMARY KEY (id) )";
 	
-	// Drop EMPLOYEES table if Exists!!
-	var sql1 = "DROP TABLE IF EXISTS users ";
-	
-	conn.query(sql1, function(err, results) {
+	conn.query(row1, function(err, results) {
 		if (err) throw err;
-		console.log("Table users dropped");
 	});
 	
-	// Create EMPLOYEES Table.
-	var sql2 = "CREATE TABLE users " +
-		" (Id INT not null AUTO_INCREMENT, " +
-		" Emp_No VARCHAR(20), " +
-		" Full_Name VARCHAR(255), " +
-		" Hire_Date DATE, " +
-		" PRIMARY KEY (Id) )";
+	let row2 = "CREATE TABLE IF NOT EXISTS room" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" action VARCHAR(255), " +
+		" PRIMARY KEY (id) )";
 	
-	conn.query(sql2, function(err, results) {
+	conn.query(row2, function(err, results) {
 		if (err) throw err;
-		console.log("Table users created");
 	});
 	
-	var empNos = ["E01", "E02", "E03"];
-	var fullNames = ["John", "Smith", "Gates"];
-	var hireDates = ["22/10/2001", "11/11/2000", "12/12/1990"];
+	let row3 = "CREATE TABLE IF NOT EXISTS user__room" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" room_id INT, " +
+		" user_id INT, " +
+		" FOREIGN KEY (room_id) REFERENCES room(id)" +
+		" ON DELETE SET NULL, " +
+		" FOREIGN KEY (user_id) REFERENCES users(id)" +
+		" ON DELETE SET NULL, " +
+		" PRIMARY KEY (id) )";
 	
-	// Insert Datas to EMPLOYEES.
-	for (var i = 0; i < empNos.length; i++) {
-		var sql3 = "Insert into users (Emp_No, Full_Name, Hire_Date) " //
-			+
-			" Values ('" + empNos[i] + "', '" + fullNames[i] + "', STR_TO_DATE('" + hireDates[i] + "', '%d/%m/%Y') )";
-		
-		conn.query(sql3, function(err, results) {
-			if (err) throw err;
-			console.log("Insert a record!");
-		});
-	}
+	conn.query(row3, function(err, results) {
+		if (err) throw err;
+	});
+	
+	let row4 = "CREATE TABLE IF NOT EXISTS cards" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" img_url VARCHAR(255), " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row4, function(err, results) {
+		if (err) throw err;
+	});
+	
+	let row5 = "CREATE TABLE IF NOT EXISTS cards_in_hand" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" img_url VARCHAR(255), " +
+		" card_id INT, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row5, function(err, results) {
+		if (err) throw err;
+	});
+	
+	let row6 = "CREATE TABLE IF NOT EXISTS cards_on_table" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" img_url VARCHAR(255), " +
+		" card_id INT, " +
+		" is_main BOOLEAN, " +
+		" has_mark BOOLEAN, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row6, function(err, results) {
+		if (err) throw err;
+	});
+	
+	let row7 = "CREATE TABLE IF NOT EXISTS user__hand" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" user_id INT, " +
+		" hand_card_id INT, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row7, function(err, results) {
+		if (err) throw err;
+	});
+	
 });
 
 module.exports = conn;
