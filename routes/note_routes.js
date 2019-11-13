@@ -1,15 +1,64 @@
-module.exports = function(app, db) {
+module.exports = async function(app, db) {
 	//POST
 	app.post('/party-create', async (req, res) => {
-		//req = {nickName}
-		//create a party
-		//add new player
+		let nickName = [req.body.nickName],
+			sql1 = "Insert into ?? ( ?? ) Values (?)",
+			sql2 = "Insert into ?? ( ??, ?? ) Values (?, ?)",
+			userId,
+			roomId,
+			gameStart = 'game-start';
+		
+		let roomCreate = db.format(sql1, ["room", "game_action", gameStart]);
+		let playerCreate = db.format(sql1, ['users', 'nick_name', nickName]);
+		
+		new Promise(resolve => {
+			return db.query(roomCreate, function (err, results) {
+				if (err) throw err;
+				roomId = results.insertId;
+				return resolve();
+			});
+		}).then(() => {
+			new Promise(resolve => {
+				db.query(playerCreate, function (err, results) {
+					if (err) throw err;
+					userId = results.insertId;
+					return resolve();
+				});
+			}).then(() => {
+				let chainPlayer = db.format(sql2, ['user__room', 'room_id', 'user_id', roomId, userId]);
+				new Promise(resolve => {
+					db.query(chainPlayer, function (err, results) {
+						if (err) throw err;
+						res.json({success: true});
+						return resolve();
+					});
+				})
+			})
+		})
 	});
+	
+	
 	
 	app.post('/card-main', async (req, res) => {
 		//req = {player.id, game.id, card.id, description}
 		//note a chosen card
 		//change game status
+		
+		let id = req.body.id,
+				cleanTableCards = "TRUNCATE TABLE IF EXISTS tableCards",
+				addMainCard = "Insert into tableCards (id, isMain)" //
+			+ " Values ('" + id + "', '" + true + "')";
+		
+		db.query(cleanTableCards, function(err, results, next) {
+			if (err) throw err;
+			next();
+		});
+		db.query(addMainCard, function(err, results) {
+			if (err) throw err;
+			res.json({success: true});
+		});
+		
+		
 	});
 	
 	app.post('/card-fake', async (req, res) => {
@@ -61,8 +110,6 @@ module.exports = function(app, db) {
 		//get game status
 		//get player's turn
 	});
-	
-	
 	
 	
 	app.get('/all', async (req, res) => {

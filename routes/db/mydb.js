@@ -24,7 +24,7 @@ conn.connect(function(err,result) {
 	
 	let row2 = "CREATE TABLE IF NOT EXISTS room" +
 		" (id INT not null AUTO_INCREMENT, " +
-		" action VARCHAR(255), " +
+		" game_action VARCHAR(255), " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row2, function(err, results) {
@@ -36,9 +36,9 @@ conn.connect(function(err,result) {
 		" room_id INT, " +
 		" user_id INT, " +
 		" FOREIGN KEY (room_id) REFERENCES room(id)" +
-		" ON DELETE SET NULL, " +
+		" ON DELETE CASCADE, " +
 		" FOREIGN KEY (user_id) REFERENCES users(id)" +
-		" ON DELETE SET NULL, " +
+		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row3, function(err, results) {
