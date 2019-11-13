@@ -1,14 +1,19 @@
 module.exports = async function(app, db) {
+	let gameSt = {
+		start: 'game-start',
+		gmCardSet: 'gm-card-set',
+	};
+	
+	
 	//POST
 	app.post('/party-create', async (req, res) => {
-		let nickName = [req.body.nickName],
-			sql1 = "Insert into ?? ( ?? ) Values (?)",
-			sql2 = "Insert into ?? ( ??, ?? ) Values (?, ?)",
+		let nickName = req.body.nickName,
+			sql1 = "INSERT INTO ?? ( ?? ) VALUES (?)",
+			sql2 = "INSERT INTO ?? ( ??, ?? ) VALUES (?, ?)",
 			userId,
-			roomId,
-			gameStart = 'game-start';
+			roomId;
 		
-		let roomCreate = db.format(sql1, ["room", "game_action", gameStart]);
+		let roomCreate = db.format(sql1, ["room", "game_action", gameSt.start]);
 		let playerCreate = db.format(sql1, ['users', 'nick_name', nickName]);
 		
 		new Promise(resolve => {
@@ -38,27 +43,30 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	
 	app.post('/card-main', async (req, res) => {
-		//req = {player.id, game.id, card.id, description}
-		//note a chosen card
-		//change game status
+		let cardId = req.body.cardId,
+				roomId = req.body.gameId,
+				imgUrl = req.body.imgUrl,
+				cleanTableCards = db.format("TRUNCATE TABLE ??", 'cards_on_table'),
+				addMainCard = db.format(
+					"INSERT INTO ?? ( ??, ??, ??, ??) VALUES (?, ?, ?, ?)",
+					['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, true, false]
+				),
+				changeGameStatus = db.format(
+					"UPDATE ?? SET ?? = ? WHERE ?? = ?",
+					['room', 'game_action', gameSt.gmCardSet, 'id' ,roomId]
+				);
 		
-		let id = req.body.id,
-				cleanTableCards = "TRUNCATE TABLE IF EXISTS tableCards",
-				addMainCard = "Insert into tableCards (id, isMain)" //
-			+ " Values ('" + id + "', '" + true + "')";
-		
-		db.query(cleanTableCards, function(err, results, next) {
+		db.query(cleanTableCards, function(err, results) {
 			if (err) throw err;
-			next();
 		});
 		db.query(addMainCard, function(err, results) {
 			if (err) throw err;
+		});
+		db.query(changeGameStatus, function(err, results) {
+			if (err) throw err;
 			res.json({success: true});
 		});
-		
-		
 	});
 	
 	app.post('/card-fake', async (req, res) => {
