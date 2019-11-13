@@ -1,18 +1,25 @@
 const express = require('express');
 const webpack = require('webpack');
+const bodyParser = require('body-parser');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 
 const app = express();
-const config = require('./webpack.config.js');
+const port = 8000;
 const compiler = webpack(config);
+const db = require('./routes/db/mydb');
+const config = require('./webpack.config.js');
 
-// Tell express to use the webpack-dev-middleware and use the webpack.config.js
-// configuration file as a base.
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-}));
 
-// Serve the files on port 3000.
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!\n');
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(webpackDevMiddleware(compiler, {
+//     publicPath: config.output.publicPath,
+// }));
+app.use(express.json());
+
+require('./routes/db/mydb');
+require('./routes')(app, db);
+
+
+app.listen(port, ()=>{
+  console.log(`My app listening on port ${port}`);
 });
