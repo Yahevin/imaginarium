@@ -48,6 +48,44 @@ module.exports = async function(app, db) {
 		})
 	});
 	
+	app.post('/user-join', async (req, res) => {
+		let roomId = req.body.gameId,
+				newCount;
+		
+		function getPlayersCount(resolve) {
+			let getPlayersCountReq = db.format(sql.sfw, ['room', 'id', roomId]);
+			db.query(getPlayersCountReq, function (err, results) {
+				if (err) throw err;
+				newCount = results.player_count + 1;
+				return resolve();
+			});
+		}
+		function playerCreate(resolve) {
+			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
+			db.query(playerCreateReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function playerCountUpdate() {
+			let playerCountUpdate = db.format(sql.usw, ['room', 'player_count', newCount, 'id', roomId]);
+			db.query(playerCountUpdate, function (err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		new Promise(resolve => {
+			getPlayersCount(resolve);
+		}).then(()=>{
+			new Promise(resolve => {
+				playerCreate(resolve)
+			}).then(()=>{
+				playerCountUpdate()
+			});
+		})
+	});
+	
 	
 	app.post('/card-main', async (req, res) => {
 		let cardId = req.body.cardId,
