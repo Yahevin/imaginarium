@@ -71,6 +71,7 @@ conn.connect(function(err,result) {
 		" card_id INT, " +
 		" is_main BOOLEAN, " +
 		" has_mark BOOLEAN, " +
+		" player_style VARCHAR(255), " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row6, function(err, results) {

@@ -249,13 +249,14 @@ module.exports = async function(app, db) {
 		//note + to player how's card is it
 		//if it last, change game status
 		
-		let tableCardId = req.body.cardId,
+		let style = req.body.playerStyle,
+				tableCardId = req.body.cardId,
 				roomId = req.body.gameId,
 				iAmLast = false;
 		
 		function makeGuessCard(resolve) {
 			let makeGuessCardReq = db.format(sql.usw,
-				['cards_on_table', 'has_mark', true, 'id', tableCardId]);
+				['cards_on_table', 'has_mark', true, 'player_style', style, 'id', tableCardId]);
 			db.query(makeGuessCardReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
