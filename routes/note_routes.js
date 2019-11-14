@@ -1,43 +1,49 @@
+const sql = require('./sqlCommands');
+
 module.exports = async function(app, db) {
 	let gameSt = {
 		start: 'game-start',
 		gmCardSet: 'gm-card-set',
+		allCardSet: 'all-card-set',
 	};
-	
 	
 	//POST
 	app.post('/party-create', async (req, res) => {
 		let nickName = req.body.nickName,
-			sql1 = "INSERT INTO ?? ( ?? ) VALUES (?)",
-			sql2 = "INSERT INTO ?? ( ??, ?? ) VALUES (?, ?)",
-			userId,
-			roomId;
+				userId,
+				roomId;
 		
-		let roomCreate = db.format(sql1, ["room", "game_action", gameSt.start]);
-		let playerCreate = db.format(sql1, ['users', 'nick_name', nickName]);
-		
-		new Promise(resolve => {
-			return db.query(roomCreate, function (err, results) {
+		function roomCreate(resolve) {
+			let roomCreateReq = db.format(sql.ii2, ["room", "game_action",'player_count', gameSt.start, 0]);
+			db.query(roomCreateReq, function (err, results) {
 				if (err) throw err;
 				roomId = results.insertId;
 				return resolve();
 			});
+		}
+		function playerCreate() {
+			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
+			db.query(playerCreateReq, function (err, results) {
+				if (err) throw err;
+				userId = results.insertId;
+				return resolve();
+			});
+		}
+		function chainPlayer() {
+			let chainPlayerReq = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', roomId, userId]);
+			db.query(chainPlayerReq, function (err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		new Promise(resolve => {
+			roomCreate(resolve);
 		}).then(() => {
 			new Promise(resolve => {
-				db.query(playerCreate, function (err, results) {
-					if (err) throw err;
-					userId = results.insertId;
-					return resolve();
-				});
+				playerCreate(resolve)
 			}).then(() => {
-				let chainPlayer = db.format(sql2, ['user__room', 'room_id', 'user_id', roomId, userId]);
-				new Promise(resolve => {
-					db.query(chainPlayer, function (err, results) {
-						if (err) throw err;
-						res.json({success: true});
-						return resolve();
-					});
-				})
+				chainPlayer()
 			})
 		})
 	});
@@ -47,48 +53,54 @@ module.exports = async function(app, db) {
 		let cardId = req.body.cardId,
 				roomId = req.body.gameId,
 				imgUrl = req.body.imgUrl,
-				tableCard,
-				addMainCard = db.format(
-					"INSERT INTO ?? ( ??, ??, ??, ??) VALUES (?, ?, ?, ?)",
-					['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, true, false]
-				),
-				changeGameStatus = db.format(
-					"UPDATE ?? SET ?? = ? WHERE ?? = ?",
-					['room', 'game_action', gameSt.gmCardSet, 'id', roomId]
-				);
-		
-		new Promise(resolve => {
-			return db.query(addMainCard, function (err, results) {
+				tableCard;
+
+		function addMainCard (resolve) {
+			let addMainCardReq = db.format(sql.ii4,
+				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, true, false]);
+			db.query(addMainCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
 				return resolve();
 			});
+		}
+		function noteTableCard (resolve) {
+			let noteTableCardReq = db.format(sql.ii2,
+				['room__table','room_id', 'table_card_id', roomId, tableCard]);
+			db.query(noteTableCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function changeGameStatus() {
+			let changeGameStatusReq = db.format(sql.usw,
+				['room', 'game_action', gameSt.gmCardSet, 'id', roomId]);
+			db.query(changeGameStatusReq, function(err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		new Promise(resolve => {
+			addMainCard(resolve);
 		}).then(() => {
-			let noteTableCard = db.format("INSERT INTO ?? ( ??, ??) VALUES (?, ?)",
-					['room__table','room_id', 'table_card_id', roomId, tableCard]);
 			new Promise(resolve => {
-				db.query(noteTableCard, function (err, results) {
-					if (err) throw err;
-					res.json({success: true});
-					return resolve();
-				});
+				noteTableCard(resolve);
+			}).then(()=>{
+				changeGameStatus();
 			})
 		});
-		
-		db.query(changeGameStatus, function(err, results) {
-			if (err) throw err;
-		});
 	});
+	
 	
 	app.post('/table-clear', async (req, res) => {
 		let tableCards=[],
 			roomId = req.body.gameId;
 		
-		let getTableCards = db.format("SELECT * FROM ?? WHERE ?? = ?",
-			['room__table','room_id', roomId]);
-		
-		new Promise(resolve => {
-			db.query(getTableCards, function (err, results) {
+		function getTableCards(resolve) {
+			let getTableCardsReq = db.format(sql.sfw,
+				['room__table','room_id', roomId]);
+			db.query(getTableCardsReq, function (err, results) {
 				if (err) throw err;
 				tableCards = results.map((item) => {
 					if (item.hasOwnProperty('table_card_id')) {
@@ -97,21 +109,24 @@ module.exports = async function(app, db) {
 				});
 				return resolve();
 			});
-		}).then(()=>{
-			new Promise(resolve => {
-				tableCards.forEach((currentId,index)=>{
-					let cleanTableCards = db.format(
-						"DELETE FROM ?? WHERE ?? = ?",
-						['cards_on_table', 'id', currentId]);
-					db.query(cleanTableCards, function (err, results) {
-						if (err) throw err;
-						if(index >= (tableCards.length - 1)) {
-							res.json({success: true});
-							return resolve();
-						}
-					});
+		}
+		function cleanTableCards() {
+			tableCards.forEach((currentId,index)=>{
+				let cleanTableCardsReq = db.format(sql.dfw,
+					['cards_on_table', 'id', currentId]);
+				db.query(cleanTableCardsReq, function (err, results) {
+					if (err) throw err;
+					if(index >= (tableCards.length - 1)) {
+						res.json({success: true});
+					}
 				});
-			})
+			});
+		}
+		
+		new Promise(resolve => {
+			getTableCards(resolve)
+		}).then(()=>{
+			cleanTableCards()
 		});
 	});
 	

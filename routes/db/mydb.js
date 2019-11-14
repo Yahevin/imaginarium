@@ -25,6 +25,7 @@ conn.connect(function(err,result) {
 	let row2 = "CREATE TABLE IF NOT EXISTS room" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" game_action VARCHAR(255), " +
+		" player_count INT, " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row2, function(err, results) {
