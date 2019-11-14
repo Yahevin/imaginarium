@@ -361,8 +361,38 @@ module.exports = async function(app, db) {
 	});
 	
 	app.get('/table-cards', async (req, res) => {
-		//req = {player.id, game.id}
-		//get cards on the table (needed to guess)
+		let roomId = req.body.gameId,
+				cardIds = [],
+				cardUrls = [];
+		
+		function getCardsId(resolve) {
+			let getCardsIdReq = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+			db.query(getCardsIdReq, function (err, results) {
+				if (err) throw err;
+				cardIds = results.map((item)=>{
+					return item.table_card_id;
+				});
+				return resolve();
+			});
+		}
+		function getCards() {
+			cardIds.forEach((currentId, index)=>{
+				let getCardsIdReq = db.format(sql.sfw, ['cards_on_table', 'id', currentId]);
+				db.query(getCardsIdReq, function (err, results) {
+					if (err) throw err;
+					cardUrls.push(results[0].img_url);
+					if(index === (cardIds.length - 1)) {
+						res.json(cardUrls);
+					}
+				});
+			})
+		}
+		
+		new Promise(resolve => {
+			getCardsId(resolve)
+		}).then(()=>{
+			getCards()
+		})
 	});
 	
 	app.get('/leader-board', async (req, res) => {
