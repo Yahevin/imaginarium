@@ -14,14 +14,14 @@ module.exports = async function(app, db) {
 				roomId;
 		
 		function roomCreate(resolve) {
-			let roomCreateReq = db.format(sql.ii2, ["room", "game_action",'player_count', gameSt.start, 0]);
+			let roomCreateReq = db.format(sql.ii2, ["room", "game_action",'player_count', gameSt.start, 1]);
 			db.query(roomCreateReq, function (err, results) {
 				if (err) throw err;
 				roomId = results.insertId;
 				return resolve();
 			});
 		}
-		function playerCreate() {
+		function playerCreate(resolve) {
 			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
@@ -130,10 +130,77 @@ module.exports = async function(app, db) {
 		});
 	});
 	
+	
 	app.post('/card-fake', async (req, res) => {
-		//req = {player.id, game.id, card.id}
-		//note a chosen card
-		//if it last, change game status
+		let cardId = req.body.cardId,
+				roomId = req.body.gameId,
+				imgUrl = req.body.imgUrl,
+				playersCount,
+				cardsCount,
+				tableCard;
+			
+		function addFakeCard(resolve) {
+			let addFakeCardReq = db.format(sql.ii4,
+				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, false, false]);
+			db.query(addFakeCardReq, function (err, results) {
+				if (err) throw err;
+				tableCard = results.insertId;
+				return resolve();
+			});
+		}
+		function noteTableCard(resolve) {
+			let noteTableCardReq = db.format(sql.ii2,
+				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
+			db.query(noteTableCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function getCounts(resolveMain) {
+			let getPlayersCount = db.format(sql.sfw, ['room', 'id', roomId]),
+					getCardsCount = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+			
+			new Promise(resolve => {
+				db.query(getPlayersCount, function(err, results) {
+					if (err) throw err;
+					playersCount = results.player_count;
+					return resolve();
+				});
+			}).then(()=>{
+					db.query(getCardsCount, function (err, results) {
+						if (err) throw err;
+						cardsCount = results.length;
+						return resolveMain();
+					});
+			});
+		}
+		function iAmLast() {
+			return cardsCount === playersCount;
+		}
+		function changeGameStatus() {
+			let changeGameStatusReq = db.format(sql.usw,
+				['room', 'game_action', gameSt.allCardSet, 'id', roomId]);
+			db.query(changeGameStatusReq, function(err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		new Promise(resolve => {
+			addFakeCard(resolve)
+		}).then(() => {
+			new Promise(resolve => {
+				noteTableCard(resolve)
+			}).then(()=>{
+				new Promise(resolve => {
+					getCounts(resolve);
+				}).then(()=>{
+					if (iAmLast()) {
+						changeGameStatus();
+					}
+				})
+			})
+		});
 	});
 	
 	app.post('/card-guess', async (req, res) => {
