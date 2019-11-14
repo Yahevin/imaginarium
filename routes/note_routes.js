@@ -54,6 +54,7 @@ module.exports = async function(app, db) {
 	app.post('/user-join', async (req, res) => {
 		let roomId = req.body.gameId,
 				nickName = req.body.nickName,
+			  userExist = false,
 				newCount,
 				userId;
 		
@@ -62,6 +63,40 @@ module.exports = async function(app, db) {
 			db.query(getPlayersCountReq, function (err, results) {
 				if (err) throw err;
 				newCount = +results[0].player_count + 1;
+				return resolve();
+			});
+		}
+		function userJoin(resolveMain) {
+			new Promise(resolve => {
+				checkNickName(resolve);
+			}).then(()=>{
+				if (userExist) {
+					return resolveMain();
+				} else {
+					new Promise(resolve => {
+						playerCreate(resolve);
+					}).then(()=>{
+						new Promise(resolve => {
+							checkNickName(resolve);
+						}).then(()=>{
+							if (userExist) {
+								return resolveMain();
+							} else {
+								res.json({success: false});
+							}
+						})
+					})
+				}
+			})
+		}
+		function checkNickName(resolve) {
+			let playerCreateReq = db.format(sql.sfw, ['users', 'nick_name', nickName]);
+			db.query(playerCreateReq, function (err, results) {
+				if (err) throw err;
+				userExist = results.length > 0;
+				if (userExist) {
+					res.json(results[0]);
+				}
 				return resolve();
 			});
 		}
@@ -83,7 +118,6 @@ module.exports = async function(app, db) {
 			let chainPlayerReq = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', roomId, userId]);
 			db.query(chainPlayerReq, function (err, results) {
 				if (err) throw err;
-				res.json({success: true});
 			});
 		}
 		
@@ -91,7 +125,7 @@ module.exports = async function(app, db) {
 			getPlayersCount(resolve);
 		}).then(()=>{
 			new Promise(resolve => {
-				playerCreate(resolve)
+				userJoin(resolve)
 			}).then(()=>{
 				playerCountUpdate();
 				chainPlayer();

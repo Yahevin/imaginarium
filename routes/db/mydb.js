@@ -15,7 +15,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" nick_name VARCHAR(255), " +
 		" game_master BOOLEAN, " +
-		" status VARCHAR(255), " +
+		" score INT, " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row1, function(err, results) {
