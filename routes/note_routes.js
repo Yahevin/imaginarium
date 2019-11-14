@@ -5,6 +5,7 @@ module.exports = async function(app, db) {
 		start: 'game-start',
 		gmCardSet: 'gm-card-set',
 		allCardSet: 'all-card-set',
+		allGuessDone: 'all-guess-done',
 	};
 	
 	//POST
@@ -47,6 +48,7 @@ module.exports = async function(app, db) {
 			})
 		})
 	});
+	
 	
 	app.post('/user-join', async (req, res) => {
 		let roomId = req.body.gameId,
@@ -241,11 +243,59 @@ module.exports = async function(app, db) {
 		});
 	});
 	
+	
 	app.post('/card-guess', async (req, res) => {
 		//req = {player.id, game.id, card.id}
 		//note + to player how's card is it
 		//if it last, change game status
+		
+		let tableCardId = req.body.cardId,
+				roomId = req.body.gameId,
+				iAmLast = false;
+		
+		function makeGuessCard(resolve) {
+			let makeGuessCardReq = db.format(sql.usw,
+				['cards_on_table', 'has_mark', true, 'id', tableCardId]);
+			db.query(makeGuessCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function getCounts(resolve) {
+			let getCardsCount = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+			db.query(getCardsCount, function (err, results) {
+				if (err) throw err;
+				let marked = results.filter((item)=>{
+					if (item.has_mark) {
+						return item;
+					}
+				});
+				iAmLast = marked.length === results.length;
+				return resolve();
+			});
+		}
+		function changeGameStatus() {
+			let changeGameStatusReq = db.format(sql.usw,
+				['room', 'game_action', gameSt.allGuessDone, 'id', roomId]);
+			db.query(changeGameStatusReq, function(err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		new Promise(resolve => {
+			makeGuessCard(resolve);
+		}).then(()=>{
+			new Promise(resolve => {
+				getCounts(resolve);
+			}).then(()=>{
+				if (iAmLast) {
+					changeGameStatus();
+				}
+			})
+		});
 	});
+	
 	
 	app.post('/turn-end', async (req, res) => {
 		//req = {player.id, game.id}
@@ -284,16 +334,4 @@ module.exports = async function(app, db) {
 		//get game status
 		//get player's turn
 	});
-	
-	
-	app.get('/all', async (req, res) => {
-		let getUsers = "SELECT * FROM users";
-		
-		db.query(getUsers, function(err, results) {
-			if (err) throw err;
-			console.log("Table selected");
-			res.json(results)
-		});
-	})
-	
 };
