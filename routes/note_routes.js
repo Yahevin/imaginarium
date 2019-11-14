@@ -47,25 +47,71 @@ module.exports = async function(app, db) {
 		let cardId = req.body.cardId,
 				roomId = req.body.gameId,
 				imgUrl = req.body.imgUrl,
-				cleanTableCards = db.format("TRUNCATE TABLE ??", 'cards_on_table'),
+				tableCard,
 				addMainCard = db.format(
 					"INSERT INTO ?? ( ??, ??, ??, ??) VALUES (?, ?, ?, ?)",
 					['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, true, false]
 				),
 				changeGameStatus = db.format(
 					"UPDATE ?? SET ?? = ? WHERE ?? = ?",
-					['room', 'game_action', gameSt.gmCardSet, 'id' ,roomId]
+					['room', 'game_action', gameSt.gmCardSet, 'id', roomId]
 				);
 		
-		db.query(cleanTableCards, function(err, results) {
-			if (err) throw err;
+		new Promise(resolve => {
+			return db.query(addMainCard, function (err, results) {
+				if (err) throw err;
+				tableCard = results.insertId;
+				return resolve();
+			});
+		}).then(() => {
+			let noteTableCard = db.format("INSERT INTO ?? ( ??, ??) VALUES (?, ?)",
+					['room__table','room_id', 'table_card_id', roomId, tableCard]);
+			new Promise(resolve => {
+				db.query(noteTableCard, function (err, results) {
+					if (err) throw err;
+					res.json({success: true});
+					return resolve();
+				});
+			})
 		});
-		db.query(addMainCard, function(err, results) {
-			if (err) throw err;
-		});
+		
 		db.query(changeGameStatus, function(err, results) {
 			if (err) throw err;
-			res.json({success: true});
+		});
+	});
+	
+	app.post('/table-clear', async (req, res) => {
+		let tableCards=[],
+			roomId = req.body.gameId;
+		
+		let getTableCards = db.format("SELECT * FROM ?? WHERE ?? = ?",
+			['room__table','room_id', roomId]);
+		
+		new Promise(resolve => {
+			db.query(getTableCards, function (err, results) {
+				if (err) throw err;
+				tableCards = results.map((item) => {
+					if (item.hasOwnProperty('table_card_id')) {
+						return item.table_card_id
+					}
+				});
+				return resolve();
+			});
+		}).then(()=>{
+			new Promise(resolve => {
+				tableCards.forEach((currentId,index)=>{
+					let cleanTableCards = db.format(
+						"DELETE FROM ?? WHERE ?? = ?",
+						['cards_on_table', 'id', currentId]);
+					db.query(cleanTableCards, function (err, results) {
+						if (err) throw err;
+						if(index >= (tableCards.length - 1)) {
+							res.json({success: true});
+							return resolve();
+						}
+					});
+				});
+			})
 		});
 	});
 	

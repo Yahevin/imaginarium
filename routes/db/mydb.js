@@ -86,6 +86,15 @@ conn.connect(function(err,result) {
 		if (err) throw err;
 	});
 	
+	let row8 = "CREATE TABLE IF NOT EXISTS room__table" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" room_id INT, " +
+		" table_card_id INT, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row8, function(err, results) {
+		if (err) throw err;
+	});
 });
 
 module.exports = conn;
