@@ -334,8 +334,13 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/turn-end', async (req, res) => {
-		//req = {player.id, game.id}
-		//change game status
+			let roomId = req.body.gameId,
+					changeGameStatus = db.format(sql.usw,
+					['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
+				db.query(changeGameStatus, function(err, results) {
+					if (err) throw err;
+					res.json({success: true});
+				});
 	});
 	
 	
