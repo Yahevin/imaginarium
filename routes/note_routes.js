@@ -6,6 +6,7 @@ module.exports = async function(app, db) {
 		gmCardSet: 'gm-card-set',
 		allCardSet: 'all-card-set',
 		allGuessDone: 'all-guess-done',
+		getNewCards: 'get-new-cards',
 	};
 	
 	//POST
@@ -52,13 +53,15 @@ module.exports = async function(app, db) {
 	
 	app.post('/user-join', async (req, res) => {
 		let roomId = req.body.gameId,
-				newCount;
+				nickName = req.body.nickName,
+				newCount,
+				userId;
 		
 		function getPlayersCount(resolve) {
 			let getPlayersCountReq = db.format(sql.sfw, ['room', 'id', roomId]);
 			db.query(getPlayersCountReq, function (err, results) {
 				if (err) throw err;
-				newCount = results.player_count + 1;
+				newCount = +results[0].player_count + 1;
 				return resolve();
 			});
 		}
@@ -66,12 +69,19 @@ module.exports = async function(app, db) {
 			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
+				userId = results.insertId;
 				return resolve();
 			});
 		}
 		function playerCountUpdate() {
-			let playerCountUpdate = db.format(sql.usw, ['room', 'player_count', newCount, 'id', roomId]);
-			db.query(playerCountUpdate, function (err, results) {
+			let playerCountUpdateReq = db.format(sql.usw, ['room', 'player_count', newCount, 'id', roomId]);
+			db.query(playerCountUpdateReq, function (err, results) {
+				if (err) throw err;
+			});
+		}
+		function chainPlayer() {
+			let chainPlayerReq = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', roomId, userId]);
+			db.query(chainPlayerReq, function (err, results) {
 				if (err) throw err;
 				res.json({success: true});
 			});
@@ -83,7 +93,8 @@ module.exports = async function(app, db) {
 			new Promise(resolve => {
 				playerCreate(resolve)
 			}).then(()=>{
-				playerCountUpdate()
+				playerCountUpdate();
+				chainPlayer();
 			});
 		})
 	});
@@ -93,11 +104,13 @@ module.exports = async function(app, db) {
 		let cardId = req.body.cardId,
 				roomId = req.body.gameId,
 				imgUrl = req.body.imgUrl,
+				playerStyle = null,
 				tableCard;
-
+		
 		function addMainCard (resolve) {
-			let addMainCardReq = db.format(sql.ii4,
-				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, true, false]);
+			let addMainCardReq = db.format(sql.ii5,
+				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', 'player_style',
+					imgUrl, cardId, true, false, playerStyle]);
 			db.query(addMainCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
@@ -106,7 +119,7 @@ module.exports = async function(app, db) {
 		}
 		function noteTableCard (resolve) {
 			let noteTableCardReq = db.format(sql.ii2,
-				['room__table','room_id', 'table_card_id', roomId, tableCard]);
+				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
 			db.query(noteTableCardReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -175,13 +188,15 @@ module.exports = async function(app, db) {
 		let cardId = req.body.cardId,
 				roomId = req.body.gameId,
 				imgUrl = req.body.imgUrl,
+				playerStyle = null,
 				playersCount,
 				cardsCount,
 				tableCard;
 			
 		function addFakeCard(resolve) {
-			let addFakeCardReq = db.format(sql.ii4,
-				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', imgUrl, cardId, false, false]);
+			let addFakeCardReq = db.format(sql.ii5,
+				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', 'player_style',
+					imgUrl, cardId, false, false, playerStyle]);
 			db.query(addFakeCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
@@ -210,6 +225,7 @@ module.exports = async function(app, db) {
 					db.query(getCardsCount, function (err, results) {
 						if (err) throw err;
 						cardsCount = results.length;
+						res.json({success: true});
 						return resolveMain();
 					});
 			});
@@ -245,34 +261,51 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/card-guess', async (req, res) => {
-		//req = {player.id, game.id, card.id}
-		//note + to player how's card is it
-		//if it last, change game status
-		
 		let style = req.body.playerStyle,
 				tableCardId = req.body.cardId,
 				roomId = req.body.gameId,
-				iAmLast = false;
+				iAmLast = false,
+				cardIds = [],
+				marked = [];
 		
 		function makeGuessCard(resolve) {
-			let makeGuessCardReq = db.format(sql.usw,
+			let makeGuessCardReq = db.format(sql.ussw,
 				['cards_on_table', 'has_mark', true, 'player_style', style, 'id', tableCardId]);
 			db.query(makeGuessCardReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
 			});
 		}
-		function getCounts(resolve) {
-			let getCardsCount = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
-			db.query(getCardsCount, function (err, results) {
+		function getCounts(resolveMain) {
+			new Promise(resolve => {
+				getCardsId(resolve);
+			}).then(()=>{
+				getCardsCount(resolveMain)
+			});
+		}
+		function getCardsId(resolve) {
+			let getCardsIdReq = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+			db.query(getCardsIdReq, function (err, results) {
 				if (err) throw err;
-				let marked = results.filter((item)=>{
-					if (item.has_mark) {
-						return item;
+				cardIds = results.map((item)=>{
+					return item.table_card_id;
+				});
+				return resolve();
+			});
+		}
+		function getCardsCount(resolve) {
+			cardIds.forEach((currentId, index)=>{
+				let getCardsCountReq = db.format(sql.sfw, ['cards_on_table', 'id', currentId]);
+				db.query(getCardsCountReq, function (err, results) {
+					if (err) throw err;
+					if(results[0].has_mark) {
+						marked.push(results)
+					}
+					if (index === (cardIds.length - 1)) {
+						iAmLast = marked.length === cardIds.length;
+						return resolve();
 					}
 				});
-				iAmLast = marked.length === results.length;
-				return resolve();
 			});
 		}
 		function changeGameStatus() {
@@ -280,7 +313,7 @@ module.exports = async function(app, db) {
 				['room', 'game_action', gameSt.allGuessDone, 'id', roomId]);
 			db.query(changeGameStatusReq, function(err, results) {
 				if (err) throw err;
-				res.json({success: true});
+				res.json({success: true, iAmLast:true});
 			});
 		}
 		
@@ -292,6 +325,8 @@ module.exports = async function(app, db) {
 			}).then(()=>{
 				if (iAmLast) {
 					changeGameStatus();
+				} else {
+					res.json({success: true, iAmLast: false});
 				}
 			})
 		});
