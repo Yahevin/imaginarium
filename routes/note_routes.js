@@ -378,21 +378,27 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	//GET
-	app.get('/party-join', async (req, res) => {
-		//req = {game.id, nickName}
-		//join to party
-		//add new player
-		//get player data
-		//get users
-		//get game status
+	//PUT
+	app.put('/set-style', async (req, res) => {
+		let style = req.body.playerStyle,
+				userId = req.body.userId,
+				setStyleReq = db.format(sql.usw,
+				['users', 'player_style', style, 'id', userId]);
+		
+			db.query(setStyleReq, function(err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
 	});
 	
+	
+	//GET
 	app.get('/new-cards', async (req, res) => {
 		//req = {player.id, game.id}
 		//note new cards to not allow doubles
 		//get new cards
 	});
+	
 	
 	app.get('/table-cards', async (req, res) => {
 		let roomId = req.body.gameId,
@@ -429,10 +435,12 @@ module.exports = async function(app, db) {
 		})
 	});
 	
+	
 	app.get('/leader-board', async (req, res) => {
 		//req = {game.id}
 		//get figures position
 	});
+	
 	
 	app.get('/ping', async (req, res) => {
 		//req = {player.id, game.id}
