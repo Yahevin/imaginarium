@@ -82,6 +82,10 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
 		" hand_card_id INT, " +
+		" FOREIGN KEY (user_id) REFERENCES users(id)" +
+		" ON DELETE CASCADE, " +
+		" FOREIGN KEY (hand_card_id) REFERENCES cards_in_hand(id)" +
+		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row7, function(err, results) {
@@ -102,6 +106,31 @@ conn.connect(function(err,result) {
 	conn.query(row8, function(err, results) {
 		if (err) throw err;
 	});
+	
+	let row9 = "CREATE TABLE IF NOT EXISTS distribution" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" room_id INT, " +
+		" PRIMARY KEY (id) )";
+	
+	
+	conn.query(row9, function(err, results) {
+		if (err) throw err;
+	});
+	
+	let row10 = "CREATE TABLE IF NOT EXISTS in_basket" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" distribution_id INT, " +
+		" card_id INT, " +
+		" FOREIGN KEY (distribution_id) REFERENCES distribution(id)" +
+		" ON DELETE CASCADE, " +
+		" PRIMARY KEY (id) )";
+	
+	
+	conn.query(row10, function(err, results) {
+		if (err) throw err;
+	});
+	
+	
 });
 
 module.exports = conn;

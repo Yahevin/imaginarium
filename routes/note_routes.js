@@ -167,6 +167,14 @@ module.exports = async function(app, db) {
 				res.json({success: true});
 			});
 		}
+		function removeFromHand(resolve) {
+			let removeFromHandReq = db.format(sql.dfw,
+				['cards_in_hand', 'card_id', cardId]);
+			db.query(removeFromHandReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
 		
 		new Promise(resolve => {
 			addMainCard(resolve);
@@ -174,12 +182,16 @@ module.exports = async function(app, db) {
 			new Promise(resolve => {
 				noteTableCard(resolve);
 			}).then(()=>{
-				changeGameStatus();
+				new Promise(resolve => {
+					removeFromHand(resolve);
+				}).then(()=>{
+					changeGameStatus();
+				})
 			})
 		});
 	});
 	
-	//TODO add card move to basket
+	
 	app.post('/card-fake', async (req, res) => {
 		let cardId = req.body.cardId,
 			roomId = req.body.gameId,
@@ -203,6 +215,14 @@ module.exports = async function(app, db) {
 			let noteTableCardReq = db.format(sql.ii2,
 				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
 			db.query(noteTableCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function removeFromHand(resolve) {
+			let removeFromHandReq = db.format(sql.dfw,
+				['cards_in_hand', 'card_id', cardId]);
+			db.query(removeFromHandReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
 			});
@@ -245,11 +265,15 @@ module.exports = async function(app, db) {
 				noteTableCard(resolve)
 			}).then(()=>{
 				new Promise(resolve => {
-					getCounts(resolve);
+					removeFromHand(resolve)
 				}).then(()=>{
-					if (iAmLast()) {
-						changeGameStatus();
-					}
+					new Promise(resolve => {
+						getCounts(resolve);
+					}).then(()=>{
+						if (iAmLast()) {
+							changeGameStatus();
+						}
+					})
 				})
 			})
 		});
@@ -331,7 +355,8 @@ module.exports = async function(app, db) {
 	
 	app.post('/table-clear', async (req, res) => {
 		let tableCards=[],
-			roomId = req.body.gameId;
+				roomId = req.body.gameId,
+				distribution = {};
 		
 		function getTableCards(resolve) {
 			let getTableCardsReq = db.format(sql.sfw,
@@ -344,6 +369,27 @@ module.exports = async function(app, db) {
 					}
 				});
 				return resolve();
+			});
+		}
+		function getDistribution(resolve) {
+			let getDistributionReq = db.format(sql.sfw,
+				['distribution', 'room_id', roomId]);
+			db.query(getDistributionReq, function (err, results) {
+				if (err) throw err;
+				distribution = results[0];
+				return resolve();
+			});
+		}
+		function moveToBasket(resolve) {
+			tableCards.forEach((currentId,index)=> {
+				let moveToBasketReq = db.format(sql.ii2,
+					['in_basket', 'distribution_id', 'card_id', distribution.id, currentId]);
+				db.query(moveToBasketReq, function (err, results) {
+					if (err) throw err;
+					if(index >= (tableCards.length - 1)) {
+						return resolve();
+					}
+				});
 			});
 		}
 		function cleanTableCards() {
@@ -362,8 +408,17 @@ module.exports = async function(app, db) {
 		new Promise(resolve => {
 			getTableCards(resolve)
 		}).then(()=>{
-			cleanTableCards()
-		});
+			new Promise(resolve => {
+				getDistribution(resolve);
+			}).then(()=>{
+				new Promise(resolve => {
+					moveToBasket(resolve);
+				}).then(()=>{
+					cleanTableCards()
+				});
+			})
+		})
+		
 	});
 	
 	//TODO after party-create or basket clear
