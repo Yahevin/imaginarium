@@ -449,8 +449,32 @@ module.exports = async function(app, db) {
 	
 	
 	app.get('/leader-board', async (req, res) => {
-		//req = {game.id}
-		//get figures position
+		let roomId = req.body.gameId,
+				users = [];
+		
+		function getUsersId(resolve) {
+			let getUsersIdReq =  db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getUsersIdReq, function (err, results) {
+				if (err) throw err;
+				users = results;
+				return resolve();
+			});
+		}
+		function getUsers() {
+			users.forEach((user)=>{
+				let getUsersReq =  db.format(sql.sfw, ['users', 'id', user.id]);
+				db.query(getUsersReq, function (err, results) {
+					if (err) throw err;
+					res.json(results);
+				});
+			});
+		}
+		
+		new Promise(resolve => {
+			getUsersId(resolve);
+		}).then(()=>{
+			getUsers();
+		});
 	});
 	
 	
