@@ -421,16 +421,190 @@ module.exports = async function(app, db) {
 		
 	});
 	
-	//TODO after party-create or basket clear
-	app.post('/set-distribution', async (req,res) => {
 	
+	app.post('/set-distribution', async (req,res) => {
+		let roomId = req.body.gameId,
+				setDistributionReq = db.format(sql.ii1,
+				['distribution', 'room_id', roomId]);
+		
+		db.query(setDistributionReq, function (err, results) {
+			if (err) throw err;
+			res.json({success:true});
+		});
 	});
 	
-	//TODO
+	
 	app.post('/new-cards', async (req, res) => {
-		//req = {player.id, game.id, card_count}
-		//sort cards and add new row with users card
-		//to 'new_cards' table
+		let roomId = req.body.gameId,
+				cardsCount = req.body.cardsCount,
+				playersCount,
+				distributionId,
+				handCards = [],
+				inBasketCards = [],
+				cardsShelter = new Set,
+				cardsPool = [];
+		
+		function getPlayersCount(resolve) {
+			let getPlayersCountReq = db.format(sql.sfw,['room', 'id', roomId]);
+			db.query(getPlayersCountReq, function (err, results) {
+				if (err) throw err;
+				playersCount = results[0].player_count;
+				return resolve();
+			});
+		}
+		function getHandCards(resolveMain) {
+			let handCardsId = [];
+			
+			new Promise(resolve => {
+				let getHandCardsIdReq = db.format(sql.sfw,['room__hand', 'room_id', roomId]);
+				db.query(getHandCardsIdReq, function (err, results) {
+					if (err) throw err;
+					results.forEach((item,index)=>{
+						handCardsId.push(item.hand_card_id);
+						if(index >= (results.length - 1)) {
+							return resolve();
+						}
+					});
+				});
+			}).then(()=>{
+				handCardsId.forEach((currentId,index)=>{
+					let getHandCardsReq = db.format(sql.sfw,['cards_in_hand', 'id', currentId]);
+					db.query(getHandCardsReq, function (err, results) {
+						if (err) throw err;
+						handCards.push(item.card_id);
+						if(index >= (handCardsId.length - 1)) {
+							return resolveMain();
+						}
+					});
+				})
+			});
+		}
+		function getBasketCards(resolveMain) {
+			new Promise(resolve => {
+				let distributionReq = db.format(sql.sfw,['distribution', 'room_id', roomId]);
+				db.query(distributionReq, function (err, results) {
+					if (err) throw err;
+					distributionId = results[0].id;
+					return resolve();
+				});
+			}).then(()=>{
+				let getBasketCardsReq = db.format(sql.sfw,['in_basket', 'distribution_id', distributionId]);
+				db.query(getBasketCardsReq, function (err, results) {
+					if (err) throw err;
+					results.forEach((item,index)=>{
+						inBasketCards.push(item.card_id);
+						if(index >= (results.length - 1)) {
+							return resolveMain();
+						}
+					});
+				});
+			});
+		}
+		function getCardsShelter(resolve) {
+			let getCardsShelterReq = db.format(sql.sf,['cards']);
+			db.query(getCardsShelterReq, function (err, results) {
+				if (err) throw err;
+				
+				results.forEach((item,index)=>{
+					cardsShelter.add(item.id);
+					if(index >= (results.length - 1)) {
+						return resolve();
+					}
+				});
+				return resolve();
+			});
+		}
+		function basketIsFull() {
+			let diff = cardsShelter.length - handCards.length - inBasketCards.length - playersCount * cardsCount;
+			return diff > 0;
+		}
+		function clearBasket(resolveMain) {
+			new Promise(resolve => {
+				let clearReq = db.format(sql.dfw,['distribution','id',distributionId]);
+				db.query(clearReq, function (err, results) {
+					if (err) throw err;
+					return resolve();
+				});
+			}).then(()=>{
+				let clearReq = db.format(sql.ii1,['distribution','room_id',roomId]);
+				db.query(clearReq, function (err, results) {
+					if (err) throw err;
+					return resolveMain();
+				});
+			});
+		}
+		function getRandomCards() {
+			let less = handCards.concat(inBasketCards),
+					stop = 1000,
+					i = 0;
+			
+			less.forEach((id)=>{
+				cardsShelter.delete(id);
+			});
+			
+			while (cardsPool.length < cardsCount * playersCount || i < stop ) {
+				let random = Math.floor(Math.random()) * cardsPool.length * 10;
+				i++;
+				cardsPool.push(random);
+			}
+		}
+		function setCards() {
+			let users = [];
+			
+			new Promise(resolve => {
+				let getUsersReq = db.format(sql.sfw,['user__room','room_id',roomId]);
+				db.query(getUsersReq, function (err, results) {
+					if (err) throw err;
+					results.forEach((user,index)=>{
+						users.push(user.id);
+						if(index >= (results.length - 1)) {
+							return resolve();
+						}
+					});
+				});
+			}).then(()=>{
+				users.forEach((user,index)=>{
+					for(let i=0; i < cardsCount; i++) {
+						let setReq = db.format(sql.ii2,['new_cards','card_id', 'user_id', cardsPool[i], user]);
+						db.query(setReq, function (err, results) {
+							if (err) throw err;
+						});
+					}
+					cardsPool.splice(0,cardsCount);
+					if(index >= (users.length - 1)) {
+						res.json({success: true});
+					}
+				});
+			});
+		}
+		
+		new Promise(resolve => {
+			getPlayersCount(resolve)
+		}).then(()=>{
+			new Promise(resolve => {
+				getHandCards(resolve)
+			}).then(()=>{
+				new Promise(resolve => {
+					getBasketCards(resolve)
+				}).then(()=>{
+					new Promise(resolve => {
+						getCardsShelter(resolve)
+					}).then(()=>{
+						if (basketIsFull()) {
+							new Promise(resolve => {
+								clearBasket(resolve)
+							}).then(()=>{
+								getRandomCards();
+								setCards()
+							})
+						} else {
+							getRandomCards();
+							setCards()
+						}
+					})
+				})
+			})
+		})
 	});
 	
 	//PUT

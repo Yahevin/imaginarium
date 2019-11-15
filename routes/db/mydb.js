@@ -22,6 +22,7 @@ conn.connect(function(err,result) {
 		if (err) throw err;
 	});
 	
+	
 	let row2 = "CREATE TABLE IF NOT EXISTS room" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" game_action VARCHAR(255), " +
@@ -31,6 +32,7 @@ conn.connect(function(err,result) {
 	conn.query(row2, function(err, results) {
 		if (err) throw err;
 	});
+	
 	
 	let row3 = "CREATE TABLE IF NOT EXISTS user__room" +
 		" (id INT not null AUTO_INCREMENT, " +
@@ -46,6 +48,7 @@ conn.connect(function(err,result) {
 		if (err) throw err;
 	});
 	
+	
 	let row4 = "CREATE TABLE IF NOT EXISTS cards" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" img_url VARCHAR(255), " +
@@ -54,6 +57,7 @@ conn.connect(function(err,result) {
 	conn.query(row4, function(err, results) {
 		if (err) throw err;
 	});
+	
 	
 	let row5 = "CREATE TABLE IF NOT EXISTS cards_in_hand" +
 		" (id INT not null AUTO_INCREMENT, " +
@@ -64,6 +68,7 @@ conn.connect(function(err,result) {
 	conn.query(row5, function(err, results) {
 		if (err) throw err;
 	});
+	
 	
 	let row6 = "CREATE TABLE IF NOT EXISTS cards_on_table" +
 		" (id INT not null AUTO_INCREMENT, " +
@@ -77,6 +82,7 @@ conn.connect(function(err,result) {
 	conn.query(row6, function(err, results) {
 		if (err) throw err;
 	});
+	
 	
 	let row7 = "CREATE TABLE IF NOT EXISTS user__hand" +
 		" (id INT not null AUTO_INCREMENT, " +
@@ -92,6 +98,7 @@ conn.connect(function(err,result) {
 		if (err) throw err;
 	});
 	
+	
 	let row8 = "CREATE TABLE IF NOT EXISTS room__table" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" room_id INT, " +
@@ -102,22 +109,37 @@ conn.connect(function(err,result) {
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 	
-	
 	conn.query(row8, function(err, results) {
 		if (err) throw err;
 	});
 	
-	let row9 = "CREATE TABLE IF NOT EXISTS distribution" +
+	
+	let row9 = "CREATE TABLE IF NOT EXISTS room__hand" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" room_id INT, " +
+		" hand_card_id INT, " +
+		" FOREIGN KEY (room_id) REFERENCES room(id)" +
+		" ON DELETE CASCADE, " +
+		" FOREIGN KEY (hand_card_id) REFERENCES cards_in_hand(id)" +
+		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
 	
 	conn.query(row9, function(err, results) {
 		if (err) throw err;
 	});
 	
-	let row10 = "CREATE TABLE IF NOT EXISTS in_basket" +
+	
+	let row10 = "CREATE TABLE IF NOT EXISTS distribution" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" room_id INT, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row10, function(err, results) {
+		if (err) throw err;
+	});
+	
+	
+	let row11 = "CREATE TABLE IF NOT EXISTS in_basket" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" distribution_id INT, " +
 		" card_id INT, " +
@@ -125,12 +147,22 @@ conn.connect(function(err,result) {
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 	
-	
-	conn.query(row10, function(err, results) {
+	conn.query(row11, function(err, results) {
 		if (err) throw err;
 	});
 	
 	
+	let row12 = "CREATE TABLE IF NOT EXISTS new_cards" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" user_id INT, " +
+		" card_id INT, " +
+		" FOREIGN KEY (user_id) REFERENCES user(id)" +
+		" ON DELETE CASCADE, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row12, function(err, results) {
+		if (err) throw err;
+	});
 });
 
 module.exports = conn;
