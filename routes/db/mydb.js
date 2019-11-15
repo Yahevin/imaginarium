@@ -15,6 +15,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" nick_name VARCHAR(255), " +
 		" game_master BOOLEAN, " +
+		" player_style VARCHAR(255), " +
 		" score INT, " +
 		" PRIMARY KEY (id) )";
 	
@@ -93,7 +94,7 @@ conn.connect(function(err,result) {
 		" FOREIGN KEY (hand_card_id) REFERENCES cards_in_hand(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(row7, function(err, results) {
 		if (err) throw err;
 	});
@@ -108,7 +109,7 @@ conn.connect(function(err,result) {
 		" FOREIGN KEY (table_card_id) REFERENCES cards_on_table(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(row8, function(err, results) {
 		if (err) throw err;
 	});
@@ -123,7 +124,7 @@ conn.connect(function(err,result) {
 		" FOREIGN KEY (hand_card_id) REFERENCES cards_in_hand(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(row9, function(err, results) {
 		if (err) throw err;
 	});
@@ -146,7 +147,7 @@ conn.connect(function(err,result) {
 		" FOREIGN KEY (distribution_id) REFERENCES distribution(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(row11, function(err, results) {
 		if (err) throw err;
 	});
@@ -156,10 +157,10 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
 		" card_id INT, " +
-		" FOREIGN KEY (user_id) REFERENCES user(id)" +
+		" FOREIGN KEY (user_id) REFERENCES users(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(row12, function(err, results) {
 		if (err) throw err;
 	});

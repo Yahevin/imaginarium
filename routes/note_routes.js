@@ -24,7 +24,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function playerCreate(resolve) {
-			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
+			let playerCreateReq = db.format(sql.ii2, ['users', 'nick_name', 'game_master', nickName, true]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
 				userId = results.insertId;
@@ -441,8 +441,7 @@ module.exports = async function(app, db) {
 				distributionId,
 				handCards = [],
 				inBasketCards = [],
-				cardsShelter = new Set,
-				cardsPool = [];
+				cardsShelter = [];
 		
 		function getPlayersCount(resolve) {
 			let getPlayersCountReq = db.format(sql.sfw,['room', 'id', roomId]);
@@ -459,24 +458,32 @@ module.exports = async function(app, db) {
 				let getHandCardsIdReq = db.format(sql.sfw,['room__hand', 'room_id', roomId]);
 				db.query(getHandCardsIdReq, function (err, results) {
 					if (err) throw err;
-					results.forEach((item,index)=>{
-						handCardsId.push(item.hand_card_id);
-						if(index >= (results.length - 1)) {
-							return resolve();
-						}
-					});
+					if(results.length > 0) {
+						results.forEach((item,index)=>{
+							handCardsId.push(item.hand_card_id);
+							if(index >= (results.length - 1)) {
+								return resolve();
+							}
+						});
+					} else {
+						return resolve();
+					}
 				});
 			}).then(()=>{
-				handCardsId.forEach((currentId,index)=>{
-					let getHandCardsReq = db.format(sql.sfw,['cards_in_hand', 'id', currentId]);
-					db.query(getHandCardsReq, function (err, results) {
-						if (err) throw err;
-						handCards.push(item.card_id);
-						if(index >= (handCardsId.length - 1)) {
-							return resolveMain();
-						}
-					});
-				})
+				if (handCardsId.length > 0) {
+					handCardsId.forEach((currentId, index) => {
+						let getHandCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
+						db.query(getHandCardsReq, function (err, results) {
+							if (err) throw err;
+							handCards.push(item.card_id);
+							if (index >= (handCardsId.length - 1)) {
+								return resolveMain();
+							}
+						});
+					})
+				} else {
+					return resolveMain();
+				}
 			});
 		}
 		function getBasketCards(resolveMain) {
@@ -491,12 +498,16 @@ module.exports = async function(app, db) {
 				let getBasketCardsReq = db.format(sql.sfw,['in_basket', 'distribution_id', distributionId]);
 				db.query(getBasketCardsReq, function (err, results) {
 					if (err) throw err;
-					results.forEach((item,index)=>{
-						inBasketCards.push(item.card_id);
-						if(index >= (results.length - 1)) {
-							return resolveMain();
-						}
-					});
+					if (results.length > 0) {
+						results.forEach((item,index)=>{
+							inBasketCards.push(item.card_id);
+							if(index >= (results.length - 1)) {
+								return resolveMain();
+							}
+						});
+					} else {
+						return resolveMain();
+					}
 				});
 			});
 		}
@@ -504,12 +515,8 @@ module.exports = async function(app, db) {
 			let getCardsShelterReq = db.format(sql.sf,['cards']);
 			db.query(getCardsShelterReq, function (err, results) {
 				if (err) throw err;
-				
-				results.forEach((item,index)=>{
-					cardsShelter.add(item.id);
-					if(index >= (results.length - 1)) {
-						return resolve();
-					}
+				results.forEach((item)=>{
+					cardsShelter.push(item.id);
 				});
 				return resolve();
 			});
@@ -535,17 +542,18 @@ module.exports = async function(app, db) {
 		}
 		function getRandomCards() {
 			let less = handCards.concat(inBasketCards),
-					stop = 1000,
-					i = 0;
+					deletable;
 			
 			less.forEach((id)=>{
-				cardsShelter.delete(id);
+				deletable = cardsShelter.indexOf(id);
+				cardsShelter.splice(deletable,(deletable + 1));
 			});
-			
-			while (cardsPool.length < cardsCount * playersCount || i < stop ) {
-				let random = Math.floor(Math.random()) * cardsPool.length * 10;
-				i++;
-				cardsPool.push(random);
+			let j, temp;
+			for(let i = cardsShelter.length - 1; i > 0; i--){
+				j = Math.floor(Math.random()*(i + 1));
+				temp = cardsShelter[j];
+				cardsShelter[j] = cardsShelter[i];
+				cardsShelter[i] = temp;
 			}
 		}
 		function setCards() {
@@ -565,12 +573,12 @@ module.exports = async function(app, db) {
 			}).then(()=>{
 				users.forEach((user,index)=>{
 					for(let i=0; i < cardsCount; i++) {
-						let setReq = db.format(sql.ii2,['new_cards','card_id', 'user_id', cardsPool[i], user]);
+						let setReq = db.format(sql.ii2,['new_cards','card_id', 'user_id', cardsShelter[i], user]);
 						db.query(setReq, function (err, results) {
 							if (err) throw err;
 						});
 					}
-					cardsPool.splice(0,cardsCount);
+					cardsShelter.splice(0,cardsCount);
 					if(index >= (users.length - 1)) {
 						res.json({success: true});
 					}
