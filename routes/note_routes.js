@@ -179,54 +179,16 @@ module.exports = async function(app, db) {
 		});
 	});
 	
-	
-	app.post('/table-clear', async (req, res) => {
-		let tableCards=[],
-			roomId = req.body.gameId;
-		
-		function getTableCards(resolve) {
-			let getTableCardsReq = db.format(sql.sfw,
-				['room__table','room_id', roomId]);
-			db.query(getTableCardsReq, function (err, results) {
-				if (err) throw err;
-				tableCards = results.map((item) => {
-					if (item.hasOwnProperty('table_card_id')) {
-						return item.table_card_id
-					}
-				});
-				return resolve();
-			});
-		}
-		function cleanTableCards() {
-			tableCards.forEach((currentId,index)=>{
-				let cleanTableCardsReq = db.format(sql.dfw,
-					['cards_on_table', 'id', currentId]);
-				db.query(cleanTableCardsReq, function (err, results) {
-					if (err) throw err;
-					if(index >= (tableCards.length - 1)) {
-						res.json({success: true});
-					}
-				});
-			});
-		}
-		
-		new Promise(resolve => {
-			getTableCards(resolve)
-		}).then(()=>{
-			cleanTableCards()
-		});
-	});
-	
-	
+	//TODO add card move to basket
 	app.post('/card-fake', async (req, res) => {
 		let cardId = req.body.cardId,
-				roomId = req.body.gameId,
-				imgUrl = req.body.imgUrl,
-				playerStyle = null,
-				playersCount,
-				cardsCount,
-				tableCard;
-			
+			roomId = req.body.gameId,
+			imgUrl = req.body.imgUrl,
+			playerStyle = null,
+			playersCount,
+			cardsCount,
+			tableCard;
+		
 		function addFakeCard(resolve) {
 			let addFakeCardReq = db.format(sql.ii5,
 				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', 'player_style',
@@ -247,7 +209,7 @@ module.exports = async function(app, db) {
 		}
 		function getCounts(resolveMain) {
 			let getPlayersCount = db.format(sql.sfw, ['room', 'id', roomId]),
-					getCardsCount = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+				getCardsCount = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
 			
 			new Promise(resolve => {
 				db.query(getPlayersCount, function(err, results) {
@@ -256,12 +218,12 @@ module.exports = async function(app, db) {
 					return resolve();
 				});
 			}).then(()=>{
-					db.query(getCardsCount, function (err, results) {
-						if (err) throw err;
-						cardsCount = results.length;
-						res.json({success: true});
-						return resolveMain();
-					});
+				db.query(getCardsCount, function (err, results) {
+					if (err) throw err;
+					cardsCount = results.length;
+					res.json({success: true});
+					return resolveMain();
+				});
 			});
 		}
 		function iAmLast() {
@@ -296,11 +258,11 @@ module.exports = async function(app, db) {
 	
 	app.post('/card-guess', async (req, res) => {
 		let style = req.body.playerStyle,
-				tableCardId = req.body.cardId,
-				roomId = req.body.gameId,
-				iAmLast = false,
-				cardIds = [],
-				marked = [];
+			tableCardId = req.body.cardId,
+			roomId = req.body.gameId,
+			iAmLast = false,
+			cardIds = [],
+			marked = [];
 		
 		function makeGuessCard(resolve) {
 			let makeGuessCardReq = db.format(sql.ussw,
@@ -367,16 +329,54 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	app.post('/turn-end', async (req, res) => {
-			let roomId = req.body.gameId,
-					changeGameStatus = db.format(sql.usw,
-					['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
-				db.query(changeGameStatus, function(err, results) {
-					if (err) throw err;
-					res.json({success: true});
+	app.post('/table-clear', async (req, res) => {
+		let tableCards=[],
+			roomId = req.body.gameId;
+		
+		function getTableCards(resolve) {
+			let getTableCardsReq = db.format(sql.sfw,
+				['room__table','room_id', roomId]);
+			db.query(getTableCardsReq, function (err, results) {
+				if (err) throw err;
+				tableCards = results.map((item) => {
+					if (item.hasOwnProperty('table_card_id')) {
+						return item.table_card_id
+					}
 				});
+				return resolve();
+			});
+		}
+		function cleanTableCards() {
+			tableCards.forEach((currentId,index)=>{
+				let cleanTableCardsReq = db.format(sql.dfw,
+					['cards_on_table', 'id', currentId]);
+				db.query(cleanTableCardsReq, function (err, results) {
+					if (err) throw err;
+					if(index >= (tableCards.length - 1)) {
+						res.json({success: true});
+					}
+				});
+			});
+		}
+		
+		new Promise(resolve => {
+			getTableCards(resolve)
+		}).then(()=>{
+			cleanTableCards()
+		});
 	});
 	
+	//TODO after party-create or basket clear
+	app.post('/set-distribution', async (req,res) => {
+	
+	});
+	
+	//TODO
+	app.post('/new-cards', async (req, res) => {
+		//req = {player.id, game.id, card_count}
+		//sort cards and add new row with users card
+		//to 'new_cards' table
+	});
 	
 	//PUT
 	app.put('/set-style', async (req, res) => {
@@ -392,14 +392,19 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	//GET
-	app.get('/new-cards', async (req, res) => {
-		//req = {player.id, game.id}
-		//note new cards to not allow doubles
-		//get new cards
+	app.put('/turn-end', async (req, res) => {
+		let roomId = req.body.gameId,
+			changeGameStatus = db.format(sql.usw,
+				['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
+		db.query(changeGameStatus, function(err, results) {
+			if (err) throw err;
+			res.json({success: true});
+		});
 	});
 	
 	
+	
+	//GET
 	app.get('/table-cards', async (req, res) => {
 		let roomId = req.body.gameId,
 				cardIds = [],
@@ -433,6 +438,13 @@ module.exports = async function(app, db) {
 		}).then(()=>{
 			getCards()
 		})
+	});
+	
+	//TODO get when game status = 'ready-to-get-card'
+	app.get('/new-cards', async (req, res) => {
+		//req = {player.id, game.id, card_count}
+		//note new cards to not allow doubles
+		//get new cards
 	});
 	
 	
