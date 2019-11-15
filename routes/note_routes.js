@@ -620,17 +620,89 @@ module.exports = async function(app, db) {
 			});
 	});
 	
-	//TODO add making new gameMaster
+
 	app.put('/turn-end', async (req, res) => {
 		let roomId = req.body.gameId,
-			changeGameStatus = db.format(sql.usw,
-				['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
-		db.query(changeGameStatus, function(err, results) {
-			if (err) throw err;
-			res.json({success: true});
+				userId = req.body.userId;
+		
+		function changeGameStatus(resolve) {
+			let changeGameStatusReq = db.format(sql.usw, ['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
+			db.query(changeGameStatusReq, function(err, results) {
+				if (err) throw err;
+					return resolve();
+			});
+		}
+		function demoteMe(resolve) {
+			let demoteMeReq = db.format(sql.usw, ['users', 'game_master', false, 'id', userId]);
+			db.query(demoteMeReq, function(err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function findNewGM() {
+			let usersId = [],
+					users = [];
+			
+			new Promise(resolve => {
+				let getUsersId = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+				db.query(getUsersId, function(err, results) {
+					if (err) throw err;
+					results.forEach((item,index)=>{
+						usersId.push(item.id);
+						if(index >= (results.length - 1)) {
+							return resolve();
+						}
+					});
+				});
+			}).then(()=>{
+				new Promise(resolve => {
+					usersId.forEach((currentId,index)=>{
+						let getUsers = db.format(sql.sfw, ['users', 'id', currentId]);
+						db.query(getUsers, function(err, results) {
+							if (err) throw err;
+							results.forEach((item,index)=>{
+								users.push(item);
+								if(index >= (results.length - 1)) {
+									return resolve();
+								}
+							});
+						});
+					});
+				}).then(()=>{
+					let current = 0,
+							next;
+					
+					users.forEach((item,index)=>{
+						if (item.id === userId) {
+							current = index;
+						}
+					});
+					
+					if (current < (users.length - 1)) {
+						next = users[current + 1];
+					} else {
+						next = users[0];
+					}
+					
+					let setGM = db.format(sql.usw, ['users', 'game_master', 'id', next.id]);
+					db.query(setGM, function(err, results) {
+						if (err) throw err;
+						res.json({success: true});
+					});
+				})
+			});
+		}
+		
+		new Promise(resolve => {
+			changeGameStatus(resolve);
+		}).then(()=>{
+			new Promise(resolve => {
+				demoteMe(resolve)
+			}).then(()=>{
+				findNewGM()
+			})
 		});
 	});
-	
 	
 	//GET
 	app.get('/table-cards', async (req, res) => {
