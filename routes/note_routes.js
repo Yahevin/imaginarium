@@ -740,11 +740,15 @@ module.exports = async function(app, db) {
 		})
 	});
 	
-	//TODO get when game status = 'ready-to-get-card'
+
 	app.get('/new-cards', async (req, res) => {
-		//req = {player.id, game.id, card_count}
-		//note new cards to not allow doubles
-		//get new cards
+		let userId = req.body.userId,
+				getCards = db.format(sql.sfw, ['new_cards', 'user_id', userId]);
+		
+		db.query(getCards, function(err, results) {
+			if (err) throw err;
+			res.json(results);
+		})
 	});
 	
 	
