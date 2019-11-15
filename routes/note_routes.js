@@ -391,7 +391,7 @@ module.exports = async function(app, db) {
 			});
 	});
 	
-	
+	//TODO add making new gameMaster
 	app.put('/turn-end', async (req, res) => {
 		let roomId = req.body.gameId,
 			changeGameStatus = db.format(sql.usw,
@@ -401,7 +401,6 @@ module.exports = async function(app, db) {
 			res.json({success: true});
 		});
 	});
-	
 	
 	
 	//GET
@@ -479,8 +478,31 @@ module.exports = async function(app, db) {
 	
 	
 	app.get('/ping', async (req, res) => {
-		//req = {player.id, game.id}
-		//get game status
-		//get player's turn
+		let roomId = req.body.gameId,
+				userId = req.body.userId,
+				resp = {};
+		
+		function getUser(resolve) {
+			let getUsersIdReq =  db.format(sql.sfw, ['users', 'id', userId]);
+			db.query(getUsersIdReq, function (err, results) {
+				if (err) throw err;
+				resp.gameMaster = results[0].game_master;
+				return resolve();
+			});
+		}
+		function getRoom() {
+			let getUsersIdReq =  db.format(sql.sfw, ['room', 'id', roomId]);
+			db.query(getUsersIdReq, function (err, results) {
+				if (err) throw err;
+				resp.gameAction = results[0].game_action;
+				res.json(resp);
+			});
+		}
+		
+		new Promise(resolve => {
+			getUser(resolve);
+		}).then(()=>{
+			getRoom();
+		});
 	});
 };
