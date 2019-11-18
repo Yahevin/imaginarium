@@ -2,6 +2,7 @@ const sql = require('./sqlCommands');
 
 module.exports = async function(app, db) {
 	let gameSt = {
+		prepare: 'game-prepare',
 		start: 'game-start',
 		gmCardSet: 'gm-card-set',
 		allCardSet: 'all-card-set',
@@ -16,7 +17,7 @@ module.exports = async function(app, db) {
 				roomId;
 		
 		function roomCreate(resolve) {
-			let roomCreateReq = db.format(sql.ii2, ["room", "game_action",'player_count', gameSt.start, 1]);
+			let roomCreateReq = db.format(sql.ii2, ["room", "game_action",'player_count', gameSt.prepare, 1]);
 			db.query(roomCreateReq, function (err, results) {
 				if (err) throw err;
 				roomId = results.insertId;
@@ -35,7 +36,14 @@ module.exports = async function(app, db) {
 			let chainPlayerReq = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', roomId, userId]);
 			db.query(chainPlayerReq, function (err, results) {
 				if (err) throw err;
-				res.json({success: true});
+				res.json({
+					room_id: roomId,
+					user_id: userId,
+					nick_name: nickName,
+					player_style: null,
+					game_master: true,
+					game_action: gameSt.prepare,
+				});
 			});
 		}
 		
@@ -52,7 +60,7 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/user-join', async (req, res) => {
-		let roomId = req.body.gameId,
+		let roomId = req.body.roomId,
 				nickName = req.body.nickName,
 			  userExist = false,
 				newCount,
@@ -95,7 +103,15 @@ module.exports = async function(app, db) {
 				if (err) throw err;
 				userExist = results.length > 0;
 				if (userExist) {
-					res.json(results[0]);
+					let data = {
+						room_id: roomId,
+						user_id: results[0].id,
+						nick_name: nickName,
+						player_style: results[0].player_style,
+						game_master: results[0].game_master,
+						game_action: gameSt.prepare,
+					};
+					res.json(data);
 				}
 				return resolve();
 			});

@@ -7,11 +7,12 @@ export const store = new Vuex.Store({
   state: {
     player: {
       id: null,
-      status: '',
+      nickName: '',
+      playerStyle: '',
       gameMaster: false,
     },
     game: {
-      run: false,
+      id: null,
       action: '',
     },
     handCards: [{
@@ -35,16 +36,14 @@ export const store = new Vuex.Store({
     }],
   },
   actions: {
-    setPlayer({commit}) {
-      // ajax to set a player
-      // .success( start commit)
-  
-      let note;
-      
+    setPlayer({commit}, note) {
       commit('SET_PLAYER', note)
     },
-    setPlayerStatus({commit}, status) {
-      commit('SET_PLAYER', status)
+    setGameId({commit},id) {
+      commit('SET_GAME_ID',id)
+    },
+    setGameAction({commit},action) {
+      commit('SET_GAME_ACTION',action)
     },
     myTurnStart({commit}) {
       commit('MY_TURN_START')
@@ -87,17 +86,17 @@ export const store = new Vuex.Store({
     SET_PLAYER(state, note) {
       state.player = note;
     },
-    SET_PLAYER_STATUS(state, status) {
-      state.player.status = status;
+    SET_GAME_ID(state,id) {
+      state.game.id = id;
+    },
+    SET_GAME_ACTION(state,action) {
+      state.game.action = action;
     },
     MY_TURN_START(state) {
       state.player.gameMaster = true;
     },
     MY_TURN_END(state) {
       state.player.gameMaster = false;
-    },
-    GAME_START(state) {
-      state.game.run = true;
     },
     GET_TABLE_CARDS(state, cards) {
       state.tableCards.push(...cards);

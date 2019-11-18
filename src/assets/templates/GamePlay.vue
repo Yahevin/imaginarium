@@ -82,16 +82,15 @@
 			  // set the player's status
 			  // await this.ping();
 		    
-		    if (!this.game.run) {
-		    	this.getNewCards();
-		    } else {
-			    await this.$store.dispatch('getTableCards');
-		    	
-			    this.showTable();
-		    }
+		    // if (!this.game.run) {
+		    // 	this.getNewCards();
+		    // } else {
+			  //   await this.$store.dispatch('getTableCards');
+		    //
+			  //   this.showTable();
+		    // }
 		  },
 		  async getNewCards() {
-			  this.$store.dispatch('setPlayerStatus', 'looting');
 			  await this.$store.dispatch('getNewCards');
 			
 			  this.showNew();
