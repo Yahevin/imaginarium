@@ -7,8 +7,8 @@ export const store = new Vuex.Store({
   state: {
     player: {
       id: null,
-      nickName: '',
-      playerStyle: '',
+      nickName: null,
+      style: null,
       gameMaster: false,
     },
     game: {
@@ -38,6 +38,12 @@ export const store = new Vuex.Store({
   actions: {
     setPlayer({commit}, note) {
       commit('SET_PLAYER', note)
+    },
+    setPlayerRole({commit}, role) {
+      commit('SET_PLAYER_ROLE', role)
+    },
+    setPlayerStyle({commit}, style) {
+      commit('SET_PLAYER_STYLE', style)
     },
     setGameId({commit},id) {
       commit('SET_GAME_ID',id)
@@ -85,6 +91,12 @@ export const store = new Vuex.Store({
   mutations: {
     SET_PLAYER(state, note) {
       state.player = note;
+    },
+    SET_PLAYER_ROLE(state,role) {
+      state.player.gameMaster = role;
+    },
+    SET_PLAYER_STYLE(state,style) {
+      state.player.style = style;
     },
     SET_GAME_ID(state,id) {
       state.game.id = id;

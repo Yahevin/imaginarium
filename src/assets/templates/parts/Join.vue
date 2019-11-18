@@ -115,7 +115,7 @@
 		    let data = {
 			    id: resp.user_id,
 			    nickName: resp.nick_name,
-			    playerStyle: resp.player_style,
+			    style: resp.player_style,
 			    gameMaster: resp.game_master,
 		    };
 		    this.$store.dispatch('setPlayer', data);

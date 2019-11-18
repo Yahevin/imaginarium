@@ -1,7 +1,9 @@
 <template>
 	<section>
-		<join v-show="unknownPlayer"
+		<join v-show="playerUnknown"
 					@start="startGame"></join>
+		<style-select v-show="styleUnset && !this.playerUnknown"
+          @start="startGame"></style-select>
 		<play-table v-show="tableShown"
 					@endRound="getNewCards"></play-table>
 		<new-cards v-show="newShown"
@@ -23,6 +25,7 @@
 <script>
   import {store} from '../js/store/index';
   import Join from  './parts/Join';
+  import StyleSelect from  './parts/StyleSelect';
   import PlayTable from  './parts/PlayTable';
   import NewCards from './parts/NewCards';
   import MineCards from  './parts/MineCards';
@@ -37,58 +40,52 @@
 			NewCards,
 	    MineCards,
       LeaderBoard,
+	    StyleSelect,
     },
     store,
 	  mixins: [toggle],
 	  
 	  data() {
     	return {
-		    unknownPlayer: true,
+		   
 	    }
 	  },
 	  computed: {
 		  player() {
 			  return this.$store.getters.player;
 		  },
-		  myTurn() {
-		  	return this.$store.getters.myTurn;
-		  },
 		  game() {
 			  return this.$store.getters.game;
 		  },
+		  myTurn() {
+		  	return this.$store.getters.player.gameMaster;
+		  },
+		  styleUnset() {
+		  	return this.$store.getters.player.style === null;
+		  },
+		  playerUnknown() {
+			  return this.$store.getters.player.nickName === null;
+		  },
+		  battleGround() {
+		  	return this.$store.getters.party;
+		  },
 	  },
 	  created() {
-		  // setInterval(()=>{
-			//   this.ping();
-		  // }, 1000);
+
 	  },
 	  mounted() {
 	  },
 	  methods: {
-    	async getPlayers() {
-		    await $.ajax({
-			    type: "GET",
-			    url: '/all',
-			    success: function (resp) {
-				    console.log(resp)
-			    }
-		    });
-	    },
-		  
-		  async startGame() {
-		    this.unknownPlayer = false;
-			  	
-		    // know the game action and
-			  // set the player's status
-			  // await this.ping();
-		    
-		    // if (!this.game.run) {
-		    // 	this.getNewCards();
-		    // } else {
-			  //   await this.$store.dispatch('getTableCards');
-		    //
-			  //   this.showTable();
-		    // }
+		  startGame() {
+		    if (!this.styleUnset){
+		    	this.playerReady();
+		    }
+		  },
+		  async playerReady() {
+			  await this.ping();
+			  setInterval(async ()=>{
+				  await this.ping();
+			  },1000);
 		  },
 		  async getNewCards() {
 			  await this.$store.dispatch('getNewCards');
@@ -112,24 +109,19 @@
 			  this.showTable();
 		  },
 		  
-	    ping() {
+	    async ping() {
 		    let data = {
-				  id: this.player.id,
-				  status: this.player.status,
+				  user_id: this.player.id,
+				  room_id: this.game.id,
 			  };
 			
 			  $.ajax({
-				  type: 'GET',
-				  url: '/',
+				  type: 'POST',
+				  url: '/ping',
 				  data: data,
-				  success: function (resp){
-				    console.log(resp)
-					  if (resp.game.myTurn && !this.myTurn) {
-						  this.$store.dispatch('myTurnStart');
-					  }
-					  if (!resp.game.myTurn && this.myTurn) {
-						  this.$store.dispatch('myTurnEnd');
-					  }
+				  success:(resp)=>{
+					  this.$store.dispatch('setPlayerRole',resp.gameMaster);
+					  this.$store.dispatch('setGameAction',resp.gameAction);
 				  }
 			  });
 		  },

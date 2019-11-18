@@ -1,4 +1,5 @@
 @import './variables';
+@import './animation';
 @import './mixins';
 @import './fonts';
 
@@ -11,4 +12,36 @@ button {
   width: 50px;
   height: 50px;
   background-color: orange;
+}
+.invisible {
+  height: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.ps {
+  &-red {
+    background-color: red;
+  }
+  &-cyan {
+    background-color: cyan;
+  }
+  &-green {
+    background-color: green;
+  }
+  &-blue {
+    background-color: blue;
+  }
+  &-yellow {
+    background-color: yellow;
+  }
+  &-black {
+    background-color: black;
+  }
+  &-pink {
+    background-color: pink;
+  }
+  &-violet {
+    background-color: violet;
+  }
 }

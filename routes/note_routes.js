@@ -25,7 +25,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function playerCreate(resolve) {
-			let playerCreateReq = db.format(sql.ii2, ['users', 'nick_name', 'game_master', nickName, true]);
+			let playerCreateReq = db.format(sql.ii2, ['users', 'nick_name', 'game_master','player_style', nickName, true, null]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
 				userId = results.insertId;
@@ -117,7 +117,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function playerCreate(resolve) {
-			let playerCreateReq = db.format(sql.ii1, ['users', 'nick_name', nickName]);
+			let playerCreateReq = db.format(sql.ii3, ['users', 'nick_name','game_master','player_style', nickName, false, null]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
 				userId = results.insertId;
@@ -631,8 +631,8 @@ module.exports = async function(app, db) {
 		})
 	});
 	
-	//PUT
-	app.put('/set-style', async (req, res) => {
+
+	app.post('/set-style', async (req, res) => {
 		let style = req.body.playerStyle,
 				userId = req.body.userId,
 				setStyleReq = db.format(sql.usw,
@@ -645,7 +645,7 @@ module.exports = async function(app, db) {
 	});
 	
 
-	app.put('/turn-end', async (req, res) => {
+	app.post('/turn-end', async (req, res) => {
 		let roomId = req.body.gameId,
 				userId = req.body.userId;
 		
@@ -728,8 +728,8 @@ module.exports = async function(app, db) {
 		});
 	});
 	
-	//GET
-	app.get('/table-cards', async (req, res) => {
+
+	app.post('/table-cards', async (req, res) => {
 		let roomId = req.body.gameId,
 				cardIds = [],
 				cardUrls = [];
@@ -765,7 +765,7 @@ module.exports = async function(app, db) {
 	});
 	
 
-	app.get('/new-cards', async (req, res) => {
+	app.post('/new-cards', async (req, res) => {
 		let userId = req.body.userId,
 				getCards = db.format(sql.sfw, ['new_cards', 'user_id', userId]);
 		
@@ -776,7 +776,7 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	app.get('/leader-board', async (req, res) => {
+	app.post('/leader-board', async (req, res) => {
 		let roomId = req.body.gameId,
 				users = [];
 		
@@ -806,16 +806,18 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	app.get('/ping', async (req, res) => {
-		let roomId = req.body.gameId,
-				userId = req.body.userId,
+	app.post('/ping', async (req, res) => {
+		let roomId = req.body.room_id,
+				userId = req.body.user_id,
 				resp = {};
 		
 		function getUser(resolve) {
 			let getUsersIdReq =  db.format(sql.sfw, ['users', 'id', userId]);
 			db.query(getUsersIdReq, function (err, results) {
 				if (err) throw err;
-				resp.gameMaster = results[0].game_master;
+				if (results.length > 0) {
+					resp.gameMaster = results[0].game_master;
+				}
 				return resolve();
 			});
 		}
@@ -823,7 +825,9 @@ module.exports = async function(app, db) {
 			let getUsersIdReq =  db.format(sql.sfw, ['room', 'id', roomId]);
 			db.query(getUsersIdReq, function (err, results) {
 				if (err) throw err;
-				resp.gameAction = results[0].game_action;
+				if (results.length > 0) {
+					resp.gameAction = results[0].game_action;
+				}
 				res.json(resp);
 			});
 		}
