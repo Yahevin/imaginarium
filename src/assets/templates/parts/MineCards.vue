@@ -36,7 +36,7 @@
 			  return this.$store.getters.game;
 		  },
 		  canSet() {
-			  return this.game.action === 'game-start' && this.myTurn()
+			  return this.game.action === 'game-start' && this.myTurn
 				  || this.game.action === 'gm-card-set';
 		  }
 	  },
@@ -45,11 +45,23 @@
       	if (!this.canSet) {
       		return
 	      }
-      // ajax set card
-	    // .success:
+	      let url = this.myTurn ? '/card-main' : '/card-fake',
+		        data = {
+      		    id: card.id,
+			        room_id: this.game.id,
+			        card_id: card.card_id,
+			        img_url: card.img_url,
+		        };
 	      
-      	this.$emit('cardSetDone');
-      }
+	      $.ajax({
+		      type: 'POST',
+		      url: url,
+		      data: data,
+		      success:()=>{
+			      this.$emit('cardSetDone');
+		      }
+	      });
+      },
 	  },
   }
 </script>

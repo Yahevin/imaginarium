@@ -150,16 +150,16 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/card-main', async (req, res) => {
-		let cardId = req.body.cardId,
-				roomId = req.body.gameId,
-				imgUrl = req.body.imgUrl,
-				playerStyle = null,
+		let handCardId = req.body.id,
+				cardId = req.body.card_id,
+				roomId = req.body.room_id,
+				imgUrl = req.body.img_url,
 				tableCard;
 		
 		function addMainCard (resolve) {
-			let addMainCardReq = db.format(sql.ii5,
-				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', 'player_style',
-					imgUrl, cardId, true, false, playerStyle]);
+			let addMainCardReq = db.format(sql.ii3,
+				['cards_on_table','img_url', 'card_id', 'is_main',
+					imgUrl, cardId, true]);
 			db.query(addMainCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
@@ -184,7 +184,7 @@ module.exports = async function(app, db) {
 		}
 		function removeFromHand(resolve) {
 			let removeFromHandReq = db.format(sql.dfw,
-				['cards_in_hand', 'card_id', cardId]);
+				['cards_in_hand', 'id', handCardId]);
 			db.query(removeFromHandReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -208,18 +208,17 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/card-fake', async (req, res) => {
-		let cardId = req.body.cardId,
-			roomId = req.body.gameId,
-			imgUrl = req.body.imgUrl,
-			playerStyle = null,
-			playersCount,
-			cardsCount,
-			tableCard;
+		let handCardId = req.body.id,
+				cardId = req.body.card_id,
+				roomId = req.body.room_id,
+				imgUrl = req.body.img_url,
+				playersCount,
+				cardsCount,
+				tableCard;
 		
 		function addFakeCard(resolve) {
-			let addFakeCardReq = db.format(sql.ii5,
-				['cards_on_table','img_url', 'card_id', 'is_main', 'has_mark', 'player_style',
-					imgUrl, cardId, false, false, playerStyle]);
+			let addFakeCardReq = db.format(sql.ii3,
+				['cards_on_table','img_url', 'card_id', 'is_main', imgUrl, cardId, false]);
 			db.query(addFakeCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
@@ -235,8 +234,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function removeFromHand(resolve) {
-			let removeFromHandReq = db.format(sql.dfw,
-				['cards_in_hand', 'card_id', cardId]);
+			let removeFromHandReq = db.format(sql.dfw, ['cards_in_hand', 'id', handCardId]);
 			db.query(removeFromHandReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -256,7 +254,6 @@ module.exports = async function(app, db) {
 				db.query(getCardsCount, function (err, results) {
 					if (err) throw err;
 					cardsCount = results.length;
-					res.json({success: true});
 					return resolveMain();
 				});
 			});
@@ -287,6 +284,8 @@ module.exports = async function(app, db) {
 					}).then(()=>{
 						if (iAmLast()) {
 							changeGameStatus();
+						} else {
+							res.json({success: true});
 						}
 					})
 				})

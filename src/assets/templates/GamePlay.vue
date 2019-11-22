@@ -4,12 +4,12 @@
 					@start="getReady"></join>
 		<style-select v-show="styleUnset && !this.playerUnknown"
           @start="getReady"></style-select>
-		<play-table v-show="tableShown"
-					@endRound="getNewCards"></play-table>
 		<new-cards v-show="newShown"
 					@enough="showMyCards"></new-cards>
 		<mine-cards v-show="myCardsShown"
-					@cardSetDone=""></mine-cards>
+					@cardSetDone="showTable"></mine-cards>
+		<play-table v-show="tableShown"
+		            @endRound="getNewCards"></play-table>
 		<leader-board v-show="boardShown"></leader-board>
 		
 		<button v-show="player.gameMaster"
