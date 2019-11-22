@@ -1,24 +1,19 @@
 <template>
 	<section>
 		<join v-show="playerUnknown"
-					@start="startGame"></join>
+					@start="getReady"></join>
 		<style-select v-show="styleUnset && !this.playerUnknown"
-          @start="startGame"></style-select>
+          @start="getReady"></style-select>
 		<play-table v-show="tableShown"
 					@endRound="getNewCards"></play-table>
 		<new-cards v-show="newShown"
-					@enough="newRound"></new-cards>
+					@enough="showMyCards"></new-cards>
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone=""></mine-cards>
-		
-		<button @click="boardShown = true">show table</button>
-		
-		
-		<button @click="getPlayers()">get players</button>
-		
-		
 		<leader-board v-show="boardShown"></leader-board>
 		
+		<button v-show="player.gameMaster"
+		        @click="startGame"></button>
 	</section>
 </template>
 
@@ -50,12 +45,45 @@
 		   
 	    }
 	  },
+	  watch: {
+		  gameAction: async function (newGame, oldGame) {
+		  	switch (newGame) {
+				  case 'game-prepare' :
+				  	break;
+				  case 'game-start':
+				  	console.log('game-start');
+					  await this.getNewCards();
+					  break;
+				  case 'gm-card-set' :
+				  	console.log('gm-card-set');
+					  break;
+				  case 'all-card-set' :
+					  console.log('all-card-set');
+					  this.startGuess();
+					  break;
+				  case 'all-guess-done' :
+					  console.log('all-guess-done');
+					  //after gameMaster click 'next round'
+					  //show results
+					  break;
+				  case 'get-new-cards' :
+					  console.log('get-new-cards');
+					  break;
+			  }
+		  },
+	  },
 	  computed: {
 		  player() {
 			  return this.$store.getters.player;
 		  },
-		  game() {
-			  return this.$store.getters.game;
+		  gameId() {
+			  return this.$store.getters.game.id;
+		  },
+		  gameAction() {
+			  return this.$store.getters.game.action;
+		  },
+		  gameRun() {
+		  	return this.gameAction !== 'game-prepare';
 		  },
 		  myTurn() {
 		  	return this.$store.getters.player.gameMaster;
@@ -69,6 +97,9 @@
 		  battleGround() {
 		  	return this.$store.getters.party;
 		  },
+		  handCards() {
+		  	return this.$store.getters.handCards;
+		  },
 	  },
 	  created() {
 
@@ -76,43 +107,81 @@
 	  mounted() {
 	  },
 	  methods: {
-		  startGame() {
-		    if (!this.styleUnset){
+		  getReady() {
+		    if (!this.styleUnset) {
 		    	this.playerReady();
 		    }
 		  },
 		  async playerReady() {
 			  await this.ping();
+			  
+			  //if player joined after game start
+			  if (this.gameRun) {
+				  this.setOnlyMyCards();
+			  }
+			  
 			  setInterval(async ()=>{
 				  await this.ping();
 			  },1000);
 		  },
+		  async startGame() {
+			  await this.setDistribution();
+			  await this.createNewCards(6);
+			  await this.$store.dispatch('setGameAction','game-start');
+		  },
+		  async setDistribution() {
+			  await new Promise(resolve => {
+				  $.ajax({
+					  type: 'POST',
+					  url: '/set-distribution',
+					  data: {room_id: this.gameId},
+					  success:()=>{
+						  return resolve();
+					  }
+				  });
+			  })
+		  },
+		  async createNewCards(count) {
+		  	let data = {
+				  room_id: this.gameId,
+				  cards_count: count,
+			  };
+		  	
+		  	await new Promise(resolve => {
+				  $.ajax({
+					  type: 'POST',
+					  url: '/create-new-cards',
+					  data: data,
+					  success:()=>{
+							return resolve();
+					  }
+				  });
+			  })
+		  },
 		  async getNewCards() {
-			  await this.$store.dispatch('getNewCards');
+		  	let data = {
+				  user_id: this.player.id,
+				  room_id: this.gameId,
+			  };
+		  	
+			  await this.$store.dispatch('getNewCards', data);
 			
 			  this.showNew();
 		  },
-		  newRound() {
-			  this.$store.dispatch('setPlayerStatus', 'readyToSetCard');
-		  	
-			  this.showMyCards();
-		  },
+
 		  async startGuess() {
-			  if(this.myTurn) {
-				  this.$store.dispatch('setPlayerStatus', 'waitingForGuess');
-			  } else {
-				  this.$store.dispatch('setPlayerStatus', 'readyToGuess');
-			  }
-			
 			  await this.$store.dispatch('getTableCards');
 			  
 			  this.showTable();
 		  },
-		  
+		  async setOnlyMyCards() {
+			  await this.createNewCards(6);
+			  await this.getNewCards();
+		  },
 	    async ping() {
 		    let data = {
 				  user_id: this.player.id,
-				  room_id: this.game.id,
+				  room_id: this.gameId,
 			  };
 			
 			  $.ajax({

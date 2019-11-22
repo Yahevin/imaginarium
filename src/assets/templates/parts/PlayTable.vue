@@ -57,7 +57,7 @@
 		  	return this.$store.getters.tableCards;
 		  },
 		  allDone() {
-			  return this.game.action === 'allDoneGuess';
+			  return this.game.action === 'all-guess-done';
 		  },
 		  player() {
 			  return this.$store.getters.player;
@@ -69,7 +69,7 @@
 		  	return this.player.gameMaster;
 		  },
 		  canGuess() {
-		  	return this.game.action === 'guessCard';
+		  	return this.game.action === 'all-card-set';
 		  },
 	  },
 	  methods: {

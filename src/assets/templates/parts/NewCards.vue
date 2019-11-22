@@ -4,7 +4,7 @@
 			v-for="card in newCards">
 			<div class="">
 				<img class=""
-					:src="card.img">
+					:src="card.img_url">
 			</div>
 		</article>
 		<button @click="enough"></button>

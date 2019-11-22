@@ -62,7 +62,6 @@ conn.connect(function(err,result) {
 	
 	let row5 = "CREATE TABLE IF NOT EXISTS cards_in_hand" +
 		" (id INT not null AUTO_INCREMENT, " +
-		" img_url VARCHAR(255), " +
 		" card_id INT, " +
 		" PRIMARY KEY (id) )";
 	
@@ -73,7 +72,6 @@ conn.connect(function(err,result) {
 	
 	let row6 = "CREATE TABLE IF NOT EXISTS cards_on_table" +
 		" (id INT not null AUTO_INCREMENT, " +
-		" img_url VARCHAR(255), " +
 		" card_id INT, " +
 		" is_main BOOLEAN, " +
 		" has_mark BOOLEAN, " +

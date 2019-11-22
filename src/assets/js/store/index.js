@@ -15,19 +15,9 @@ export const store = new Vuex.Store({
       id: null,
       action: '',
     },
-    handCards: [{
-      img: 'url',
-      playerStyle: ''
-    }],
-    tableCards: [{
-      img: 'url',
-      hasMarker: false,
-      playerStyle: ''
-    }],
-    newCards:[{
-      img: 'url',
-      playerStyle: ''
-    }],
+    handCards: [],
+    tableCards: [],
+    newCards:[],
     party: [{
       id: 237,
       position: 0,
@@ -60,16 +50,25 @@ export const store = new Vuex.Store({
     gameStart({commit}) {
       commit('GAME_START')
     },
-    getNewCards({commit}) {
-      // ajax to get cards
-      // if(state.player.status === 'handsFree')
-      // add 6 cards
-      // .success( start commit)
-      // cards = response;
-  
-      let cards=[];
-      
-      commit('GET_NEW_CARDS', cards)
+    getNewCards({commit}, data) {
+      $.ajax({
+        type: 'POST',
+        url: '/get-new-cards',
+        data: data,
+        success:(resp)=>{
+          commit('GET_NEW_CARDS', resp)
+        }
+      });
+    },
+    getMyCards({commit},data) {
+      $.ajax({
+        type: 'POST',
+        url: '/get-new-cards',
+        data: data,
+        success:(resp)=>{
+          commit('GET_MY_CARDS', resp)
+        }
+      });
     },
     getTableCards({commit}) {
       // ajax to get cards
@@ -116,6 +115,9 @@ export const store = new Vuex.Store({
     GET_NEW_CARDS(state, cards) {
       state.handCards.push(...cards);
       state.newCards = cards;
+    },
+    GET_MY_CARDS(state, cards) {
+      state.handCards.push(...cards);
     },
     GET_PARTY_RESULTS(state,results) {
       state.party = results;

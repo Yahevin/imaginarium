@@ -85,6 +85,8 @@ module.exports = async function(app, db) {
 						playerCreate(resolve);
 					}).then(()=>{
 						new Promise(resolve => {
+							playerCountUpdate();
+							chainPlayer();
 							checkNickName(resolve);
 						}).then(()=>{
 							if (userExist) {
@@ -142,10 +144,7 @@ module.exports = async function(app, db) {
 		}).then(()=>{
 			new Promise(resolve => {
 				userJoin(resolve)
-			}).then(()=>{
-				playerCountUpdate();
-				chainPlayer();
-			});
+			})
 		})
 	});
 	
@@ -439,7 +438,7 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/set-distribution', async (req,res) => {
-		let roomId = req.body.gameId,
+		let roomId = req.body.room_id,
 				setDistributionReq = db.format(sql.ii1,
 				['distribution', 'room_id', roomId]);
 		
@@ -450,9 +449,9 @@ module.exports = async function(app, db) {
 	});
 	
 	
-	app.post('/new-cards', async (req, res) => {
-		let roomId = req.body.gameId,
-				cardsCount = req.body.cardsCount,
+	app.post('/create-new-cards', async (req, res) => {
+		let roomId = req.body.room_id,
+				cardsCount = req.body.cards_count,
 				playersCount,
 				distributionId,
 				handCards = [],
@@ -491,10 +490,12 @@ module.exports = async function(app, db) {
 						let getHandCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
 						db.query(getHandCardsReq, function (err, results) {
 							if (err) throw err;
-							handCards.push(item.card_id);
-							if (index >= (handCardsId.length - 1)) {
-								return resolveMain();
-							}
+							results.forEach((item,index)=> {
+								handCards.push(item.card_id);
+								if (index >= (handCardsId.length - 1)) {
+									return resolveMain();
+								}
+							});
 						});
 					})
 				} else {
@@ -580,7 +581,7 @@ module.exports = async function(app, db) {
 				db.query(getUsersReq, function (err, results) {
 					if (err) throw err;
 					results.forEach((user,index)=>{
-						users.push(user.id);
+						users.push(user.user_id);
 						if(index >= (results.length - 1)) {
 							return resolve();
 						}
@@ -764,14 +765,130 @@ module.exports = async function(app, db) {
 		})
 	});
 	
-
-	app.post('/new-cards', async (req, res) => {
-		let userId = req.body.userId,
-				getCards = db.format(sql.sfw, ['new_cards', 'user_id', userId]);
+	
+	app.post('/get-new-cards', async (req, res) => {
+		let userId = req.body.user_id,
+				roomId = req.body.room_id,
+				cardsIds = [],
+				resp = [],
+				handCardIds = [];
+			
+			
+		function getCardsId(resolve) {
+			let getCardsIdReq = db.format(sql.sfw, ['new_cards', 'user_id', userId]);
+			
+			db.query(getCardsIdReq, function(err, results) {
+				if (err) throw err;
+				results.forEach((item)=>{
+					cardsIds.push(item.card_id);
+				});
+				return resolve();
+			})
+		}
+		function getCards() {
+			cardsIds.forEach((currentId,index)=>{
+				let getCardsReq = db.format(sql.sfw, ['cards', 'id', currentId]);
+				
+				db.query(getCardsReq, function(err, results) {
+					if (err) throw err;
+					resp.push(results[0]);
+					
+					if(index === (cardsIds.length - 1)) {
+						res.json(resp);
+					}
+				})
+			});
+		}
+		function deleteTheCopy() {
+			let getCardsIdReq = db.format(sql.dfw, ['new_cards', 'user_id', userId]);
+			
+			db.query(getCardsIdReq, function(err, results) {
+				if (err) throw err;
+			})
+		}
+		function createHandCards(resolve) {
+			cardsIds.forEach((currentId,index)=>{
+				let createHandCardsReq = db.format(sql.ii1, ['cards_in_hand', 'card_id',  currentId]);
+				
+				db.query(createHandCardsReq, function(err, results) {
+					if (err) throw err;
+					handCardIds.push(results.insertId);
+					
+					if(index === (cardsIds.length - 1)) {
+						return resolve();
+					}
+				})
+			});
+		}
+		function chainWithRoom() {
+			handCardIds.forEach((currentId)=>{
+				let chainWithRoomReq = db.format(sql.ii2, ['room__hand', 'room_id', 'hand_card_id', roomId, currentId]);
+				
+				db.query(chainWithRoomReq, function(err, results) {
+					if (err) throw err;
+				});
+			});
+		}
+		function chainWithUser() {
+			handCardIds.forEach((currentId)=> {
+				let chainWithUserReq = db.format(sql.ii2, ['user__hand', 'user_id', 'hand_card_id', userId, currentId]);
+				
+				db.query(chainWithUserReq, function (err, results) {
+					if (err) throw err;
+				});
+			});
+		}
 		
-		db.query(getCards, function(err, results) {
-			if (err) throw err;
-			res.json(results);
+		new Promise(resolve => {
+			getCardsId(resolve)
+		}).then(()=>{
+			new Promise(resolve => {
+				createHandCards(resolve);
+			}).then(()=>{
+				chainWithRoom();
+				chainWithUser();
+				deleteTheCopy();
+				getCards();
+			})
+		})
+	});
+	
+	
+	app.post('/get-my-cards', async (req, res) => {
+		let userId = req.body.user_id,
+				handCardIds = [],
+				resp = [];
+		
+		function getHandCards(resolve) {
+			let getHandCardsReq = db.format(sql.sfw, ['user__hand', 'user_id', userId]);
+			
+			db.query(getHandCardsReq, function(err, results) {
+				if (err) throw err;
+				results.forEach((item)=>{
+					handCardIds.push(item.hand_card_id);
+				});
+				
+				return resolve();
+			})
+		}
+		function getMyCards() {
+			handCardIds.forEach((currentId)=>{
+				let getMyCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
+				
+				db.query(getMyCardsReq, function(err, results) {
+					if (err) throw err;
+					results.forEach((item)=>{
+						resp.push(item);
+					});
+					res.json(resp);
+				})
+			})
+		}
+		
+		new Promise(resolve => {
+			getHandCards(resolve);
+		}).then(()=>{
+			getMyCards();
 		})
 	});
 	
