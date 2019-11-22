@@ -13,7 +13,9 @@
 		<leader-board v-show="boardShown"></leader-board>
 		
 		<button v-show="player.gameMaster"
-		        @click="startGame"></button>
+		        @click="startGame">
+			start
+		</button>
 	</section>
 </template>
 

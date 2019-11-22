@@ -7,7 +7,9 @@
 					:src="card.img_url">
 			</div>
 		</article>
-		<button @click="enough"></button>
+		<button @click="enough">
+			enough
+		</button>
 	</section>
 </template>
 

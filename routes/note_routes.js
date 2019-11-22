@@ -634,8 +634,8 @@ module.exports = async function(app, db) {
 	
 
 	app.post('/set-style', async (req, res) => {
-		let style = req.body.playerStyle,
-				userId = req.body.userId,
+		let style = req.body.player_style,
+				userId = req.body.user_id,
 				setStyleReq = db.format(sql.usw,
 				['users', 'player_style', style, 'id', userId]);
 		

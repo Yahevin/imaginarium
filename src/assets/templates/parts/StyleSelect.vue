@@ -49,6 +49,9 @@
 			styleSelected() {
 				return this.style !== null;
 			},
+			player() {
+				return this.$store.getters.player;
+			},
 		},
 		methods: {
 			clearChosen() {
@@ -57,8 +60,12 @@
 			},
 			makeChoise(event) {
 				event.preventDefault();
+				let data = {
+					player_style: this.style,
+					user_id: this.player.id
+				};
 				
-				this.$store.dispatch('setPlayerStyle', this.style);
+				this.$store.dispatch('setPlayerStyle', data);
 				this.$emit('start');
 			},
 		},

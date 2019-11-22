@@ -32,8 +32,15 @@ export const store = new Vuex.Store({
     setPlayerRole({commit}, role) {
       commit('SET_PLAYER_ROLE', role)
     },
-    setPlayerStyle({commit}, style) {
-      commit('SET_PLAYER_STYLE', style)
+    setPlayerStyle({commit}, data) {
+      $.ajax({
+        type: 'POST',
+        url: '/set-style',
+        data: data,
+        success:()=>{
+          commit('SET_PLAYER_STYLE', data.player_style);
+        }
+      });
     },
     setGameId({commit},id) {
       commit('SET_GAME_ID',id)
