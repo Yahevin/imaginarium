@@ -1,11 +1,11 @@
 <template>
 	<section class="">
 		<article class=""
-			v-for="card in cards">
+			v-for="card in myCards">
 			<div class=""
 				@click="cardSet(card)">
 				<img class=""
-					:src="card.img">
+					:src="card.img_url">
 			</div>
 		</article>
 	</section>
@@ -23,7 +23,7 @@
 	    }
 	  },
 	  computed: {
-    	cards() {
+		  myCards() {
     		return this.$store.getters.handCards;
 	    },
 		  player() {
@@ -36,8 +36,8 @@
 			  return this.$store.getters.game;
 		  },
 		  canSet() {
-			  return this.game.action === 'leaderSetsCard' && this.myTurn()
-				  || this.game.action === 'allSetCards';
+			  return this.game.action === 'game-start' && this.myTurn()
+				  || this.game.action === 'gm-card-set';
 		  }
 	  },
 	  methods: {

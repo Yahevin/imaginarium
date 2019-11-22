@@ -70,7 +70,7 @@ export const store = new Vuex.Store({
     getMyCards({commit},data) {
       $.ajax({
         type: 'POST',
-        url: '/get-new-cards',
+        url: '/get-my-cards',
         data: data,
         success:(resp)=>{
           commit('GET_MY_CARDS', resp)

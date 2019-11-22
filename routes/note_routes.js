@@ -780,21 +780,21 @@ module.exports = async function(app, db) {
 			db.query(getCardsIdReq, function(err, results) {
 				if (err) throw err;
 				results.forEach((item)=>{
-					cardsIds.push(item.card_id);
+					cardsIds.push({id: item.card_id});
 				});
 				return resolve();
 			})
 		}
-		function getCards() {
-			cardsIds.forEach((currentId,index)=>{
-				let getCardsReq = db.format(sql.sfw, ['cards', 'id', currentId]);
+		function getImages(resolve) {
+			cardsIds.forEach((item,index)=>{
+				let getImagesReq = db.format(sql.sfw, ['cards', 'id', item.id]);
 				
-				db.query(getCardsReq, function(err, results) {
+				db.query(getImagesReq, function(err, results) {
 					if (err) throw err;
-					resp.push(results[0]);
+					item.img_url = results[0].img_url;
 					
 					if(index === (cardsIds.length - 1)) {
-						res.json(resp);
+						return resolve();
 					}
 				})
 			});
@@ -807,8 +807,8 @@ module.exports = async function(app, db) {
 			})
 		}
 		function createHandCards(resolve) {
-			cardsIds.forEach((currentId,index)=>{
-				let createHandCardsReq = db.format(sql.ii1, ['cards_in_hand', 'card_id',  currentId]);
+			cardsIds.forEach((item,index)=>{
+				let createHandCardsReq = db.format(sql.ii2, ['cards_in_hand', 'card_id', 'img_url',  item.id, item.img_url]);
 				
 				db.query(createHandCardsReq, function(err, results) {
 					if (err) throw err;
@@ -838,17 +838,35 @@ module.exports = async function(app, db) {
 				});
 			});
 		}
+		function getCards() {
+			handCardIds.forEach((currentId,index)=>{
+				let getCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
+				
+				db.query(getCardsReq, function(err, results) {
+					if (err) throw err;
+					resp.push(results[0]);
+					
+					if(index === (handCardIds.length - 1)) {
+						res.json(resp);
+					}
+				})
+			});
+		}
 		
 		new Promise(resolve => {
 			getCardsId(resolve)
 		}).then(()=>{
 			new Promise(resolve => {
-				createHandCards(resolve);
+				getImages(resolve)
 			}).then(()=>{
-				chainWithRoom();
-				chainWithUser();
-				deleteTheCopy();
-				getCards();
+				new Promise(resolve => {
+					createHandCards(resolve);
+				}).then(()=>{
+					chainWithRoom();
+					chainWithUser();
+					deleteTheCopy();
+					getCards();
+				})
 			})
 		})
 	});

@@ -121,7 +121,7 @@
 		    this.$store.dispatch('setPlayer', data);
 		    this.$store.dispatch('setGameId', resp.room_id);
 		    this.$store.dispatch('setGameAction', resp.game_action);
-		    this.$store.dispatch('',);
+		    this.$store.dispatch('getMyCards', {user_id: resp.user_id});
 		
 		    this.$emit('start');
 	    }
