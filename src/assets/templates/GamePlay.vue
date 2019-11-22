@@ -9,13 +9,11 @@
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone="showTable"></mine-cards>
 		<play-table v-show="tableShown"
-		            @endRound="getNewCards"></play-table>
+          @endRound="getNewCards"></play-table>
 		<leader-board v-show="boardShown"></leader-board>
 		
-		<button v-show="player.gameMaster"
-		        @click="startGame">
-			start
-		</button>
+		<button v-show="player.gameMaster" @click="startGame">start</button>
+		
 	</section>
 </template>
 
@@ -53,23 +51,16 @@
 				  case 'game-prepare' :
 				  	break;
 				  case 'game-start':
-				  	console.log('game-start');
-					  await this.getNewCards();
+					  this.getNewCards();
 					  break;
 				  case 'gm-card-set' :
-				  	console.log('gm-card-set');
 					  break;
 				  case 'all-card-set' :
-					  console.log('all-card-set');
 					  this.startGuess();
 					  break;
 				  case 'all-guess-done' :
-					  console.log('all-guess-done');
 					  //after gameMaster click 'next round'
 					  //show results
-					  break;
-				  case 'get-new-cards' :
-					  console.log('get-new-cards');
 					  break;
 			  }
 		  },
@@ -172,8 +163,8 @@
 		  },
 
 		  async startGuess() {
-			  await this.$store.dispatch('getTableCards');
-			  
+			  this.$store.dispatch('getTableCards', {room_id: this.gameId});
+
 			  this.showTable();
 		  },
 		  async setOnlyMyCards() {
@@ -190,9 +181,15 @@
 				  type: 'POST',
 				  url: '/ping',
 				  data: data,
-				  success:(resp)=>{
+				  success: (resp)=>{
 					  this.$store.dispatch('setPlayerRole',resp.gameMaster);
 					  this.$store.dispatch('setGameAction',resp.gameAction);
+					  
+					  if (resp.gameAction === 'gm-card-set') {
+					  	this.$store.dispatch('getTableCards', {room_id: this.gameId})
+					  } else if (resp.gameAction === 'all-card-set') {
+					  	this.$store.dispatch()
+					  }
 				  }
 			  });
 		  },
