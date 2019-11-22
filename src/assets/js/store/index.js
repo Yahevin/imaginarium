@@ -48,15 +48,6 @@ export const store = new Vuex.Store({
     setGameAction({commit},action) {
       commit('SET_GAME_ACTION',action)
     },
-    myTurnStart({commit}) {
-      commit('MY_TURN_START')
-    },
-    myTurnEnd({commit}) {
-      commit('MY_TURN_END')
-    },
-    gameStart({commit}) {
-      commit('GAME_START')
-    },
     getNewCards({commit}, data) {
       $.ajax({
         type: 'POST',
@@ -77,22 +68,24 @@ export const store = new Vuex.Store({
         }
       });
     },
-    getTableCards({commit}) {
-      // ajax to get cards
-      // .success( start commit)
-      // cards = response;
-      
-      let cards=[];
-      
-      commit('GET_TABLE_CARDS', cards)
+    getTableCards({commit},data) {
+      $.ajax({
+        type: 'POST',
+        url: '/table-cards',
+        data: data,
+        success:(resp)=>{
+          commit('GET_TABLE_CARDS', resp)
+        }
+      });
     },
     getPartyResults({commit}, data) {
       // ajax get leader board
-      
-      let results = data;
-      
-      commit('GET_PARTY_RESULTS', results)
-    }
+
+      commit('GET_PARTY_RESULTS', data)
+    },
+    clearTheTable({commit}) {
+      commit('CLEAR_THE_TABLE')
+    },
   },
   mutations: {
     SET_PLAYER(state, note) {
@@ -110,12 +103,6 @@ export const store = new Vuex.Store({
     SET_GAME_ACTION(state,action) {
       state.game.action = action;
     },
-    MY_TURN_START(state) {
-      state.player.gameMaster = true;
-    },
-    MY_TURN_END(state) {
-      state.player.gameMaster = false;
-    },
     GET_TABLE_CARDS(state, cards) {
       state.tableCards.push(...cards);
     },
@@ -128,6 +115,9 @@ export const store = new Vuex.Store({
     },
     GET_PARTY_RESULTS(state,results) {
       state.party = results;
+    },
+    CLEAR_THE_TABLE(state) {
+      state.tableCards = [];
     }
   },
   getters: {

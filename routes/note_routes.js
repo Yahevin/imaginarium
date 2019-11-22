@@ -730,9 +730,9 @@ module.exports = async function(app, db) {
 	
 
 	app.post('/table-cards', async (req, res) => {
-		let roomId = req.body.gameId,
+		let roomId = req.body.room_id,
 				cardIds = [],
-				cardUrls = [];
+				resp = [];
 		
 		function getCardsId(resolve) {
 			let getCardsIdReq = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
@@ -749,9 +749,16 @@ module.exports = async function(app, db) {
 				let getCardsIdReq = db.format(sql.sfw, ['cards_on_table', 'id', currentId]);
 				db.query(getCardsIdReq, function (err, results) {
 					if (err) throw err;
-					cardUrls.push(results[0].img_url);
+					let card = results[0],
+							data = {
+								img_url: card.img_url,
+								card_id: card.card_id,
+								id: card.id,
+							};
+					
+					resp.push(data);
 					if(index === (cardIds.length - 1)) {
-						res.json(cardUrls);
+						res.json(resp);
 					}
 				});
 			})
