@@ -25,7 +25,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function playerCreate(resolve) {
-			let playerCreateReq = db.format(sql.ii2, ['users', 'nick_name', 'game_master','player_style', nickName, true, null]);
+			let playerCreateReq = db.format(sql.ii3, ['users', 'nick_name', 'game_master','player_style', nickName, true, null]);
 			db.query(playerCreateReq, function (err, results) {
 				if (err) throw err;
 				userId = results.insertId;
