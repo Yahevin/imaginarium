@@ -76,7 +76,6 @@ conn.connect(function(err,result) {
 		" card_id INT, " +
 		" img_url VARCHAR(255), " +
 		" is_main BOOLEAN, " +
-		
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row6, function(err, results) {
@@ -169,6 +168,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
 		" table_card_id INT, " +
+		" is_main BOOLEAN, " +
 		" FOREIGN KEY (user_id) REFERENCES users(id)" +
 		" ON DELETE CASCADE, " +
 		" FOREIGN KEY (table_card_id) REFERENCES cards_on_table(id)" +

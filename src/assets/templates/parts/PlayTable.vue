@@ -68,6 +68,9 @@
 		  game() {
 			  return this.$store.getters.game;
 		  },
+		  marks() {
+			  return this.$store.marks;
+		  },
 		  iAmGameMaster() {
 		  	return this.player.gameMaster;
 		  },
@@ -101,7 +104,18 @@
 				  data: data,
 				  success:(resp)=>{
 					  this.view = null;
-					  console.log(resp.iAmLast);
+					  if (resp.iAmLast) {
+					  	this.countTheScore();
+					  }
+				  }
+			  });
+		  },
+		  countTheScore() {
+			  $.ajax({
+				  type: 'POST',
+				  url: '/count-score',
+				  data: {room_id: this.game.id},
+				  success:()=>{
 				  }
 			  });
 		  },

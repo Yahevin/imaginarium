@@ -175,8 +175,8 @@ module.exports = async function(app, db) {
 			});
 		}
 		function noteTableCard2(resolve) {
-			let noteTableCard2Req = db.format(sql.ii2,
-				['user__table', 'user_id', 'table_card_id', userId, tableCard]);
+			let noteTableCard2Req = db.format(sql.ii3,
+				['user__table', 'user_id', 'table_card_id', 'is_main', userId, tableCard, true]);
 			db.query(noteTableCard2Req, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -247,8 +247,8 @@ module.exports = async function(app, db) {
 			});
 		}
 		function noteTableCard2(resolve) {
-			let noteTableCard2Req = db.format(sql.ii2,
-				['user__table', 'user_id', 'table_card_id', userId, tableCard]);
+			let noteTableCard2Req = db.format(sql.ii3,
+				['user__table', 'user_id', 'table_card_id','is_main', userId, tableCard, false]);
 			db.query(noteTableCard2Req, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -345,7 +345,7 @@ module.exports = async function(app, db) {
 				new Promise(resolve => {
 					getGuessedUsers(resolve);
 				}).then(()=>{
-					iAmLast = userGuessed === userCount;
+					iAmLast = userGuessed === (userCount - 1);
 					return resolveMain();
 				})
 			});
@@ -970,7 +970,9 @@ module.exports = async function(app, db) {
 				let getMarksReq = db.format(sql.sfw, ['user__guess', 'user_id', currentId]);
 				db.query(getMarksReq, function (err, results) {
 					if (err) throw err;
-					resp.push(results[0]);
+					if (results.length > 0) {
+						resp.push(results[0]);
+					}
 					if(index >= (userIds.length - 1)) {
 						res.json(resp);
 					}
@@ -988,9 +990,130 @@ module.exports = async function(app, db) {
 	});
 	
 	
+	app.post('/count-score', async (req, res) => {
+		let roomId = req.body.room_id,
+				usersId = [],
+				users = [],
+				cards = [],
+				marks = [],
+				rewards = [];
+		
+		function getUsersIds(resolve) {
+			let getUsersIdsReq =  db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getUsersIdsReq, function (err, results) {
+				if (err) throw err;
+				usersId = results;
+				return resolve();
+			});
+		}
+		function getUsers(resolve) {
+			usersId.forEach((user,index)=>{
+				let getMarksReq =  db.format(sql.sfw, ['users', 'id', user.id]);
+				db.query(getMarksReq, function (err, results) {
+					if (err) throw err;
+					users.push(results[0]);
+					if(index >= (usersId.length - 1)) {
+						return resolve();
+					}
+				});
+			});
+		}
+		function getMarks(resolve) {
+			usersId.forEach((user,index)=>{
+				let getMarksReq =  db.format(sql.sfw, ['user__guess', 'user_id', user.id]);
+				db.query(getMarksReq, function (err, results) {
+					if (err) throw err;
+					if (results.length > 0) {
+						marks.push(results[0]);
+					}
+					if(index >= (users.length - 1)) {
+						return resolve();
+					}
+				});
+			});
+		}
+		function getCards(resolve) {
+			users.forEach((user,index)=>{
+				let getCardsReq =  db.format(sql.sfw, ['user__table', 'user_id', user.id]);
+				db.query(getCardsReq, function (err, results) {
+					if (err) throw err;
+					cards.push(results[0]);
+					if(index >= (users.length - 1)) {
+						return resolve();
+					}
+				});
+			});
+		}
+		function countScores(resolve) {
+			let max = marks.length;
+			
+			cards.forEach((card)=>{
+				let score = 0;
+				marks.forEach((mark)=>{
+					if (card.table_card_id === mark.guess_id) {
+						score++;
+					}
+				});
+
+				if(card.is_main) {
+					score = score === 0 || score === max
+						? score = -3
+						: score += 3;
+				}
+				
+				rewards.push({
+					id: card.user_id,
+					score: score,
+				})
+			});
+			return resolve();
+		}
+		function rewriteScores() {
+			rewards.forEach((reward,index)=>{
+				users.forEach((user)=>{
+					if (user.id === reward.id) {
+						reward.score =  +user.score + reward.score;
+					}
+				});
+				
+				let rewriteScoresReq = db.format(sql.usw, ['users', 'score', reward.score, 'id', reward.id]);
+				db.query(rewriteScoresReq, function (err, results) {
+					if (err) throw err;
+					if(index >= (rewards.length - 1)) {
+						res.json({success: true});
+					}
+				});
+			});
+		}
+		
+		new Promise(resolve => {
+			getUsersIds(resolve)
+		}).then(()=>{
+			new Promise(resolve => {
+				getUsers(resolve)
+			}).then(()=>{
+				new Promise(resolve => {
+					getMarks(resolve)
+				}).then(()=>{
+					new Promise(resolve => {
+						getCards(resolve)
+					}).then(()=>{
+						new Promise(resolve => {
+							countScores(resolve)
+						}).then(()=>{
+							rewriteScores()
+						})
+					})
+				})
+			})
+		})
+	});
+	
+	
 	app.post('/leader-board', async (req, res) => {
 		let roomId = req.body.gameId,
-				users = [];
+				users = [],
+				resp = [];
 		
 		function getUsersId(resolve) {
 			let getUsersIdReq =  db.format(sql.sfw, ['user__room', 'room_id', roomId]);
@@ -1001,11 +1124,14 @@ module.exports = async function(app, db) {
 			});
 		}
 		function getUsers() {
-			users.forEach((user)=>{
+			users.forEach((user,)=>{
 				let getUsersReq =  db.format(sql.sfw, ['users', 'id', user.id]);
 				db.query(getUsersReq, function (err, results) {
 					if (err) throw err;
-					res.json(results);
+					resp.push(results[0]);
+					if(index >= (users.length - 1)) {
+						res.json(resp);
+					}
 				});
 			});
 		}
