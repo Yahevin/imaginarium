@@ -18,6 +18,7 @@ export const store = new Vuex.Store({
     handCards: [],
     tableCards: [],
     newCards:[],
+	  marks: [],
     party: [{
       id: 237,
       position: 0,
@@ -78,6 +79,16 @@ export const store = new Vuex.Store({
         }
       });
     },
+	  getMarks({commit}, data) {
+		  $.ajax({
+			  type: 'POST',
+			  url: '/get-marks',
+			  data: data,
+			  success:(resp)=>{
+				  commit('GET_MARKS', resp)
+			  }
+		  });
+	  },
     getPartyResults({commit}, data) {
       // ajax get leader board
 
@@ -107,7 +118,7 @@ export const store = new Vuex.Store({
       state.game.action = action;
     },
     GET_TABLE_CARDS(state, cards) {
-      state.tableCards.push(...cards);
+      state.tableCards = cards;
     },
     GET_NEW_CARDS(state, cards) {
       state.handCards.push(...cards);
@@ -116,9 +127,20 @@ export const store = new Vuex.Store({
     GET_MY_CARDS(state, cards) {
       state.handCards.push(...cards);
     },
-    GET_PARTY_RESULTS(state,results) {
-      state.party = results;
+    GET_PARTY_RESULTS(state,resp) {
+      state.party = resp;
     },
+	  GET_MARKS(state, resp) {
+		  state.marks = resp;
+		  state.tableCards.forEach((card)=>{
+		  	card.marks = [];
+		  	resp.forEach((mark)=>{
+		  		if(card.id === mark.guess_id) {
+		  		  card.marks.push(mark)
+				  }
+			  })
+		  })
+	  },
     CLEAR_THE_TABLE(state) {
       state.tableCards = [];
     },
@@ -148,7 +170,10 @@ export const store = new Vuex.Store({
     },
     party(state) {
       return state.party
-    }
+    },
+	  marks(state) {
+    	return state.marks
+	  }
   },
   modules: {}
 });

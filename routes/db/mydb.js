@@ -184,6 +184,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
 		" guess_id INT, " +
+		" player_style VARCHAR(255), " +
 		" FOREIGN KEY (user_id) REFERENCES users(id)" +
 		" ON DELETE CASCADE, " +
 		" FOREIGN KEY (guess_id) REFERENCES cards_on_table(id)" +

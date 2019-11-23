@@ -187,8 +187,8 @@
 					  
 					  if (resp.gameAction === 'gm-card-set') {
 					  	this.$store.dispatch('getTableCards', {room_id: this.gameId})
-					  } else if (resp.gameAction === 'all-card-set') {
-					  	this.$store.dispatch()
+					  } else if (resp.gameAction === 'all-card-set' && resp.gameAction === 'all-guess-done') {
+					  	this.$store.dispatch('getMarks');
 					  }
 				  }
 			  });

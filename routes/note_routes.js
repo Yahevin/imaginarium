@@ -323,14 +323,15 @@ module.exports = async function(app, db) {
 		let userId = req.body.user_id,
 				roomId = req.body.room_id,
 				guessId = req.body.guess_id,
+				playerStyle = req.body.player_style,
 				iAmLast = false,
 				userCount = 0,
 				userGuessed = 0,
 				userIds = [];
 		
 		function makeGuessCard(resolve) {
-			let makeGuessCardReq = db.format(sql.ii2,
-				['user__guess', 'user_id', 'guess_id', userId, guessId]);
+			let makeGuessCardReq = db.format(sql.ii3,
+				['user__guess', 'user_id', 'guess_id', 'player_style', userId, guessId, playerStyle]);
 			
 			db.query(makeGuessCardReq, function(err, results) {
 				if (err) throw err;
@@ -946,6 +947,44 @@ module.exports = async function(app, db) {
 		}).then(()=>{
 			getMyCards();
 		})
+	});
+	
+	
+	app.post('/get-marks', async (req, res) => {
+		let roomId = req.body.room_id,
+				userIds = [],
+				resp = [];
+		
+		function getUsersId(resolve) {
+			let getCardsIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getCardsIdReq, function (err, results) {
+				if (err) throw err;
+				userIds = results.map((item)=>{
+					return item.user_id;
+				});
+				return resolve();
+			});
+		}
+		function getMarks() {
+			userIds.forEach((currentId, index)=>{
+				let getMarksReq = db.format(sql.sfw, ['user__guess', 'user_id', currentId]);
+				db.query(getMarksReq, function (err, results) {
+					if (err) throw err;
+					resp.push(results[0]);
+					if(index >= (userIds.length - 1)) {
+						res.json(resp);
+					}
+				});
+			});
+		}
+		
+		new Promise(resolve => {
+			getUsersId(resolve)
+		}).then(()=>{
+			getMarks()
+		});
+		
+		
 	});
 	
 	
