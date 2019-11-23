@@ -45,6 +45,8 @@
       	if (!this.canSet) {
       		return
 	      }
+      	this.$store.dispatch('removeFromHand', card.id);
+      	
 	      let url = this.myTurn ? '/card-main' : '/card-fake',
 		        data = {
       		    id: card.id,

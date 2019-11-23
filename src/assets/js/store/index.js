@@ -86,6 +86,9 @@ export const store = new Vuex.Store({
     clearTheTable({commit}) {
       commit('CLEAR_THE_TABLE')
     },
+    removeFromHand({commit}, id) {
+      commit('REMOVE_FROM_HAND', id)
+    }
   },
   mutations: {
     SET_PLAYER(state, note) {
@@ -118,7 +121,14 @@ export const store = new Vuex.Store({
     },
     CLEAR_THE_TABLE(state) {
       state.tableCards = [];
-    }
+    },
+    REMOVE_FROM_HAND(state,id) {
+      state.handCards.forEach((item,index)=>{
+        if (item.id === id) {
+          state.handCards.splice(index,1);
+        }
+      });
+    },
   },
   getters: {
     player(state) {
