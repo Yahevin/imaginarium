@@ -153,13 +153,13 @@ module.exports = async function(app, db) {
 		let handCardId = req.body.id,
 				cardId = req.body.card_id,
 				roomId = req.body.room_id,
+				userId = req.body.user_id,
 				imgUrl = req.body.img_url,
 				tableCard;
 		
 		function addMainCard (resolve) {
 			let addMainCardReq = db.format(sql.ii3,
-				['cards_on_table','img_url', 'card_id', 'is_main',
-					imgUrl, cardId, true]);
+				['cards_on_table','img_url', 'card_id', 'is_main', imgUrl, cardId, true]);
 			db.query(addMainCardReq, function (err, results) {
 				if (err) throw err;
 				tableCard = results.insertId;
@@ -170,6 +170,14 @@ module.exports = async function(app, db) {
 			let noteTableCardReq = db.format(sql.ii2,
 				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
 			db.query(noteTableCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function noteTableCard2(resolve) {
+			let noteTableCard2Req = db.format(sql.ii2,
+				['user__table', 'user_id', 'table_card_id', userId, tableCard]);
+			db.query(noteTableCard2Req, function (err, results) {
 				if (err) throw err;
 				return resolve();
 			});
@@ -198,9 +206,13 @@ module.exports = async function(app, db) {
 				noteTableCard(resolve);
 			}).then(()=>{
 				new Promise(resolve => {
-					removeFromHand(resolve);
+					noteTableCard2(resolve);
 				}).then(()=>{
-					changeGameStatus();
+					new Promise(resolve => {
+						removeFromHand(resolve);
+					}).then(()=>{
+						changeGameStatus();
+					})
 				})
 			})
 		});
@@ -211,6 +223,7 @@ module.exports = async function(app, db) {
 		let handCardId = req.body.id,
 				cardId = req.body.card_id,
 				roomId = req.body.room_id,
+				userId = req.body.user_id,
 				imgUrl = req.body.img_url,
 				playersCount,
 				cardsCount,
@@ -229,6 +242,14 @@ module.exports = async function(app, db) {
 			let noteTableCardReq = db.format(sql.ii2,
 				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
 			db.query(noteTableCardReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
+		function noteTableCard2(resolve) {
+			let noteTableCard2Req = db.format(sql.ii2,
+				['user__table', 'user_id', 'table_card_id', userId, tableCard]);
+			db.query(noteTableCard2Req, function (err, results) {
 				if (err) throw err;
 				return resolve();
 			});
@@ -277,16 +298,20 @@ module.exports = async function(app, db) {
 				noteTableCard(resolve)
 			}).then(()=>{
 				new Promise(resolve => {
-					removeFromHand(resolve)
+					noteTableCard2(resolve)
 				}).then(()=>{
 					new Promise(resolve => {
-						getCounts(resolve);
+						removeFromHand(resolve)
 					}).then(()=>{
-						if (iAmLast()) {
-							changeGameStatus();
-						} else {
-							res.json({success: true});
-						}
+						new Promise(resolve => {
+							getCounts(resolve);
+						}).then(()=>{
+							if (iAmLast()) {
+								changeGameStatus();
+							} else {
+								res.json({success: true});
+							}
+						})
 					})
 				})
 			})
@@ -295,48 +320,55 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/card-guess', async (req, res) => {
-		let style = req.body.playerStyle,
-			tableCardId = req.body.cardId,
-			roomId = req.body.gameId,
-			iAmLast = false,
-			cardIds = [],
-			marked = [];
+		let userId = req.body.user_id,
+				roomId = req.body.room_id,
+				guessId = req.body.guess_id,
+				iAmLast = false,
+				userCount = 0,
+				userGuessed = 0,
+				userIds = [];
 		
 		function makeGuessCard(resolve) {
-			let makeGuessCardReq = db.format(sql.ussw,
-				['cards_on_table', 'has_mark', true, 'player_style', style, 'id', tableCardId]);
-			db.query(makeGuessCardReq, function (err, results) {
+			let makeGuessCardReq = db.format(sql.ii2,
+				['user__guess', 'user_id', 'guess_id', userId, guessId]);
+			
+			db.query(makeGuessCardReq, function(err, results) {
 				if (err) throw err;
 				return resolve();
 			});
 		}
 		function getCounts(resolveMain) {
 			new Promise(resolve => {
-				getCardsId(resolve);
+				getUsersId(resolve);
 			}).then(()=>{
-				getCardsCount(resolveMain)
+				new Promise(resolve => {
+					getGuessedUsers(resolve);
+				}).then(()=>{
+					iAmLast = userGuessed === userCount;
+					return resolveMain();
+				})
 			});
 		}
-		function getCardsId(resolve) {
-			let getCardsIdReq = db.format(sql.sfw, ['room__table', 'room_id', roomId]);
+		function getUsersId(resolve) {
+			let getCardsIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
 			db.query(getCardsIdReq, function (err, results) {
 				if (err) throw err;
-				cardIds = results.map((item)=>{
-					return item.table_card_id;
+				userCount = results.length;
+				userIds = results.map((item)=>{
+					return item.user_id;
 				});
 				return resolve();
 			});
 		}
-		function getCardsCount(resolve) {
-			cardIds.forEach((currentId, index)=>{
-				let getCardsCountReq = db.format(sql.sfw, ['cards_on_table', 'id', currentId]);
-				db.query(getCardsCountReq, function (err, results) {
+		function getGuessedUsers(resolve) {
+			userIds.forEach((currentId, index)=>{
+				let getGuessedUsersReq = db.format(sql.sfw, ['user__guess', 'user_id', currentId]);
+				db.query(getGuessedUsersReq, function (err, results) {
 					if (err) throw err;
-					if(results[0].has_mark) {
-						marked.push(results)
+					if (results.length > 0) {
+						userGuessed++;
 					}
-					if (index === (cardIds.length - 1)) {
-						iAmLast = marked.length === cardIds.length;
+					if(index >= (userIds.length - 1)) {
 						return resolve();
 					}
 				});

@@ -51,6 +51,7 @@
 		        data = {
       		    id: card.id,
 			        room_id: this.game.id,
+			        user_id: this.player.id,
 			        card_id: card.card_id,
 			        img_url: card.img_url,
 		        };

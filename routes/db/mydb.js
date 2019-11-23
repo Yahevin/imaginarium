@@ -63,6 +63,7 @@ conn.connect(function(err,result) {
 	let row5 = "CREATE TABLE IF NOT EXISTS cards_in_hand" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" card_id INT, " +
+		" img_url VARCHAR(255), " +
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row5, function(err, results) {
@@ -73,9 +74,9 @@ conn.connect(function(err,result) {
 	let row6 = "CREATE TABLE IF NOT EXISTS cards_on_table" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" card_id INT, " +
+		" img_url VARCHAR(255), " +
 		" is_main BOOLEAN, " +
-		" has_mark BOOLEAN, " +
-		" player_style VARCHAR(255), " +
+		
 		" PRIMARY KEY (id) )";
 	
 	conn.query(row6, function(err, results) {
@@ -160,6 +161,36 @@ conn.connect(function(err,result) {
 		" PRIMARY KEY (id) )";
 
 	conn.query(row12, function(err, results) {
+		if (err) throw err;
+	});
+	
+	
+	let row13 = "CREATE TABLE IF NOT EXISTS user__table" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" user_id INT, " +
+		" table_card_id INT, " +
+		" FOREIGN KEY (user_id) REFERENCES users(id)" +
+		" ON DELETE CASCADE, " +
+		" FOREIGN KEY (table_card_id) REFERENCES cards_on_table(id)" +
+		" ON DELETE CASCADE, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row13, function(err, results) {
+		if (err) throw err;
+	});
+	
+	
+	let row14 = "CREATE TABLE IF NOT EXISTS user__guess" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" user_id INT, " +
+		" guess_id INT, " +
+		" FOREIGN KEY (user_id) REFERENCES users(id)" +
+		" ON DELETE CASCADE, " +
+		" FOREIGN KEY (guess_id) REFERENCES cards_on_table(id)" +
+		" ON DELETE CASCADE, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row14, function(err, results) {
 		if (err) throw err;
 	});
 });
