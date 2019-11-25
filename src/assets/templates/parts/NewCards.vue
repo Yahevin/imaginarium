@@ -1,15 +1,12 @@
 <template>
-	<section class="">
-		<article class=""
-			v-for="card in newCards">
-			<div class="">
-				<img class=""
+	<section class="cards">
+		<article class="cards-wrap">
+			<div class="cards-item"
+			     v-for="card in newCards">
+				<img class="cards-item__img"
 					:src="card.img_url">
 			</div>
 		</article>
-		<button @click="enough">
-			enough
-		</button>
 	</section>
 </template>
 

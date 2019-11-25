@@ -1,9 +1,9 @@
 <template>
-	<section class="">
-		<article class=""
-			v-for="card in myCards">
-			<div class=""
-				@click="cardSet(card)">
+	<section class="cards">
+		<article class="cards-wrap">
+			<div class="cards-item"
+			     v-for="card in myCards"
+					 @click="cardSet(card)">
 				<img class=""
 					:src="card.img_url">
 			</div>

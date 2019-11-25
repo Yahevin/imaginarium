@@ -9,20 +9,18 @@
 @import './parts/_leader-board.scss';
 @import './parts/_join-page.scss';
 @import './parts/_player-style.scss';
+@import './parts/_game.scss';
+@import './parts/_cards.scss';
 
 h1 {
   font-family: 'Roboto-Bold', sans-serif;
   @extend .font-big;
 }
-button {
-  display: block;
-  width: 50px;
-  height: 50px;
-}
+
 body {
   @extend .font-base;
 
-  & label, & input, & form, & div, & section, & article, & main {
+  & label, & input, & button, & form, & div, & section, & article, & main {
     display: block;
     box-sizing: border-box;
     font-family: inherit;
