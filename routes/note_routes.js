@@ -937,10 +937,10 @@ module.exports = async function(app, db) {
 					results.forEach((item)=>{
 						resp.push(item);
 					});
+					if (index >= handCardIds.length - 1) {
+						res.json(resp);
+					}
 				});
-				if (index >= handCardIds.length - 1) {
-					res.json(resp);
-				}
 			})
 		}
 		
