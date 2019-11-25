@@ -1,7 +1,11 @@
+//MAIN
 @import './variables';
 @import './animation';
 @import './mixins';
 @import './fonts';
+
+//PARTS
+@import './parts/background.scss';
 
 h1 {
   font-family: 'Roboto-Bold', sans-serif;

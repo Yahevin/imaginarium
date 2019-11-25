@@ -1,5 +1,5 @@
 <template>
-	<section>
+	<section class="game">
 		<join v-show="playerUnknown"
 					@start="getReady"></join>
 		<style-select v-show="styleUnset && !this.playerUnknown"
@@ -197,6 +197,5 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 </style>
