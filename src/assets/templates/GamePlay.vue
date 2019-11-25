@@ -12,7 +12,9 @@
           @endRound="getNewCards"></play-table>
 		<leader-board v-show="boardShown"></leader-board>
 		
-		<button v-show="player.gameMaster" @click="startGame">start</button>
+		<article class="game__start">
+			<button v-show="player.gameMaster && !gameRun" @click="startGame">start</button>
+		</article>
 		
 	</section>
 </template>
@@ -42,7 +44,6 @@
 	  
 	  data() {
     	return {
-		   
 	    }
 	  },
 	  watch: {
@@ -78,6 +79,12 @@
 		  gameRun() {
 		  	return this.gameAction !== 'game-prepare';
 		  },
+		  handCards() {
+			  return this.$store.getters.handCards;
+		  },
+		  tableCards() {
+			  return this.$store.getters.tableCards;
+		  },
 		  myTurn() {
 		  	return this.$store.getters.player.gameMaster;
 		  },
@@ -93,12 +100,8 @@
 		  battleGround() {
 		  	return this.$store.getters.party;
 		  },
-		  handCards() {
-		  	return this.$store.getters.handCards;
-		  },
 	  },
 	  created() {
-
 	  },
 	  mounted() {
 	  },
@@ -113,7 +116,16 @@
 			  
 			  //if player joined after game start
 			  if (this.gameRun) {
-				  this.setOnlyMyCards();
+				  let count = 6 - this.handCards.length;
+				
+				  if (count > 0) {
+					  await this.setOnlyMyCards(count);
+				  }
+				  if (this.tableCards.length > 0) {
+				  	this.showTable();
+				  } else {
+				  	this.showMyCards();
+				  }
 			  }
 			  
 			  setInterval(async ()=>{
@@ -180,7 +192,7 @@
 				  room_id: this.gameId,
 			  };
 			
-			  $.ajax({
+			  await $.ajax({
 				  type: 'POST',
 				  url: '/ping',
 				  data: data,
@@ -190,8 +202,8 @@
 					  
 					  if (resp.gameAction === 'gm-card-set') {
 					  	this.$store.dispatch('getTableCards', {room_id: this.gameId})
-					  } else if (resp.gameAction === 'all-card-set' && resp.gameAction === 'all-guess-done') {
-					  	this.$store.dispatch('getMarks');
+					  } else if (resp.gameAction === 'all-card-set' || resp.gameAction === 'all-guess-done') {
+					  	this.$store.dispatch('getMarks',{room_id: this.gameId});
 					  }
 				  }
 			  });

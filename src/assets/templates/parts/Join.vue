@@ -58,15 +58,15 @@
     },
 	  computed: {
 		  nickEmpty() {
-		  	return this.formSubmitted && this.nickName.length === 0;
+		  	return this.nickName.length === 0;
 		  },
 		  roomEmpty() {
 			  return this.formSubmitted
 				  && this.gameJoin
-				  && this.roomId.length === 0;
+				  && this.roomId === null;
 		  },
 		  formFull() {
-		  	return !this.nickEmpty || !this.roomEmpty;
+		  	return !this.nickEmpty && !this.roomEmpty;
 		  }
 		  
 	  },
