@@ -1,0 +1,56 @@
+.join {
+  @extend .absolute;
+  @extend .flex-center;
+  z-index: 0;
+  pointer-events: none;
+
+  &-form {
+    @extend .font-small;
+
+    font-family: 'Roboto-Bold', sans-serif;
+    padding: 20px 40px;
+    border-radius: 3px;
+    background: linear-gradient(45deg, #297b76eb, #8a007a);
+    pointer-events: all;
+
+    &__input {
+      border-radius: 3px;
+      padding: 4px 8px;
+      margin: 0 auto 30px auto;
+    }
+    &__submit {
+      margin: 0 auto;
+      width: 50px;
+      height: 50px;
+      background-color: green;
+      color: green;
+      border: 0;
+      cursor: pointer;
+      clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
+      @extend .onTap;
+    }
+  }
+  &-method {
+    margin: 30px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 40px;
+  }
+  &-radio {
+    width: 100%;
+    &__label {
+      padding: 4px 8px;
+      color: #3333deb8;
+      background-color: orange;
+      border: 2px solid #0000ff4f;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      text-transform: uppercase;
+      @extend .onTap;
+    }
+    &__btn {
+      @extend .invisible;
+    }
+  }
+}

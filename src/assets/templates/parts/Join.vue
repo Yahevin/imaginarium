@@ -1,48 +1,45 @@
 <template>
-		<section>
-				<article>
-						<h3>Пора наконец сыграть!</h3>
-						<form @submit="newPlayer($event)"
-									:class="{ 'form--empty_nick': nickEmpty, 'form--empty_room': roomEmpty }"
-						      ref="form">
-								<input class=""
-							        type="text"
-							        placeholder="Никнейм"
-							        v-model="nickName"
-								>
-								<div>
-										<div>
-												<label class="" for="gameJoin">
-													Присоединиться
-												</label>
-												<input class=""
-											        id="gameJoin"
-											        type="radio"
-											        :value="true"
-											        v-model="gameJoin"
-												>
-										</div>
-										<div>
-												<label class="" for="gameJoin">
-													Начать партию
-												</label>
-												<input class=""
-											        id="gameCreate"
-											        type="radio"
-											        :value="false"
-											        v-model="gameJoin"
-												>
-										</div>
-								</div>
-								<input v-show="gameJoin"
-									class=""
-							        type="text"
-							        placeholder="id комнаты"
-							        v-model="roomId"
-								>
-								<input class="" type="submit">
-						</form>
-				</article>
+		<section class="join">
+					<form class="join-form"
+					      :class="{ 'form--empty_nick': nickEmpty, 'form--empty_room': roomEmpty }"
+					      @submit="newPlayer($event)"
+					      ref="form">
+							<input class="join-form__input"
+						        type="text"
+						        placeholder="Никнейм"
+						        v-model="nickName">
+							<div class="join-method">
+									<div class="join-radio">
+											<label class="join-radio__label"
+											       for="gameJoin">
+												Присоединиться
+											</label>
+											<input class="join-radio__btn"
+										        id="gameJoin"
+										        type="radio"
+										        :value="true"
+										        v-model="gameJoin">
+									</div>
+									<div class="join-radio">
+											<label class="join-radio__label"
+											       for="gameCreate">
+												Начать партию
+											</label>
+											<input class="join-radio__btn"
+										        id="gameCreate"
+										        type="radio"
+										        :value="false"
+										        v-model="gameJoin">
+									</div>
+							</div>
+							<input class="join-form__input"
+						        type="text"
+						        placeholder="id комнаты"
+										v-show="gameJoin"
+										v-model="roomId">
+							<input class="join-form__submit"
+							       type="submit">
+					</form>
 		</section>
 </template>
 

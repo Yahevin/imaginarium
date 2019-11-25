@@ -6,3 +6,8 @@
     transform: scale(1);
   }
 }
+.onTap {
+  &:active {
+    animation: onTapped 0.2s ease;
+  }
+}
