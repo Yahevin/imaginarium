@@ -57,3 +57,15 @@
   visibility: hidden;
   position: absolute;
 }
+.submit-btn {
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+  background-color: green;
+  color: green;
+  border: 0;
+  cursor: pointer;
+  clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
+  @extend .onTap;
+  @extend .appear;
+}

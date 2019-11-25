@@ -2,7 +2,7 @@
 	<section class="game">
 		<join v-show="playerUnknown"
 					@start="getReady"></join>
-		<style-select v-show="styleUnset && !this.playerUnknown"
+		<style-select v-show="needToSetStyle"
           @start="getReady"></style-select>
 		<new-cards v-show="newShown"
 					@enough="showMyCards"></new-cards>
@@ -83,6 +83,9 @@
 		  },
 		  styleUnset() {
 		  	return this.$store.getters.player.style === null;
+		  },
+		  needToSetStyle() {
+		  	return this.styleUnset && !this.playerUnknown || this.styleUnset && this.player.id;
 		  },
 		  playerUnknown() {
 			  return this.$store.getters.player.nickName === null;

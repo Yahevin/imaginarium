@@ -6,6 +6,18 @@
     transform: scale(1);
   }
 }
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.appear {
+  animation: appear 0.2s ease;
+}
 .onTap {
   &:active {
     animation: onTapped 0.2s ease;

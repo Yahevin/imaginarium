@@ -929,7 +929,7 @@ module.exports = async function(app, db) {
 			})
 		}
 		function getMyCards() {
-			handCardIds.forEach((currentId)=>{
+			handCardIds.forEach((currentId,index)=>{
 				let getMyCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
 				
 				db.query(getMyCardsReq, function(err, results) {
@@ -937,8 +937,10 @@ module.exports = async function(app, db) {
 					results.forEach((item)=>{
 						resp.push(item);
 					});
+				});
+				if (index >= handCardIds.length - 1) {
 					res.json(resp);
-				})
+				}
 			})
 		}
 		
