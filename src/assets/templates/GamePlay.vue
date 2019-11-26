@@ -9,12 +9,20 @@
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone="showTable"></mine-cards>
 		<play-table v-show="tableShown"
-          @endRound="getNewCards"></play-table>
+          @endRound="newRound"></play-table>
 		<leader-board v-show="boardShown"></leader-board>
 		
-		<article class="game__start">
-			<button v-show="player.gameMaster && !gameRun" @click="startGame">start</button>
+		<article class="game__btn_panel">
+			<button v-show="player.gameMaster && !gameRun && !styleUnset"
+			        @click="startGame">start</button>
 		</article>
+		
+		<nav  v-show="!playerUnknown"
+					class="nav game__btn_panel">
+			<button @click="showMyCards">My cards</button>
+			<button @click="showTable">Table</button>
+			<button @click="showBoard">Grid</button>
+		</nav>
 		
 	</section>
 </template>
@@ -119,7 +127,7 @@
 				  let count = 6 - this.handCards.length;
 				
 				  if (count > 0) {
-					  await this.setOnlyMyCards(count);
+					  // await this.setOnlyMyCards(count);
 				  }
 				  if (this.tableCards.length > 0) {
 				  	this.showTable();
@@ -135,7 +143,21 @@
 		  async startGame() {
 			  await this.setDistribution();
 			  await this.createNewCards(6);
-			  await this.$store.dispatch('setGameAction','game-start');
+			  await this.setAction('game-start');
+		  },
+		  async setAction(action) {
+		  	let data = {
+				  room_id: this.gameId,
+				  action: action,
+			  };
+		  	
+			  await $.ajax({
+				  type: 'POST',
+				  url: '/set-action',
+				  data: data,
+				  success:(resp)=>{
+				  }
+			  });
 		  },
 		  async setDistribution() {
 			  await new Promise(resolve => {
@@ -177,7 +199,7 @@
 			  // this.showNew();
 				this.showMyCards();
 		  },
-
+		  
 		  async startGuess() {
 			  this.$store.dispatch('getTableCards', {room_id: this.gameId});
 
@@ -209,9 +231,14 @@
 				  }
 			  });
 		  },
+		  async newRound() {
+			  await this.createNewCards(1);
+			  await this.setAction('game-start');
+		  }
 	  }
   }
 </script>
 
 <style lang="scss" scoped>
+
 </style>

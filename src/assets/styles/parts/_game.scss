@@ -1,7 +1,7 @@
 .game {
   @extend .absolute;
   @extend .flex-center;
-  &__start {
+  &__btn_panel {
     button {
       @extend .font-base;
       font-family: 'Roboto-Bold', sans-serif;
@@ -10,5 +10,16 @@
       height: 60px;
       background-color: orange;
     }
+  }
+}
+
+.nav {
+  @extend .flex-center;
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+  & button {
+    margin: 0 20px;
   }
 }

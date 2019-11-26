@@ -125,7 +125,7 @@ export const store = new Vuex.Store({
       state.newCards = cards;
     },
     GET_MY_CARDS(state, cards) {
-      state.handCards.push(...cards);
+      state.handCards = cards;
     },
     GET_PARTY_RESULTS(state,resp) {
       state.party = resp;
