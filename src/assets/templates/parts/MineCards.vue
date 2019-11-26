@@ -1,13 +1,22 @@
 <template>
 	<section class="cards">
-		<article class="cards-wrap">
-			<div class="cards-item"
-			     v-for="card in myCards"
-					 @click="cardSet(card)">
-				<img class=""
-					:src="card.img_url">
+		<form class="cards-form"
+					@submit="cardSet()">
+			<div class="cards-radio"
+			     v-for="card in myCards">
+					<label class="cards-radio__label" for="handCard"></label>
+					<input class="cards-radio__btn"
+					       id="handCard"
+					       type="radio"
+					       :value="card"
+					       v-model="chosen">
+					<img class="cards-radio__img"
+						:src="card.img_url">
 			</div>
-		</article>
+			<input class="cards-form__submit"
+			       type="submit"
+						 v-show="chosen !== null && canSet">
+		</form>
 	</section>
 </template>
 
@@ -19,7 +28,7 @@
     store,
 	  data() {
     	return {
-    	
+		    chosen: null,
 	    }
 	  },
 	  computed: {
@@ -41,19 +50,16 @@
 		  }
 	  },
 	  methods: {
-      cardSet(card) {
-      	if (!this.canSet) {
-      		return
-	      }
-      	this.$store.dispatch('removeFromHand', card.id);
+      cardSet() {
+      	this.$store.dispatch('removeFromHand', this.chosen.id);
       	
 	      let url = this.myTurn ? '/card-main' : '/card-fake',
 		        data = {
-      		    id: card.id,
+      		    id: this.chosen.id,
 			        room_id: this.game.id,
 			        user_id: this.player.id,
-			        card_id: card.card_id,
-			        img_url: card.img_url,
+			        card_id: this.chosen.card_id,
+			        img_url: this.chosen.img_url,
 		        };
 	      
 	      $.ajax({

@@ -174,7 +174,8 @@
 		  	
 			  await this.$store.dispatch('getNewCards', data);
 			
-			  this.showNew();
+			  // this.showNew();
+				this.showMyCards();
 		  },
 
 		  async startGuess() {

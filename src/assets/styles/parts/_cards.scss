@@ -1,13 +1,30 @@
 .cards {
   @extend .absolute;
   @extend .flex-center;
-  &-wrap {
+  &-form {
     width: 70%;
     height: auto;
     display: flex;
     flex-wrap: wrap;
   }
-  &-item {
+  &-radio {
     margin: 0 20px;
+    width: 200px;
+    height: 300px;
+    &__label {
+      width: 100%;
+      height: 100%;
+    }
+    &__input {
+      @extend .invisible;
+      &:checked + img {
+        box-shadow: 0 0 8px 2px #FFD700;
+        @extend .onTap;
+      }
+    }
+    &__img {
+      @extend .absolute;
+      pointer-events: none;
+    }
   }
 }
