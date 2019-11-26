@@ -1,12 +1,13 @@
 <template>
 	<section class="cards">
 		<form class="cards-form"
-					@submit="cardSet()">
+					@submit="cardSet($event)">
 			<div class="cards-radio"
-			     v-for="card in myCards">
-					<label class="cards-radio__label" for="handCard"></label>
+			     v-for="(card,index) in myCards">
+					<label class="cards-radio__label"
+					       :for="'handCards-' + index"></label>
 					<input class="cards-radio__btn"
-					       id="handCard"
+					       :id="'handCards-' + index"
 					       type="radio"
 					       :value="card"
 					       v-model="chosen">
@@ -39,7 +40,7 @@
 			  return this.$store.getters.player;
 		  },
 		  myTurn() {
-			  return this.$store.getters.myTurn;
+			  return this.$store.getters.player.gameMaster;
 		  },
 		  game() {
 			  return this.$store.getters.game;
@@ -50,7 +51,8 @@
 		  }
 	  },
 	  methods: {
-      cardSet() {
+      cardSet(e) {
+      	e.preventDefault();
       	this.$store.dispatch('removeFromHand', this.chosen.id);
       	
 	      let url = this.myTurn ? '/card-main' : '/card-fake',

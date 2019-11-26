@@ -1,31 +1,49 @@
 <template>
 	<section>
 		<!--all cards on table-->
-		<article class=""
-			v-for="card in cards">
-			<div class=""
-					 @click="cardView(card)">
-				<img class=""
-						 :src="card.img_url">
-				<div class="">
-					<span class=""
-					      v-for="mark in card.marks"
-					      v-show="allDone"
-					      :class="mark.player_style">
-					</span>
-				</div>
+		<form class="cards-form"
+		      @submit="cardGuessed($event)">
+			<div class="cards-radio"
+			     v-for="(card,index) in tableCards">
+				<label class="cards-radio__label"
+				       :for="'tableCards-' + index"></label>
+				<input class="cards-radio__btn"
+				       :id="'tableCards-' + index"
+				       type="radio"
+				       :value="card"
+				       v-model="chosen">
+				<img class="cards-radio__img"
+				     :src="card.img_url">
+				<span class=""
+				      v-for="mark in card.marks"
+				      v-show="allDone"
+				      :class="mark.player_style">
+					.
+				</span>
 			</div>
-		</article>
+			<input class="cards-form__submit"
+			       type="submit"
+			       v-show="chosen !== null && canGuess">
+		</form>
+		
+		<!--<article class=""-->
+			<!--v-for="card in cards">-->
+			<!--<div class=""-->
+					 <!--@click="cardView(card)">-->
+				<!--<img class=""-->
+						 <!--:src="card.img_url">-->
+			<!--</div>-->
+		<!--</article>-->
 		
 		<!--scaled card-->
-		<article class=""
-				v-if="view !== null">
-			<img class=""
-	        :src="view.img_url"
-					@click="cardGuessed">
-			<div class="bg"
-					@click="closeView"></div>
-		</article>
+		<!--<article class=""-->
+				<!--v-if="view !== null">-->
+			<!--<img class=""-->
+	        <!--:src="view.img_url"-->
+					<!--@click="cardGuessed">-->
+			<!--<div class="bg"-->
+					<!--@click="closeView"></div>-->
+		<!--</article>-->
 		
 		<!--markers, seen while not all players choose-->
 		<article class=""
@@ -53,10 +71,11 @@
 	  data() {
 		  return {
 		  	view: null,
+			  chosen: null,
 		  }
 	  },
 	  computed: {
-		  cards() {
+		  tableCards() {
 		  	return this.$store.getters.tableCards;
 		  },
 		  allDone() {
@@ -69,7 +88,7 @@
 			  return this.$store.getters.game;
 		  },
 		  marks() {
-			  return this.$store.marks;
+			  return this.$store.getters.marks;
 		  },
 		  iAmGameMaster() {
 		  	return this.player.gameMaster;
@@ -85,7 +104,8 @@
 		  closeView() {
 			  this.view = null;
 		  },
-		  cardGuessed(card) {
+		  cardGuessed(e) {
+		  	e.preventDefault();
 		  	
 		  	if(!this.canGuess) {
 		  		return;
@@ -94,7 +114,7 @@
 		  	let data = {
 		  		user_id: this.player.id,
 				  room_id: this.game.id,
-				  guess_id: card.id,
+				  guess_id: this.chosen.id,
 				  player_style: this.player.style,
 			  };
 			

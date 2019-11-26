@@ -6,16 +6,21 @@
     height: auto;
     display: flex;
     flex-wrap: wrap;
+    &__submit {
+      @extend .submit-btn;
+      margin: auto auto;
+    }
   }
   &-radio {
-    margin: 0 20px;
+    margin: 20px 20px;
     width: 200px;
     height: 300px;
+    position: relative;
     &__label {
       width: 100%;
       height: 100%;
     }
-    &__input {
+    &__btn {
       @extend .invisible;
       &:checked + img {
         box-shadow: 0 0 8px 2px #FFD700;
