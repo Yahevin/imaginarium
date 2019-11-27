@@ -3,56 +3,39 @@
 		<!--all cards on table-->
 		<form class="cards-form"
 		      @submit="cardGuessed($event)">
-			<div class="cards-radio"
-			     v-for="(card,index) in tableCards">
-				<label class="cards-radio__label"
-				       :for="'tableCards-' + index"></label>
-				<input class="cards-radio__btn"
-				       :id="'tableCards-' + index"
-				       type="radio"
-				       :value="card"
-				       v-model="chosen">
-				<img class="cards-radio__img"
-				     :src="card.img_url">
-				<span class=""
-				      v-for="mark in card.marks"
-				      v-show="allDone"
-				      :class="mark.player_style">
-					.
-				</span>
-			</div>
+			<article class="cards__grid">
+				<div class="cards-radio"
+				     v-for="(card,index) in tableCards">
+					<label class="cards-radio__label"
+					       :for="'tableCards-' + index"></label>
+					<input class="cards-radio__btn"
+					       :id="'tableCards-' + index"
+					       type="radio"
+					       :value="card"
+					       v-model="chosen">
+					<img class="cards-radio__img"
+					     :src="card.img_url">
+					<span class=""
+					      v-for="mark in card.marks"
+					      v-show="allDone"
+					      :class="mark.player_style">
+						.
+					</span>
+				</div>
+			</article>
 			<input class="cards-form__submit"
 			       type="submit"
 			       v-show="chosen !== null && canGuess">
 		</form>
 		
-		<!--<article class=""-->
-			<!--v-for="card in cards">-->
-			<!--<div class=""-->
-					 <!--@click="cardView(card)">-->
-				<!--<img class=""-->
-						 <!--:src="card.img_url">-->
-			<!--</div>-->
-		<!--</article>-->
-		
-		<!--scaled card-->
-		<!--<article class=""-->
-				<!--v-if="view !== null">-->
-			<!--<img class=""-->
-	        <!--:src="view.img_url"-->
-					<!--@click="cardGuessed">-->
-			<!--<div class="bg"-->
-					<!--@click="closeView"></div>-->
-		<!--</article>-->
-		
 		<!--markers, seen while not all players choose-->
-		<article class=""
-			v-show="!allDone">
-			<span class=""
-			      v-for="mark in marks"
-			      :class="mark.player_style">
-			</span>
-		</article>
+		<!--<article class=""-->
+			<!--v-show="!allDone">-->
+			<!--<span class=""-->
+			      <!--v-for="mark in marks"-->
+			      <!--:class="mark.player_style">-->
+			<!--</span>-->
+		<!--</article>-->
 		
 		<button class=""
 			v-show="allDone && iAmGameMaster"

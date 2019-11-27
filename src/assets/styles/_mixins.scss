@@ -68,4 +68,14 @@
   clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
   @extend .onTap;
   @extend .appear;
+  @extend .clickable;
+  &:disabled {
+    background-color: darkslategrey;
+    color: darkslategrey;
+  }
+}
+.clickable {
+  position: relative;
+  pointer-events: all;
+  z-index: 2;
 }

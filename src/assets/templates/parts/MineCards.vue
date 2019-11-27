@@ -2,8 +2,9 @@
 	<section class="cards">
 		<form class="cards-form"
 					@submit="cardSet($event)">
-			<div class="cards-radio"
-			     v-for="(card,index) in myCards">
+			<article class="cards__grid">
+				<div class="cards-radio"
+				     v-for="(card,index) in myCards">
 					<label class="cards-radio__label"
 					       :for="'handCards-' + index"></label>
 					<input class="cards-radio__btn"
@@ -12,11 +13,12 @@
 					       :value="card"
 					       v-model="chosen">
 					<img class="cards-radio__img"
-						:src="card.img_url">
-			</div>
+					     :src="card.img_url">
+				</div>
+			</article>
 			<input class="cards-form__submit"
-			       type="submit"
-						 v-show="chosen !== null && canSet">
+			       :disabled="chosen === null && canSet"
+			       type="submit">
 		</form>
 	</section>
 </template>
