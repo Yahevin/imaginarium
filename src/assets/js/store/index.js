@@ -34,8 +34,8 @@ export const store = new Vuex.Store({
     setPlayerRole({commit}, role) {
       commit('SET_PLAYER_ROLE', role)
     },
-    setPlayerStyle({commit}, data) {
-      $.ajax({
+    async setPlayerStyle({commit}, data) {
+      await $.ajax({
         type: 'POST',
         url: '/set-style',
         data: data,
@@ -80,8 +80,8 @@ export const store = new Vuex.Store({
         }
       });
     },
-    getMyCards({commit},data) {
-      $.ajax({
+    async getMyCards({commit},data) {
+      await $.ajax({
         type: 'POST',
         url: '/get-my-cards',
         data: data,
@@ -90,8 +90,8 @@ export const store = new Vuex.Store({
         }
       });
     },
-    getTableCards({commit},data) {
-      $.ajax({
+    async getTableCards({commit},data) {
+      await $.ajax({
         type: 'POST',
         url: '/table-cards',
         data: data,
@@ -100,8 +100,8 @@ export const store = new Vuex.Store({
         }
       });
     },
-	  getMarks({commit}, data) {
-		  $.ajax({
+    async getMarks({commit}, data) {
+      await $.ajax({
 			  type: 'POST',
 			  url: '/get-marks',
 			  data: data,
