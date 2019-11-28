@@ -1,6 +1,8 @@
 <template>
 	<section>
-		<!--all cards on table-->
+		<article class="cards-question">
+			<span>{{ question }}</span>
+		</article>
 		<form class="cards-form"
 		      @submit="cardGuessed($event)">
 			<article class="cards__grid">
@@ -37,7 +39,7 @@
 			<!--</span>-->
 		<!--</article>-->
 		
-		<button class=""
+		<button class="cards-form__submit"
 			v-show="allDone && iAmGameMaster"
 			@click="endRound">
 				Next round!
@@ -78,6 +80,9 @@
 		  },
 		  canGuess() {
 		  	return this.game.action === 'all-card-set';
+		  },
+		  question() {
+			  return this.$store.getters.question;
 		  },
 	  },
 	  methods: {

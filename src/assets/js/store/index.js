@@ -25,6 +25,7 @@ export const store = new Vuex.Store({
       nickName: 'Horror House',
       playerStyle: ''
     }],
+    question: '',
   },
   actions: {
     setPlayer({commit}, note) {
@@ -49,8 +50,28 @@ export const store = new Vuex.Store({
     setGameAction({commit},action) {
       commit('SET_GAME_ACTION',action)
     },
-    getNewCards({commit}, data) {
-      $.ajax({
+    async setQuestion({commit},data) {
+      await $.ajax({
+        type: 'POST',
+        url: '/set-question',
+        data: data,
+        success:()=>{
+          commit('SET_QUESTION', data.question)
+        }
+      });
+    },
+    async getQuestion({commit},data) {
+      await $.ajax({
+        type: 'POST',
+        url: '/get-question',
+        data: data,
+        success:(resp)=>{
+          commit('GET_QUESTION', resp.question)
+        }
+      });
+    },
+    async getNewCards({commit}, data) {
+      await $.ajax({
         type: 'POST',
         url: '/get-new-cards',
         data: data,
@@ -117,6 +138,12 @@ export const store = new Vuex.Store({
     SET_GAME_ACTION(state,action) {
       state.game.action = action;
     },
+    SET_QUESTION(state,question) {
+      state.question = question;
+    },
+    GET_QUESTION(state,question) {
+      state.question = question;
+    },
     GET_TABLE_CARDS(state, cards) {
       state.tableCards = cards;
     },
@@ -173,7 +200,10 @@ export const store = new Vuex.Store({
     },
 	  marks(state) {
     	return state.marks
-	  }
+	  },
+    question(state) {
+      return state.question
+    },
   },
   modules: {}
 });

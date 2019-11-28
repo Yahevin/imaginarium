@@ -46,14 +46,25 @@ module.exports = async function(app, db) {
 				});
 			});
 		}
+		function setQuestonField(resolve) {
+			let setQuestonFieldReq = db.format(sql.ii2, ["room__question", 'room_id','question', roomId, '']);
+			db.query(setQuestonFieldReq, function (err, results) {
+				if (err) throw err;
+				return resolve();
+			});
+		}
 		
 		new Promise(resolve => {
 			roomCreate(resolve);
 		}).then(() => {
 			new Promise(resolve => {
-				playerCreate(resolve)
+				playerCreate(resolve);
 			}).then(() => {
-				chainPlayer()
+				new Promise(resolve => {
+					setQuestonField(resolve);
+				}).then(()=>{
+					chainPlayer();
+				})
 			})
 		})
 	});
@@ -158,6 +169,18 @@ module.exports = async function(app, db) {
 				if (err) throw err;
 				res.json({success: true});
 			});
+	});
+	
+	
+	app.post('/set-question', async (req, res) => {
+		let roomId = req.body.room_id,
+				question = req.body.question;
+		
+		let setQuestionReq = db.format(sql.usw, ['room__question', 'question', question, 'room_id', roomId]);
+		db.query(setQuestionReq, function (err, results) {
+			if (err) throw err;
+			res.json({success: true});
+		});
 	});
 	
 	
@@ -814,6 +837,21 @@ module.exports = async function(app, db) {
 		}).then(()=>{
 			getCards()
 		})
+	});
+	
+	
+	app.post('/get-question', async (req, res) => {
+		let roomId = req.body.room_id;
+		
+		let getQuestionReq = db.format(sql.sfw, ['room__question', 'room_id', roomId]);
+		db.query(getQuestionReq, function (err, results) {
+			if (err) throw err;
+			if(results[0].question.length > 0) {
+				res.json({question: results[0].question});
+			} else {
+				res.json({question:''});
+			}
+		});
 	});
 	
 	

@@ -1,5 +1,14 @@
 <template>
 	<section class="cards">
+		<article class="cards-question">
+			<span class="cards-question__text"
+						v-show="!myTurn">
+				{{ question }}
+			</span>
+			<input class="cards-question__input"
+						 v-show="myTurn"
+						 v-model="questionAsk">
+		</article>
 		<form class="cards-form"
 					@submit="cardSet($event)">
 			<article class="cards__grid">
@@ -17,7 +26,8 @@
 				</div>
 			</article>
 			<input class="cards-form__submit"
-			       :disabled="chosen === null && canSet"
+			       v-show="canSet"
+			       :disabled="submitDisabled"
 			       type="submit">
 		</form>
 	</section>
@@ -32,6 +42,7 @@
 	  data() {
     	return {
 		    chosen: null,
+		    questionAsk: null,
 	    }
 	  },
 	  computed: {
@@ -50,31 +61,52 @@
 		  canSet() {
 			  return this.game.action === 'game-start' && this.myTurn
 				  || this.game.action === 'gm-card-set';
-		  }
+		  },
+		  question() {
+			  return this.$store.getters.question;
+		  },
+		  submitDisabled() {
+		  	return this.chosen === null && this.canSet || this.questionAsk === null && this.canSet && this.myTurn;
+		  },
 	  },
 	  methods: {
-      cardSet(e) {
+      async cardSet(e) {
       	e.preventDefault();
-      	this.$store.dispatch('removeFromHand', this.chosen.id);
-      	
-	      let url = this.myTurn ? '/card-main' : '/card-fake',
-		        data = {
-      		    id: this.chosen.id,
-			        room_id: this.game.id,
-			        user_id: this.player.id,
-			        card_id: this.chosen.card_id,
-			        img_url: this.chosen.img_url,
-		        };
+	
+	      await this.$store.dispatch('removeFromHand', this.chosen.id);
+	      await this.noteTheCard();
 	      
-	      $.ajax({
-		      type: 'POST',
-		      url: url,
-		      data: data,
-		      success:()=>{
-			      this.$emit('cardSetDone');
-		      }
-	      });
+      	if (this.myTurn) {
+		      await this.setQuestion();
+	      }
       },
+		  async setQuestion() {
+      	let data = {
+      		room_id: this.game.id,
+		      question: this.questionAsk,
+	      };
+      	
+			  await this.$store.dispatch('setQuestion', data);
+		  },
+		  async noteTheCard() {
+			  let url = this.myTurn ? '/card-main' : '/card-fake',
+				  data = {
+					  id: this.chosen.id,
+					  room_id: this.game.id,
+					  user_id: this.player.id,
+					  card_id: this.chosen.card_id,
+					  img_url: this.chosen.img_url,
+				  };
+			
+			  $.ajax({
+				  type: 'POST',
+				  url: url,
+				  data: data,
+				  success:()=>{
+					  this.$emit('cardSetDone');
+				  }
+			  });
+		  }
 	  },
   }
 </script>

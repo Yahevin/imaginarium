@@ -44,7 +44,21 @@
       object-fit: contain;
       display: block;
       width: auto;
-      height: 100%;
+      height: calc((100vh - 271px) / 2);
+    }
+  }
+  &-question {
+    @extend .flex-center;
+    @extend .clickable;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100px;
+    padding: 8px;
+    & span {
+      display: block;
+      color: #fff;
+      @extend .font-base;
     }
   }
 }

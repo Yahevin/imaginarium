@@ -62,7 +62,8 @@
 				  case 'game-start':
 					  this.getNewCards();
 					  break;
-				  case 'gm-card-set' :
+				  case 'gm-card-set':
+				  	this.getQuestion();
 					  break;
 				  case 'all-card-set' :
 					  this.startGuess();
@@ -108,6 +109,9 @@
 		  battleGround() {
 		  	return this.$store.getters.party;
 		  },
+		  question() {
+		  	return this.$store.getters.question;
+		  }
 	  },
 	  created() {
 	  },
@@ -122,7 +126,6 @@
 		  async playerReady() {
 			  await this.ping();
 			  
-			  //if player joined after game start
 			  if (this.gameRun) {
 				  let count = 6 - this.handCards.length;
 				
@@ -138,7 +141,7 @@
 			  
 			  setInterval(async ()=>{
 				  await this.ping();
-			  },1000);
+			  },5000);
 		  },
 		  async startGame() {
 			  await this.setDistribution();
@@ -204,6 +207,9 @@
 			  this.$store.dispatch('getTableCards', {room_id: this.gameId});
 
 			  this.showTable();
+		  },
+		  getQuestion() {
+			  this.$store.dispatch('getQuestion',{room_id: this.gameId});
 		  },
 		  async setOnlyMyCards() {
 			  await this.createNewCards(6);

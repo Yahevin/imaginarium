@@ -14,7 +14,6 @@
 @import './parts/_cards.scss';
 
 h1 {
-  font-family: 'Roboto-Bold', sans-serif;
   @extend .font-big;
 }
 
@@ -27,6 +26,8 @@ body {
     font-family: inherit;
     font-size: inherit;
   }
+
+  font-family: 'Roboto-Bold', sans-serif;
 }
 
 
