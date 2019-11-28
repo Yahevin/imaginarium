@@ -194,6 +194,18 @@ conn.connect(function(err,result) {
 	conn.query(row14, function(err, results) {
 		if (err) throw err;
 	});
+	
+	let row15 = "CREATE TABLE IF NOT EXISTS room__question" +
+		" (id INT not null AUTO_INCREMENT, " +
+		" room_id INT, " +
+		" question VARCHAR(255), " +
+		" FOREIGN KEY (room_id) REFERENCES room(id)" +
+		" ON DELETE CASCADE, " +
+		" PRIMARY KEY (id) )";
+	
+	conn.query(row15, function(err, results) {
+		if (err) throw err;
+	});
 });
 
 module.exports = conn;
