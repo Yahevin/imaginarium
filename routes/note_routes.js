@@ -203,7 +203,7 @@ module.exports = async function(app, db) {
 		}
 		function noteTableCard (resolve) {
 			let noteTableCardReq = db.format(sql.ii2,
-				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
+				['room__table', 'room_id', 'table_card_id', 'card_id', roomId, tableCard, cardId]);
 			db.query(noteTableCardReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -274,8 +274,8 @@ module.exports = async function(app, db) {
 			});
 		}
 		function noteTableCard(resolve) {
-			let noteTableCardReq = db.format(sql.ii2,
-				['room__table', 'room_id', 'table_card_id', roomId, tableCard]);
+			let noteTableCardReq = db.format(sql.ii3,
+				['room__table', 'room_id', 'table_card_id','card_id', roomId, tableCard, cardId]);
 			db.query(noteTableCardReq, function (err, results) {
 				if (err) throw err;
 				return resolve();
@@ -303,7 +303,7 @@ module.exports = async function(app, db) {
 			new Promise(resolve => {
 				db.query(getPlayersCount, function(err, results) {
 					if (err) throw err;
-					playersCount = results.player_count;
+					playersCount = results[0].player_count;
 					return resolve();
 				});
 			}).then(()=>{
@@ -315,7 +315,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function iAmLast() {
-			return cardsCount === playersCount;
+			return +cardsCount === +playersCount;
 		}
 		function changeGameStatus() {
 			let changeGameStatusReq = db.format(sql.usw,
@@ -437,17 +437,17 @@ module.exports = async function(app, db) {
 	
 	app.post('/table-clear', async (req, res) => {
 		let tableCards=[],
-				roomId = req.body.gameId,
+				roomId = req.body.room_id,
 				distribution = {};
 		
 		function getTableCards(resolve) {
-			let getTableCardsReq = db.format(sql.sfw,
-				['room__table','room_id', roomId]);
+			let getTableCardsReq = db.format(sql.sfw, ['room__table','room_id', roomId]);
 			db.query(getTableCardsReq, function (err, results) {
 				if (err) throw err;
-				tableCards = results.map((item) => {
-					if (item.hasOwnProperty('table_card_id')) {
-						return item.table_card_id
+				tableCards = results.map((item,index) => {
+					console.log('item',item)
+					if (item.hasOwnProperty('card_id')) {
+						return item.card_id
 					}
 				});
 				return resolve();
@@ -476,8 +476,7 @@ module.exports = async function(app, db) {
 		}
 		function cleanTableCards() {
 			tableCards.forEach((currentId,index)=>{
-				let cleanTableCardsReq = db.format(sql.dfw,
-					['cards_on_table', 'id', currentId]);
+				let cleanTableCardsReq = db.format(sql.dfw, ['cards_on_table', 'id', currentId]);
 				db.query(cleanTableCardsReq, function (err, results) {
 					if (err) throw err;
 					if(index >= (tableCards.length - 1)) {

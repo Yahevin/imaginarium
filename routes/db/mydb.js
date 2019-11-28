@@ -102,6 +102,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" room_id INT, " +
 		" table_card_id INT, " +
+		" card_id INT, " +
 		" FOREIGN KEY (room_id) REFERENCES room(id)" +
 		" ON DELETE CASCADE, " +
 		" FOREIGN KEY (table_card_id) REFERENCES cards_on_table(id)" +

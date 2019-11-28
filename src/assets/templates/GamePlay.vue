@@ -17,13 +17,12 @@
 			        @click="startGame">start</button>
 		</article>
 		
-		<nav  v-show="!playerUnknown"
+		<nav v-show="!playerUnknown"
 					class="nav game__btn_panel">
 			<button @click="showMyCards">My cards</button>
 			<button @click="showTable">Table</button>
 			<button @click="showBoard">Grid</button>
 		</nav>
-		
 	</section>
 </template>
 
@@ -238,9 +237,19 @@
 			  });
 		  },
 		  async newRound() {
+			  await this.tableClear();
 			  await this.createNewCards(1);
 			  await this.setAction('game-start');
-		  }
+		  },
+		  async tableClear() {
+			  await $.ajax({
+				  type: 'POST',
+				  url: '/table-clear',
+				  data: {room_id: this.gameId},
+				  success: () => {
+				  }
+			  })
+		  },
 	  }
   }
 </script>
