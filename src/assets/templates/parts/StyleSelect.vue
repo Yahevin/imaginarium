@@ -59,14 +59,14 @@
 				$(this.$refs.styleForm).find('input').checked = false;
 				this.style = null;
 			},
-			makeChoise(event) {
-				event.preventDefault();
+			async makeChoise(e) {
+				e.preventDefault();
 				let data = {
 					player_style: this.style,
 					user_id: this.player.id
 				};
 				
-				this.$store.dispatch('setPlayerStyle', data);
+				await this.$store.dispatch('setPlayerStyle', data);
 				this.$emit('start');
 			},
 		},
