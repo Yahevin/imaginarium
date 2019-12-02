@@ -552,16 +552,10 @@ module.exports = async function(app, db) {
 				let getHandCardsIdReq = db.format(sql.sfw,['room__hand', 'room_id', roomId]);
 				db.query(getHandCardsIdReq, function (err, results) {
 					if (err) throw err;
-					if(results.length > 0) {
-						results.forEach((item,index)=>{
-							handCardsId.push(item.hand_card_id);
-							if(index >= (results.length - 1)) {
-								return resolve();
-							}
-						});
-					} else {
-						return resolve();
-					}
+					results.forEach((item)=>{
+						handCardsId.push(item.hand_card_id);
+					});
+					return resolve();
 				});
 			}).then(()=>{
 				if (handCardsId.length > 0) {
@@ -569,12 +563,12 @@ module.exports = async function(app, db) {
 						let getHandCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
 						db.query(getHandCardsReq, function (err, results) {
 							if (err) throw err;
-							results.forEach((item,index)=> {
+							results.forEach((item) => {
 								handCards.push(item.card_id);
-								if (index >= (handCardsId.length - 1)) {
-									return resolveMain();
-								}
 							});
+							if (index >= (handCardsId.length - 1)) {
+								return resolveMain();
+							}
 						});
 					})
 				} else {
@@ -594,16 +588,10 @@ module.exports = async function(app, db) {
 				let getBasketCardsReq = db.format(sql.sfw,['in_basket', 'distribution_id', distributionId]);
 				db.query(getBasketCardsReq, function (err, results) {
 					if (err) throw err;
-					if (results.length > 0) {
-						results.forEach((item,index)=>{
-							inBasketCards.push(item.card_id);
-							if(index >= (results.length - 1)) {
-								return resolveMain();
-							}
-						});
-					} else {
-						return resolveMain();
-					}
+					results.forEach((item)=>{
+						inBasketCards.push(item.card_id);
+					});
+					return resolveMain();
 				});
 			});
 		}
@@ -619,7 +607,7 @@ module.exports = async function(app, db) {
 		}
 		function basketIsFull() {
 			let diff = cardsShelter.length - handCards.length - inBasketCards.length - playersCount * cardsCount;
-			return diff > 0;
+			return diff < 0;
 		}
 		function clearBasket(resolveMain) {
 			new Promise(resolve => {
@@ -636,14 +624,15 @@ module.exports = async function(app, db) {
 				});
 			});
 		}
-		function getRandomCards() {
+		function getRandomCards(resolve) {
 			let less = handCards.concat(inBasketCards),
 					deletable;
-			
+					
 			less.forEach((id)=>{
 				deletable = cardsShelter.indexOf(id);
-				cardsShelter.splice(deletable,(deletable + 1));
+				cardsShelter.splice(deletable,1);
 			});
+			
 			let j, temp;
 			for(let i = cardsShelter.length - 1; i > 0; i--){
 				j = Math.floor(Math.random()*(i + 1));
@@ -651,6 +640,7 @@ module.exports = async function(app, db) {
 				cardsShelter[j] = cardsShelter[i];
 				cardsShelter[i] = temp;
 			}
+			return resolve();
 		}
 		function setCards() {
 			let users = [];
@@ -659,12 +649,10 @@ module.exports = async function(app, db) {
 				let getUsersReq = db.format(sql.sfw,['user__room','room_id',roomId]);
 				db.query(getUsersReq, function (err, results) {
 					if (err) throw err;
-					results.forEach((user,index)=>{
+					results.forEach((user)=>{
 						users.push(user.user_id);
-						if(index >= (results.length - 1)) {
-							return resolve();
-						}
 					});
+					return resolve();
 				});
 			}).then(()=>{
 				users.forEach((user,index)=>{
@@ -698,12 +686,18 @@ module.exports = async function(app, db) {
 							new Promise(resolve => {
 								clearBasket(resolve)
 							}).then(()=>{
-								getRandomCards();
-								setCards()
+								new Promise(resolve => {
+									getRandomCards(resolve);
+								}).then(()=>{
+									setCards();
+								})
 							})
 						} else {
-							getRandomCards();
-							setCards()
+							new Promise(resolve => {
+								getRandomCards(resolve);
+							}).then(()=>{
+								setCards();
+							})
 						}
 					})
 				})
@@ -711,7 +705,7 @@ module.exports = async function(app, db) {
 		})
 	});
 	
-
+	
 	app.post('/set-style', async (req, res) => {
 		let style = req.body.player_style,
 				userId = req.body.user_id,
