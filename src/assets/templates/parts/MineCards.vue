@@ -42,7 +42,7 @@
 	  data() {
     	return {
 		    chosen: null,
-		    questionAsk: null,
+		    questionAsk: '',
 	    }
 	  },
 	  computed: {
@@ -53,7 +53,7 @@
 			  return this.$store.getters.player;
 		  },
 		  myTurn() {
-			  return this.$store.getters.player.gameMaster;
+			  return Boolean(this.$store.getters.player.gameMaster);
 		  },
 		  game() {
 			  return this.$store.getters.game;
@@ -66,7 +66,7 @@
 			  return this.$store.getters.question;
 		  },
 		  submitDisabled() {
-		  	return this.chosen === null && this.canSet || this.questionAsk === null && this.canSet && this.myTurn;
+		  	return this.chosen === null || this.questionAsk.length === 0 && this.myTurn;
 		  },
 	  },
 	  methods: {
