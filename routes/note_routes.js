@@ -210,7 +210,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function noteTableCard (resolve) {
-			let noteTableCardReq = db.format(sql.ii2,
+			let noteTableCardReq = db.format(sql.ii3,
 				['room__table', 'room_id', 'table_card_id', 'card_id', roomId, tableCard, cardId]);
 			db.query(noteTableCardReq, function (err, results) {
 				if (err) throw err;
@@ -444,8 +444,9 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/table-clear', async (req, res) => {
-		let tableCards=[],
-				roomId = req.body.room_id,
+		let roomId = req.body.room_id,
+				tableCards=[],
+				cardsId = [],
 				distribution = {};
 		
 		function getTableCards(resolve) {
@@ -453,7 +454,11 @@ module.exports = async function(app, db) {
 			db.query(getTableCardsReq, function (err, results) {
 				if (err) throw err;
 				tableCards = results.map((item,index) => {
-					console.log('item',item)
+					if (item.hasOwnProperty('table_card_id')) {
+						return item.table_card_id
+					}
+				});
+				cardsId = results.map((item,index) => {
 					if (item.hasOwnProperty('card_id')) {
 						return item.card_id
 					}
@@ -471,12 +476,12 @@ module.exports = async function(app, db) {
 			});
 		}
 		function moveToBasket(resolve) {
-			tableCards.forEach((currentId,index)=> {
+			cardsId.forEach((currentId,index)=> {
 				let moveToBasketReq = db.format(sql.ii2,
 					['in_basket', 'distribution_id', 'card_id', distribution.id, currentId]);
 				db.query(moveToBasketReq, function (err, results) {
 					if (err) throw err;
-					if(index >= (tableCards.length - 1)) {
+					if(index >= (cardsId.length - 1)) {
 						return resolve();
 					}
 				});
