@@ -92,7 +92,9 @@
 				    roomId: this.roomId
 			    },
 			    success:(resp)=>{
-				    this.setPlayer(resp);
+			    	if (resp.success) {
+					    this.setPlayer(resp);
+				    }
 			    },
 		    });
 	    },

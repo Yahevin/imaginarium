@@ -7,7 +7,6 @@ module.exports = async function(app, db) {
 		gmCardSet: 'gm-card-set',
 		allCardSet: 'all-card-set',
 		allGuessDone: 'all-guess-done',
-		getNewCards: 'get-new-cards',
 	};
 	
 	//POST
@@ -73,6 +72,7 @@ module.exports = async function(app, db) {
 	app.post('/user-join', async (req, res) => {
 		let roomId = req.body.roomId,
 				nickName = req.body.nickName,
+				roomExist = false,
 			  userExist = false,
 				newCount,
 				userId;
@@ -81,7 +81,12 @@ module.exports = async function(app, db) {
 			let getPlayersCountReq = db.format(sql.sfw, ['room', 'id', roomId]);
 			db.query(getPlayersCountReq, function (err, results) {
 				if (err) throw err;
-				newCount = +results[0].player_count + 1;
+				if (results.length === 0) {
+					res.json({success:false, err:'room_not_exist'});
+				} else {
+					roomExist = true;
+					newCount = +results[0].player_count + 1;
+				}
 				return resolve();
 			});
 		}
@@ -96,11 +101,11 @@ module.exports = async function(app, db) {
 						playerCreate(resolve);
 					}).then(()=>{
 						new Promise(resolve => {
-							playerCountUpdate();
-							chainPlayer();
 							checkNickName(resolve);
 						}).then(()=>{
 							if (userExist) {
+								playerCountUpdate();
+								chainPlayer();
 								return resolveMain();
 							} else {
 								res.json({success: false});
@@ -117,6 +122,7 @@ module.exports = async function(app, db) {
 				userExist = results.length > 0;
 				if (userExist) {
 					let data = {
+						success: true,
 						room_id: roomId,
 						user_id: results[0].id,
 						nick_name: nickName,
@@ -153,9 +159,11 @@ module.exports = async function(app, db) {
 		new Promise(resolve => {
 			getPlayersCount(resolve);
 		}).then(()=>{
-			new Promise(resolve => {
-				userJoin(resolve)
-			})
+			if (roomExist) {
+				new Promise(resolve => {
+					userJoin(resolve)
+				})
+			}
 		})
 	});
 	
