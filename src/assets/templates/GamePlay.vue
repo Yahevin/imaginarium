@@ -58,17 +58,17 @@
 		  	switch (newGame) {
 				  case 'game-prepare' :
 				  	break;
-				  case 'game-start':
+				  case 'game-start' :
 					  this.getNewCards();
+					  this.clearTheTable();
 					  break;
-				  case 'gm-card-set':
+				  case 'gm-card-set' :
 				  	this.getQuestion();
 					  break;
 				  case 'all-card-set' :
 					  this.startGuess();
 					  break;
 				  case 'all-guess-done' :
-					  //after gameMaster click 'next round'
 					  //show results
 					  break;
 			  }
@@ -201,7 +201,11 @@
 			  // this.showNew();
 				this.showMyCards();
 		  },
-		  
+		  async clearTheTable() {
+		  	if (this.tableCards.length > 0) {
+				  this.$store.dispatch('clearTheTable');
+			  }
+		  },
 		  async startGuess() {
 			  this.$store.dispatch('getTableCards', {room_id: this.gameId});
 
@@ -239,7 +243,7 @@
 		  async newRound() {
 			  await this.tableClear();
 			  await this.createNewCards(1);
-			  await this.setAction('game-start');
+			  await this.endOldRound();
 		  },
 		  async tableClear() {
 			  await $.ajax({
@@ -250,6 +254,18 @@
 				  }
 			  })
 		  },
+		  endOldRound() {
+			  $.ajax({
+				  type: 'POST',
+				  url: '/turn-end',
+				  data: {
+				  	user_id: this.player.id,
+				  	room_id: this.gameId,
+				  },
+				  success: () => {
+				  }
+			  })
+		  }
 	  }
   }
 </script>

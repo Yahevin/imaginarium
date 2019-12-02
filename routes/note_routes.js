@@ -720,11 +720,11 @@ module.exports = async function(app, db) {
 	
 
 	app.post('/turn-end', async (req, res) => {
-		let roomId = req.body.gameId,
-				userId = req.body.userId;
+		let roomId = req.body.room_id,
+				userId = req.body.user_id;
 		
 		function changeGameStatus(resolve) {
-			let changeGameStatusReq = db.format(sql.usw, ['room', 'game_action', gameSt.getNewCards, 'id', roomId]);
+			let changeGameStatusReq = db.format(sql.usw, ['room', 'game_action', gameSt.start, 'id', roomId]);
 			db.query(changeGameStatusReq, function(err, results) {
 				if (err) throw err;
 					return resolve();
@@ -745,12 +745,10 @@ module.exports = async function(app, db) {
 				let getUsersId = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
 				db.query(getUsersId, function(err, results) {
 					if (err) throw err;
-					results.forEach((item,index)=>{
+					results.forEach((item)=>{
 						usersId.push(item.id);
-						if(index >= (results.length - 1)) {
-							return resolve();
-						}
 					});
+					return resolve();
 				});
 			}).then(()=>{
 				new Promise(resolve => {
@@ -758,12 +756,12 @@ module.exports = async function(app, db) {
 						let getUsers = db.format(sql.sfw, ['users', 'id', currentId]);
 						db.query(getUsers, function(err, results) {
 							if (err) throw err;
-							results.forEach((item,index)=>{
+							results.forEach((item)=>{
 								users.push(item);
-								if(index >= (results.length - 1)) {
-									return resolve();
-								}
 							});
+							if(index >= (usersId.length - 1)) {
+								return resolve();
+							}
 						});
 					});
 				}).then(()=>{
@@ -771,18 +769,17 @@ module.exports = async function(app, db) {
 							next;
 					
 					users.forEach((item,index)=>{
-						if (item.id === userId) {
+						if (+item.id === +userId) {
 							current = index;
 						}
 					});
-					
 					if (current < (users.length - 1)) {
 						next = users[current + 1];
 					} else {
 						next = users[0];
 					}
 					
-					let setGM = db.format(sql.usw, ['users', 'game_master', 'id', next.id]);
+					let setGM = db.format(sql.usw, ['users', 'game_master', true, 'id', next.id]);
 					db.query(setGM, function(err, results) {
 						if (err) throw err;
 						res.json({success: true});
@@ -985,19 +982,23 @@ module.exports = async function(app, db) {
 			})
 		}
 		function getMyCards() {
-			handCardIds.forEach((currentId,index)=>{
-				let getMyCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
-				
-				db.query(getMyCardsReq, function(err, results) {
-					if (err) throw err;
-					results.forEach((item)=>{
-						resp.push(item);
+			if (handCardIds.length === 0) {
+				res.json([]);
+			} else {
+				handCardIds.forEach((currentId, index) => {
+					let getMyCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
+					
+					db.query(getMyCardsReq, function (err, results) {
+						if (err) throw err;
+						results.forEach((item) => {
+							resp.push(item);
+						});
+						if (index >= handCardIds.length - 1) {
+							res.json(resp);
+						}
 					});
-					if (index >= handCardIds.length - 1) {
-						res.json(resp);
-					}
-				});
-			})
+				})
+			}
 		}
 		
 		new Promise(resolve => {
