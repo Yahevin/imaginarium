@@ -1,7 +1,7 @@
 class Figure {
 	constructor(iniData) {
 		this.id = iniData.id;
-		this.position = iniData.position;
+		this.position = 0;
 		this.twists = iniData.twists;
 		this.direction = 'left';
 		this.el = iniData.el;
@@ -12,29 +12,30 @@ class Figure {
 	
 	shiftResolve(newPosition) {
 		let journey = this.twists.filter((twist,index)=>{
-				if (this.position < twist.position &&  twist.position < newPosition) {
+				if (this.position < twist.position &&  twist.position <= newPosition) {
 					return twist;
 				}
 			});
+		
 		if(journey.length > 0) {
 			journey.push({
 				direction: 'next',
 				position: newPosition,
 			});
+			console.log('journey',journey);
 			this.setLongJourney(journey);
 		} else {
 			let way = {
 				direction: this.direction,
 				position: newPosition,
 			};
-
+			console.log('way',way);
 			this.directionResolve(way);
 		}
-		
 	}
 	async directionResolve(way) {
 		let step = way.position - this.position;
-
+		
 		switch (this.direction) {
 			case 'top':
 				await this.moveTop(step);
@@ -52,11 +53,12 @@ class Figure {
 		
 		this.direction = way.direction === 'next' ? this.direction : way.direction;
 	}
-	moveTop(step) {
-		let time = Math.abs(step )*this.duration,
+	async moveTop(step) {
+		let time = Math.abs(step)*this.duration,
 				z = this;
 		
 		this.row -= step;
+		
 		$(this.el).css('--step', step);
 		$(this.el).addClass('player--move_top');
 		$(this.el).css('--row', this.row + '/' + (this.row + 1));
@@ -70,7 +72,7 @@ class Figure {
 			,time)
 		})
 	}
-	moveRight(step) {
+	async moveRight(step) {
 		let time = Math.abs(step)*this.duration,
 			z = this;
 		
@@ -82,13 +84,13 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step
-				$(z.el).removeClass('player--move_right')
+				z.position += step;
+				$(z.el).removeClass('player--move_right');
 				resolve();
 			}, time)
 		})
 	}
-	moveBottom(step) {
+	async moveBottom(step) {
 		let time = Math.abs(step)*this.duration,
 			z = this;
 		
@@ -100,13 +102,13 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step
-				$(z.el).removeClass('player--move_bottom')
+				z.position += step;
+				$(z.el).removeClass('player--move_bottom');
 				resolve();
 			}, time)
 		})
 	}
-	moveLeft(step) {
+	async moveLeft(step) {
 		let time = Math.abs(step)*this.duration,
 			z = this;
 		
@@ -118,8 +120,8 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step
-				$(z.el).removeClass('player--move_left')
+				z.position += step;
+				$(z.el).removeClass('player--move_left');
 				resolve();
 			}, time)
 		})

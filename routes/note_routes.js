@@ -184,11 +184,31 @@ module.exports = async function(app, db) {
 		let roomId = req.body.room_id,
 				question = req.body.question;
 		
-		let setQuestionReq = db.format(sql.usw, ['room__question', 'question', question, 'room_id', roomId]);
-		db.query(setQuestionReq, function (err, results) {
+		let checkQuestionReq = db.format(sql.sfw, ['room__question', 'room_id', roomId ]);
+		db.query(checkQuestionReq, function (err, results) {
 			if (err) throw err;
-			res.json({success: true});
+			if (results.length > 0) {
+				setQuestion();
+			} else {
+				createQuestion();
+			}
 		});
+		
+		function createQuestion() {
+			let createQuestionReq = db.format(sql.ii2, ['room__question', 'question', 'room_id', question, roomId]);
+			db.query(createQuestionReq, function (err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
+		
+		function setQuestion() {
+			let setQuestionReq = db.format(sql.usw, ['room__question', 'question', question, 'room_id', roomId]);
+			db.query(setQuestionReq, function (err, results) {
+				if (err) throw err;
+				res.json({success: true});
+			});
+		}
 	});
 	
 	
@@ -1170,7 +1190,7 @@ module.exports = async function(app, db) {
 	
 	
 	app.post('/leader-board', async (req, res) => {
-		let roomId = req.body.gameId,
+		let roomId = req.body.room_id,
 				users = [],
 				resp = [];
 		
@@ -1183,7 +1203,7 @@ module.exports = async function(app, db) {
 			});
 		}
 		function getUsers() {
-			users.forEach((user,)=>{
+			users.forEach((user,index)=>{
 				let getUsersReq =  db.format(sql.sfw, ['users', 'id', user.id]);
 				db.query(getUsersReq, function (err, results) {
 					if (err) throw err;

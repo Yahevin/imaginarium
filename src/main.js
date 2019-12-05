@@ -2,8 +2,8 @@
 import './assets/styles/main.scss';
 
 //Libraries
-import Vue from "vue";
 import $ from "jquery";
+import Vue from "vue";
 
 //Templates
 import Main from "./assets/templates/Main.vue";

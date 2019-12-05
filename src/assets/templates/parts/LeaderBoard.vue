@@ -12,9 +12,6 @@
 				</div>
 			</div>
 		</div>
-		
-		<button @click="start">Старт!</button>
-		
 	</section>
 </template>
 
@@ -32,53 +29,44 @@
 		    cells: [].length = 100,
 		    figures: [],
 		    figureSet: new Set(),
+		    partyResults: [],
 	    }
 	  },
 	  computed: {
-		  player() {
-			  return this.$store.getters.player;
-		  },
-		  desk() {
-		  	return this.$store.getters.desk;
-		  },
 		  party() {
 		    return this.$store.getters.party;
 		  },
 		  partySize() {
 		  	return this.figures.length;
-		  }
+		  },
+		  gameId() {
+			  return this.$store.getters.game.id;
+		  },
+		  
 	  },
-	  created() {
-		  this.party.forEach((partyMember)=>{
-			  this.addNewFigure(partyMember);
-		  });
+	  async mounted () {
+		  await this.$store.dispatch('getPartyResults',{room_id: 1});
+		  
+		  if (this.party.length > this.partySize) {
+			  if (this.partySize === 0) {
+				  this.party.forEach((partyMember)=>{
+					  this.addNewFigure(partyMember);
+				  })
+			  } else {
+				  this.party.forEach((partyMember) => {
+					  if (!this.figureSet.has(partyMember.id)) {
+						  this.addNewFigure(partyMember);
+					  }
+				  });
+			  }
+		  }
+		  this.startShifting();
 	  },
 	  watch: {
-      party: function (newParty, oldParty) {
-      	
-      	if (newParty.length > this.partySize) {
-      		if (this.partySize === 0) {
-      			newParty.forEach((partyMember)=>{
-      				this.addNewFigure(partyMember);
-			      })
-		      } else {
-			      newParty.forEach((partyMember) => {
-				      if (!this.figureSet.has(partyMember.id)) {
-					      this.addNewFigure(partyMember);
-				      }
-			      });
-		      }
-	      };
-	
-	      newParty.forEach((newVal)=>{
-		      this.figures.forEach((figure)=>{
-		      	if(figure.id === newVal.id) {
-				      figure.shiftResolve(newVal.position);
-		      		return;
-			      }
-		      });
-	      });
-      },
+		  party: function () {
+			
+			  this.startShifting();
+		  }
 	  },
 	  methods: {
 		  addNewFigure(partyMember) {
@@ -86,7 +74,7 @@
 				  id: partyMember.id,
 				  nickName: partyMember.nickName,
 				  playerStyle: partyMember.playerStyle,
-				  position: partyMember.position,
+				  position: +partyMember.score,
 				  twists: this.twists,
 				  el: '#ref_' + partyMember.id,
 			  });
@@ -94,20 +82,15 @@
 			  this.figures.push(figure);
 			  this.figureSet.add(figure.id);
 		  },
-    	
-    	
-      start() {
-      	let $player= $(this.$refs.player),
-		      data = [{
-			      id: 237,
-			      position: 41,
-			      nickName: 'Horror House',
-			      playerStyle: ''
-		      }];
-      	
-      	this.$store.dispatch('getPartyResults', data);
-      },
-		  
+		  startShifting() {
+			  this.party.forEach((newVal)=>{
+				  this.figures.forEach((figure)=>{
+					  if(figure.id === newVal.id) {
+						  figure.shiftResolve(newVal.score);
+					  }
+				  });
+			  });
+		  }
 	  },
   }
 </script>

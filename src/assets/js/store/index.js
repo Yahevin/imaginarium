@@ -19,12 +19,7 @@ export const store = new Vuex.Store({
     tableCards: [],
     newCards:[],
 	  marks: [],
-    party: [{
-      id: 237,
-      position: 0,
-      nickName: 'Horror House',
-      playerStyle: ''
-    }],
+    party: [],
     question: '',
   },
   actions: {
@@ -110,10 +105,18 @@ export const store = new Vuex.Store({
 			  }
 		  });
 	  },
-    getPartyResults({commit}, data) {
-      // ajax get leader board
-
+    async SETPartyResults({commit}, data) {
       commit('GET_PARTY_RESULTS', data)
+    },
+    async getPartyResults({commit}, data) {
+      await $.ajax({
+        type: 'POST',
+        url: '/leader-board',
+        data: data,
+        success:(resp)=>{
+          commit('GET_PARTY_RESULTS', resp)
+        }
+      });
     },
     clearTheTable({commit}) {
       commit('CLEAR_THE_TABLE')

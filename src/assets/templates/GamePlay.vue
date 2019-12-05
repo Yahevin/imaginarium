@@ -69,7 +69,7 @@
 					  this.startGuess();
 					  break;
 				  case 'all-guess-done' :
-					  //show results
+				  	this.getResults();
 					  break;
 			  }
 		  },
@@ -234,11 +234,15 @@
 					  
 					  if (resp.gameAction === 'gm-card-set') {
 					  	this.$store.dispatch('getTableCards', {room_id: this.gameId})
-					  } else if (resp.gameAction === 'all-card-set' || resp.gameAction === 'all-guess-done') {
+					  } else if (resp.gameAction === 'all-card-set') {
 					  	this.$store.dispatch('getMarks',{room_id: this.gameId});
 					  }
 				  }
 			  });
+		  },
+		  async getResults() {
+			  this.$store.dispatch('getPartyResults',{room_id: this.gameId});
+			  this.$store.dispatch('getMarks',{room_id: this.gameId});
 		  },
 		  async newRound() {
 			  await this.tableClear();
