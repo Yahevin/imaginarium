@@ -43,6 +43,7 @@
     	return {
 		    chosen: null,
 		    questionAsk: '',
+		    didntSet: true,
 	    }
 	  },
 	  computed: {
@@ -58,9 +59,12 @@
 		  game() {
 			  return this.$store.getters.game;
 		  },
+		  gameAction() {
+		  	return this.game.action;
+		  },
 		  canSet() {
-			  return this.game.action === 'game-start' && this.myTurn
-				  || this.game.action === 'gm-card-set';
+			  return this.game.action === 'game-start' && this.myTurn && this.didntSet
+				  || this.game.action === 'gm-card-set' && this.didntSet;
 		  },
 		  question() {
 			  return this.$store.getters.question;
@@ -69,9 +73,15 @@
 		  	return this.chosen === null || this.questionAsk.length === 0 && this.myTurn;
 		  },
 	  },
+	  watch: {
+      gameAction: function () {
+	      this.didntSet = true;
+      }
+	  },
 	  methods: {
       async cardSet(e) {
       	e.preventDefault();
+	      this.didntSet = false;
 	
 	      await this.$store.dispatch('removeFromHand', this.chosen.id);
 	      await this.noteTheCard();

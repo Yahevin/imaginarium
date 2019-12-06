@@ -121,6 +121,9 @@ export const store = new Vuex.Store({
     clearTheTable({commit}) {
       commit('CLEAR_THE_TABLE')
     },
+    clearTheQuestion({commit}) {
+      commit('CLEAR_THE_QUESTION')
+    },
     removeFromHand({commit}, id) {
       commit('REMOVE_FROM_HAND', id)
     }
@@ -162,17 +165,23 @@ export const store = new Vuex.Store({
     },
 	  GET_MARKS(state, resp) {
 		  state.marks = resp;
-		  state.tableCards.forEach((card)=>{
+      state.tableCards = state.tableCards.map((card)=>{
 		  	card.marks = [];
 		  	resp.forEach((mark)=>{
 		  		if(card.id === mark.guess_id) {
-		  		  card.marks.push(mark)
+		  		  let pos = card.marks.length;
+		  		  card.marks.splice(pos, 0, mark);
 				  }
-			  })
+			  });
+        return card;
 		  })
 	  },
     CLEAR_THE_TABLE(state) {
       state.tableCards = [];
+    },
+    CLEAR_THE_QUESTION(state) {
+      console.log('clearQuestion')
+      state.question = '';
     },
     REMOVE_FROM_HAND(state,id) {
       state.handCards.forEach((item,index)=>{

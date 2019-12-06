@@ -2,39 +2,61 @@ class Figure {
 	constructor(iniData) {
 		this.id = iniData.id;
 		this.position = 0;
-		this.twists = iniData.twists;
 		this.direction = 'left';
 		this.el = iniData.el;
+		this.refs = iniData.refs;
 		this.row = 10;
 		this.col = 9;
 		this.duration = 1000;
 	}
 	
 	shiftResolve(newPosition) {
-		let journey = this.twists.filter((twist,index)=>{
-				if (this.position < twist.position &&  twist.position <= newPosition) {
-					return twist;
-				}
-			});
+		if (this.position < newPosition) {
+			this.setJourneyForward(newPosition);
+		} else {
+			this.setJourneyBack(newPosition);
+		}
+	}
+	async setJourneyForward(newPosition) {
+		let journey = this.getPath(newPosition);
 		
 		if(journey.length > 0) {
 			journey.push({
 				direction: 'next',
 				position: newPosition,
 			});
-			console.log('journey',journey);
 			this.setLongJourney(journey);
-		} else {
+		} else if (newPosition > this.position) {
 			let way = {
 				direction: this.direction,
 				position: newPosition,
 			};
-			console.log('way',way);
-			this.directionResolve(way);
+			await this.directionResolve(way);
 		}
 	}
+	async setJourneyBack(newPosition) {
+		let journey = this.getPath(newPosition);
+		
+		if(journey.length > 0) {
+			journey.push({
+				direction: 'next',
+				position: newPosition,
+			});
+			this.setLongJourney(journey);
+		} else if (newPosition < this.position) {
+			let way = {
+				direction: this.getDirectionBack(this.direction),
+				position: newPosition,
+			};
+			await this.directionResolve(way);
+		}
+	}
+	getPath(pos) {
+	
+	}
 	async directionResolve(way) {
-		let step = way.position - this.position;
+		let step = Math.abs( way.position - this.position);
+		this.direction = way.direction === 'next' ? this.direction : way.direction;
 		
 		switch (this.direction) {
 			case 'top':
@@ -50,8 +72,18 @@ class Figure {
 				await this.moveLeft(step);
 				break;
 		}
-		
-		this.direction = way.direction === 'next' ? this.direction : way.direction;
+	}
+	getDirectionBack(direction) {
+		switch (direction) {
+			case 'top':
+				return 'bottom';
+			case 'right':
+				return 'left';
+			case 'bottom':
+				return 'top';
+			case 'left':
+				return 'right';
+		}
 	}
 	async moveTop(step) {
 		let time = Math.abs(step)*this.duration,
@@ -128,6 +160,7 @@ class Figure {
 	}
 	async setLongJourney(journey) {
 		for (const way of journey) {
+			console.log('way',way);
 			await this.directionResolve(way);
 		}
 	}

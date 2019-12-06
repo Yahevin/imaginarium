@@ -1,27 +1,29 @@
 <template>
 	<section class="game">
-		<join v-show="playerUnknown"
-					@start="getReady"></join>
-		<style-select v-show="needToSetStyle"
-          @start="getReady"></style-select>
+		<!--<join v-show="playerUnknown"-->
+					<!--@start="getReady"></join>-->
+		<!--<style-select v-show="needToSetStyle"-->
+          <!--@start="getReady"></style-select>-->
 		<new-cards v-show="newShown"
 					@enough="showMyCards"></new-cards>
 		<mine-cards v-show="myCardsShown"
 					@cardSetDone="showTable"></mine-cards>
 		<play-table v-show="tableShown"
           @endRound="newRound"></play-table>
-		<leader-board v-show="boardShown"></leader-board>
+		<leader-board v-show="boardShown" :active="boardShown"></leader-board>
 		
 		<article class="game__btn_panel">
 			<button v-show="player.gameMaster && !gameRun && !styleUnset"
 			        @click="startGame">start</button>
 		</article>
 		
-		<nav v-show="!playerUnknown"
+		<nav
+			v-show="playerUnknown"
 					class="nav game__btn_panel">
 			<button @click="showMyCards">My cards</button>
 			<button @click="showTable">Table</button>
 			<button @click="showBoard">Grid</button>
+			<button @click="getResults">update</button>
 		</nav>
 	</section>
 </template>
@@ -61,6 +63,7 @@
 				  case 'game-start' :
 					  this.getNewCards();
 					  this.clearTheTable();
+					  this.clearTheQuestion();
 					  break;
 				  case 'gm-card-set' :
 				  	this.getQuestion();
@@ -206,6 +209,11 @@
 				  this.$store.dispatch('clearTheTable');
 			  }
 		  },
+		  async clearTheQuestion() {
+		  	if (this.question > 0) {
+				  this.$store.dispatch('clearTheQuestion');
+			  }
+		  },
 		  async startGuess() {
 			  this.$store.dispatch('getTableCards', {room_id: this.gameId});
 
@@ -241,8 +249,9 @@
 			  });
 		  },
 		  async getResults() {
-			  this.$store.dispatch('getPartyResults',{room_id: this.gameId});
-			  this.$store.dispatch('getMarks',{room_id: this.gameId});
+			  this.$store.dispatch('getPartyResults',{room_id: 2});
+			  // this.$store.dispatch('getPartyResults',{room_id: this.gameId});
+			  // this.$store.dispatch('getMarks',{room_id: this.gameId});
 		  },
 		  async newRound() {
 			  await this.tableClear();

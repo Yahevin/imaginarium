@@ -19,6 +19,7 @@
 					     :src="card.img_url">
 					<span class=""
 					      v-for="mark in card.marks"
+					      :key="mark.id"
 					      v-show="allDone"
 					      :class="mark.player_style">
 						.
@@ -27,7 +28,8 @@
 			</article>
 			<input class="cards-form__submit"
 			       type="submit"
-			       v-show="chosen !== null && canGuess">
+			       :disabled="!canSubmit"
+			       v-show="canGuess">
 		</form>
 		
 		<!--markers, seen while not all players choose-->
@@ -48,6 +50,7 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex';
   import {store} from '../../js/store/index';
   
   export default {
@@ -57,33 +60,37 @@
 		  return {
 		  	view: null,
 			  chosen: null,
+			  notGuessed: true,
 		  }
 	  },
 	  computed: {
-		  tableCards() {
-		  	return this.$store.getters.tableCards;
-		  },
+    	...mapGetters({
+		    tableCards: 'tableCards',
+		    player: 'player',
+		    game: 'game',
+		    marks: 'marks',
+		    question: 'question',
+	    }),
 		  allDone() {
 			  return this.game.action === 'all-guess-done';
-		  },
-		  player() {
-			  return this.$store.getters.player;
-		  },
-		  game() {
-			  return this.$store.getters.game;
-		  },
-		  marks() {
-			  return this.$store.getters.marks;
 		  },
 		  iAmGameMaster() {
 		  	return this.player.gameMaster;
 		  },
+		  gameAction() {
+			  return this.game.action;
+		  },
 		  canGuess() {
-		  	return this.game.action === 'all-card-set';
+		  	return this.game.action === 'all-card-set' && !this.iAmGameMaster && this.notGuessed;
 		  },
-		  question() {
-			  return this.$store.getters.question;
-		  },
+		  canSubmit() {
+    		return this.canGuess && this.chosen !== null;
+		  }
+	  },
+	  watch: {
+		  gameAction: function () {
+			  this.notGuessed = true;
+		  }
 	  },
 	  methods: {
 		  cardView(card) {
@@ -93,13 +100,10 @@
 			  this.view = null;
 		  },
 		  cardGuessed(e) {
-		  	e.preventDefault();
-		  	
-		  	if(!this.canGuess) {
-		  		return;
-			  }
-			
-		  	let data = {
+			  e.preventDefault();
+			  this.notGuessed = false;
+			  
+			  let data = {
 		  		user_id: this.player.id,
 				  room_id: this.game.id,
 				  guess_id: this.chosen.id,
@@ -115,7 +119,10 @@
 					  if (resp.iAmLast) {
 					  	this.countTheScore();
 					  }
-				  }
+				  },
+				  error:()=>{
+					  this.notGuessed = true;
+				  },
 			  });
 		  },
 		  countTheScore() {
