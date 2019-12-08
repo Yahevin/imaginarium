@@ -1,9 +1,9 @@
 <template>
 	<section class="game">
-		<!--<join v-show="playerUnknown"-->
-					<!--@start="getReady"></join>-->
-		<!--<style-select v-show="needToSetStyle"-->
-          <!--@start="getReady"></style-select>-->
+		<join v-show="playerUnknown"
+					@start="getReady"></join>
+		<style-select v-show="needToSetStyle"
+          @start="getReady"></style-select>
 		<new-cards v-show="newShown"
 					@enough="showMyCards"></new-cards>
 		<mine-cards v-show="myCardsShown"
@@ -18,7 +18,7 @@
 		</article>
 		
 		<nav
-			v-show="playerUnknown"
+			v-show="!playerUnknown"
 					class="nav game__btn_panel">
 			<button @click="showMyCards">My cards</button>
 			<button @click="showTable">Table</button>
@@ -241,17 +241,16 @@
 					  this.$store.dispatch('setGameAction',resp.gameAction);
 					  
 					  if (resp.gameAction === 'gm-card-set') {
-					  	this.$store.dispatch('getTableCards', {room_id: this.gameId})
+					  	this.$store.dispatch('getTableCards', this.gameId)
 					  } else if (resp.gameAction === 'all-card-set') {
-					  	this.$store.dispatch('getMarks',{room_id: this.gameId});
+					  	this.$store.dispatch('getMarks',this.gameId);
 					  }
 				  }
 			  });
 		  },
 		  async getResults() {
-			  this.$store.dispatch('getPartyResults',{room_id: 2});
-			  // this.$store.dispatch('getPartyResults',{room_id: this.gameId});
-			  // this.$store.dispatch('getMarks',{room_id: this.gameId});
+			  this.$store.dispatch('getPartyResults',this.gameId);
+			  this.$store.dispatch('getMarks',this.gameId);
 		  },
 		  async newRound() {
 			  await this.tableClear();

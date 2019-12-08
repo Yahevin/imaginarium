@@ -4,85 +4,107 @@ class Figure {
 		this.position = 0;
 		this.direction = 'left';
 		this.el = iniData.el;
-		this.refs = iniData.refs;
+		this.path = iniData.path;
+		this.playerStyle = iniData.playerStyle;
 		this.row = 10;
 		this.col = 9;
 		this.duration = 1000;
 	}
-	
 	shiftResolve(newPosition) {
-		if (this.position < newPosition) {
-			this.setJourneyForward(newPosition);
+		let cells,
+				rounds = Math.floor(this.position / this.path.length),
+				currPos = this.position - rounds * this.path.length,
+				newPos = newPosition - rounds * this.path.length,
+				borderCrossing = newPos > this.path.length || newPos < 0;
+		
+		if (borderCrossing) {
+			if (currPos < newPos) {
+				newPos -= this.path.length;
+				cells = this.path.slice();
+				let negativeCells = cells.splice(currPos);
+				let positiveCells = cells.splice(0, newPos + 1);
+				negativeCells.push(...positiveCells);
+				cells = negativeCells;
+			} else {
+				cells = this.path.slice();
+				let positiveCells = cells.splice(0, currPos + 1);
+				positiveCells.reverse();
+				let negativeCells = cells.splice(newPos);
+				negativeCells.reverse();
+				positiveCells.push(...negativeCells);
+				cells = positiveCells;
+			}
 		} else {
-			this.setJourneyBack(newPosition);
+			if (currPos < newPos) {
+				cells = this.path.slice(currPos, newPos + 1);
+			} else {
+				cells = this.path.slice(newPos, currPos  + 1);
+				cells.reverse();
+			}
 		}
-	}
-	async setJourneyForward(newPosition) {
-		let journey = this.getPath(newPosition);
 		
-		if(journey.length > 0) {
-			journey.push({
-				direction: 'next',
-				position: newPosition,
-			});
-			this.setLongJourney(journey);
-		} else if (newPosition > this.position) {
-			let way = {
-				direction: this.direction,
-				position: newPosition,
-			};
-			await this.directionResolve(way);
-		}
+		let journey = this.getPath(cells);
+		this.setLongJourney(journey);
 	}
-	async setJourneyBack(newPosition) {
-		let journey = this.getPath(newPosition);
+	getPath(cells) {
+		let steps = [],
+				journey = [];
 		
-		if(journey.length > 0) {
-			journey.push({
-				direction: 'next',
-				position: newPosition,
-			});
-			this.setLongJourney(journey);
-		} else if (newPosition < this.position) {
-			let way = {
-				direction: this.getDirectionBack(this.direction),
-				position: newPosition,
-			};
-			await this.directionResolve(way);
-		}
-	}
-	getPath(pos) {
+		cells.forEach((item, index) => {
+			if (index < cells.length - 1) {
+				steps.push(this.findDirection(cells[index].pos, cells[index + 1].pos));
+			}
+		});
 	
+		let direction = steps[0],
+				step = 1;
+		
+		steps.splice(0,1);
+		function noteStep(){
+			journey.push({
+				direction: direction,
+				step: step,
+			});
+		}
+		
+		steps.forEach((item)=>{
+			if (item === direction) {
+				step++;
+			} else {
+				noteStep();
+				direction = item;
+				step = 1;
+			}
+		});
+		noteStep();
+		
+		return journey;
+	}
+	findDirection(cur,next) {
+		if (cur.col === next.col) {
+			return ((cur.row - next.row) < 0)
+				? 'bottom'
+				: 'top'
+		} else {
+			return ((cur.col - next.col) < 0)
+				? 'right'
+				: 'left'
+		}
 	}
 	async directionResolve(way) {
-		let step = Math.abs( way.position - this.position);
-		this.direction = way.direction === 'next' ? this.direction : way.direction;
-		
-		switch (this.direction) {
+		switch (way.direction) {
 			case 'top':
-				await this.moveTop(step);
+				await this.moveTop(way.step);
 				break;
 			case 'right':
-				await this.moveRight(step);
+				await this.moveRight(way.step);
 				break;
 			case 'bottom':
-				await this.moveBottom(step);
+				await this.moveBottom(way.step);
 				break;
 			case 'left':
-				await this.moveLeft(step);
+				await this.moveLeft(way.step);
 				break;
-		}
-	}
-	getDirectionBack(direction) {
-		switch (direction) {
-			case 'top':
-				return 'bottom';
-			case 'right':
-				return 'left';
-			case 'bottom':
-				return 'top';
-			case 'left':
-				return 'right';
 		}
 	}
 	async moveTop(step) {
@@ -160,7 +182,6 @@ class Figure {
 	}
 	async setLongJourney(journey) {
 		for (const way of journey) {
-			console.log('way',way);
 			await this.directionResolve(way);
 		}
 	}

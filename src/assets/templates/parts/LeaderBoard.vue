@@ -73,61 +73,41 @@
 		  this.pathSet.add(this.$refs['cell-10-9']);
 		  this.pathSet.add(this.$refs['cell-10-8']);
 		  this.path.push({
-			  cell: this.$refs['cell-10-9'],
+			  cell: 'cell-10-9',
 			  pos: {
 				  row: 10,
 				  col: 9,
 			  },
 		  });
 		  this.path.push({
-			  cell: this.$refs['cell-10-8'],
+			  cell: 'cell-10-8',
 			  pos: current.pos,
 		  });
-		  
-			for (let i=0; i < 100; i++) {
-				if(current !== undefined) {
-					current = this.findNextCell(current.pos);
-					if(current !== undefined) {
-						this.path.push(current);
-					}
-				} else {
-					break;
-				}
-		  }
-			
-			this.path = this.path.map((item,index)=>{
-				console.log(item);
-					return {
-						pos: item.pos,
-						cell: this.$refs[item.cell],
-					}
-			});
-		  
-		  console.log('path',this.path);
-    	
-
-    	//TODO fix game_id
-		  await this.$store.dispatch('getPartyResults',{room_id: 2});
-		  
-		  if (this.party.length > this.partySize) {
-			  if (this.partySize === 0) {
-				  this.party.forEach((partyMember)=>{
-					  this.addNewFigure(partyMember);
-				  })
+		
+		  for (let i=0; i < 100; i++) {
+			  if(current !== undefined) {
+				  current = this.findNextCell(current.pos);
+				  if(current !== undefined) {
+					  this.path.push(current);
+				  }
 			  } else {
-				  this.party.forEach((partyMember) => {
-					  if (!this.figureSet.has(partyMember.id)) {
-						  this.addNewFigure(partyMember);
-					  }
-				  });
+				  break;
 			  }
 		  }
-		  this.startShifting();
+		
+		  this.path = this.path.map((item)=>{
+			  return {
+				  pos: item.pos,
+				  cell: this.$refs[item.cell],
+			  }
+		  });
 	  },
 	  watch: {
 		  party: function (newParty,oldParty) {
 		  	if (newParty.length === oldParty.length) {
 				  this.partyChanged = true;
+			  } else {
+		  		this.boardIni();
 			  }
 		  },
 		  active: function () {
@@ -151,7 +131,6 @@
 			  return resp;
 		  },
 		  getSiblings(current) {
-		  	//TODO compress this
 		  	let siblings = [
 					  {
 					  	cell: 'cell-' + (current.row + 1) + '-' + current.col,
@@ -183,7 +162,6 @@
 					  },
 			  ];
 		  	
-			  //TODO check class
 			  return siblings.filter((item)=>{
 					if (this.$refs.hasOwnProperty(item.cell) && $(this.$refs[item.cell][0]).css('background-color') === 'rgb(52, 217, 226)') {
 							return {
@@ -214,6 +192,24 @@
 					  }
 				  });
 			  });
+		  },
+		  boardIni() {
+			  if (this.party.length > this.partySize) {
+				  if (this.partySize === 0) {
+					  this.party.forEach((partyMember)=>{
+						  this.addNewFigure(partyMember);
+					  })
+				  } else {
+					  this.party.forEach((partyMember) => {
+						  if (!this.figureSet.has(partyMember.id)) {
+							  this.addNewFigure(partyMember);
+						  }
+					  });
+				  }
+			  }
+			  setTimeout(()=>{
+				  this.startShifting();
+			  },500);
 		  }
 	  },
   }

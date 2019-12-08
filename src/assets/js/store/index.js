@@ -85,21 +85,21 @@ export const store = new Vuex.Store({
         }
       });
     },
-    async getTableCards({commit},data) {
+    async getTableCards({commit},id) {
       await $.ajax({
         type: 'POST',
         url: '/table-cards',
-        data: data,
+        data: {room_id: id},
         success:(resp)=>{
           commit('GET_TABLE_CARDS', resp)
         }
       });
     },
-    async getMarks({commit}, data) {
+    async getMarks({commit}, id) {
       await $.ajax({
 			  type: 'POST',
 			  url: '/get-marks',
-			  data: data,
+			  data: {room_id: id},
 			  success:(resp)=>{
 				  commit('GET_MARKS', resp)
 			  }
@@ -108,11 +108,11 @@ export const store = new Vuex.Store({
     async SETPartyResults({commit}, data) {
       commit('GET_PARTY_RESULTS', data)
     },
-    async getPartyResults({commit}, data) {
+    async getPartyResults({commit}, id) {
       await $.ajax({
         type: 'POST',
         url: '/leader-board',
-        data: data,
+        data: {room_id: id},
         success:(resp)=>{
           commit('GET_PARTY_RESULTS', resp)
         }
