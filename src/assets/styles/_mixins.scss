@@ -37,6 +37,7 @@
     line-height: $line-height-big-phone;
   }
 }
+
 //End fonts
 
 // Start Element
@@ -47,16 +48,19 @@
   left: 0;
   top: 0;
 }
+
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .invisible {
   height: 0;
   visibility: hidden;
   position: absolute;
 }
+
 .submit-btn {
   margin: 0 auto;
   width: 50px;
@@ -66,14 +70,17 @@
   border: 0;
   cursor: pointer;
   clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
+  -webkit-clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
   @extend .onTap;
   @extend .appear;
   @extend .clickable;
+
   &:disabled {
     background-color: darkslategrey;
     color: darkslategrey;
   }
 }
+
 .clickable {
   position: relative;
   pointer-events: all;

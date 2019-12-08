@@ -14,12 +14,15 @@
   &--move_top {
     animation: move_top calc(1s * var(--step)) ease-out;
   }
+
   &--move_right {
     animation: move_right calc(1s * var(--step)) ease-out;
   }
+
   &--move_bottom {
     animation: move_bottom calc(1s * var(--step)) ease-out;
   }
+
   &--move_left {
     animation: move_left calc(1s * var(--step)) ease-out;
   }
@@ -35,6 +38,7 @@
   @extend .clickable;
 
 }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
@@ -46,6 +50,7 @@
   transform: rotateX(45deg) rotateZ(45deg);
   margin: 0 auto;
 }
+
 .cell {
   width: 100%;
   height: 100%;
@@ -91,8 +96,7 @@
   &:nth-of-type(49),
   &:nth-of-type(59),
   &:nth-of-type(69),
-  &:nth-of-type(70)
-  {
+  &:nth-of-type(70) {
     background-color: #34d9e2;
   }
 }
@@ -105,6 +109,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_right {
   0% {
     transform: translateX(calc(-100% * var(--step)));
@@ -113,6 +118,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_bottom {
   0% {
     transform: translateY(calc(-100% * var(--step)));
@@ -121,6 +127,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_left {
   0% {
     transform: translateX(calc(100% * var(--step)));

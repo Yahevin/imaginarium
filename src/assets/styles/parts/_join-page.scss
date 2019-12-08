@@ -17,18 +17,22 @@
       padding: 4px 8px;
       margin: 0 auto 30px auto;
     }
+
     &__submit {
       @extend .submit-btn;
     }
   }
+
   &-method {
     margin: 30px 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 40px;
   }
+
   &-radio {
     width: 100%;
+
     &__label {
       padding: 4px 8px;
       color: #3333deb8;
@@ -40,6 +44,7 @@
       text-transform: uppercase;
       @extend .onTap;
     }
+
     &__btn {
       @extend .invisible;
     }
