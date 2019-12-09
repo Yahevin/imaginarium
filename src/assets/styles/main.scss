@@ -6,12 +6,13 @@
 
 
 //PARTS
-@import './parts/_background.scss';
-@import './parts/_leader-board.scss';
-@import './parts/_join-page.scss';
-@import './parts/_player-style.scss';
-@import './parts/_game.scss';
-@import './parts/_cards.scss';
+@import './parts/background.scss';
+@import './parts/leader-board.scss';
+@import './parts/join-page.scss';
+@import './parts/player-style.scss';
+@import './parts/game.scss';
+@import './parts/cards.scss';
+@import './parts/preview.scss';
 
 h1 {
   @extend .font-big;
@@ -28,6 +29,7 @@ body {
   }
 
   font-family: 'Roboto-Bold', sans-serif;
+  margin: 0;
 }
 
 
