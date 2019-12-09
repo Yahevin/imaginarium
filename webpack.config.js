@@ -46,10 +46,21 @@ module.exports = {
           },
         }],
       },
+      {
+        test: /\.(jpg|png)$/,
+        include: path.resolve(__dirname, 'src/assets/img'),
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]',
+            outputPath: 'img'
+          },
+        }],
+      },
     ],
   },
   resolve: {
-    extensions: [ '.js', '.vue','.scss' ],
+    extensions: [ '.js', '.vue','.scss','.png','jpg' ],
     alias: {
       'vue$': 'vue/dist/vue.runtime.js',
       '@': path.resolve(__dirname, 'src'),
@@ -84,7 +95,7 @@ module.exports = {
       jQuery: 'jquery'
     }),
   ],
-
+  
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
