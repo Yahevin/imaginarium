@@ -79,3 +79,8 @@
   pointer-events: all;
   z-index: 2;
 }
+.full-screen {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
