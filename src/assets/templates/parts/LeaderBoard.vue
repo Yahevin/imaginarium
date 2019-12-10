@@ -1,17 +1,16 @@
 <template>
-	<section class="">
-		<div class="perspective">
-			<div class="grid">
-				<span class="player"
+	<section class="board">
+		<div class="board__perspective">
+			<div class="board__grid">
+				<span class="board__player"
 			      v-for="partyMember in party"
 			      :id="'ref_' + partyMember.id">
 				</span>
-				<div class="cell"
-						v-for="(cell, index) in cells"
+				<div class="board__cell"
+						v-for="(cell) in cells"
 				     :ref="'cell-' + cell.row + '-' + cell.col"
 						:data-col="cell.col"
 						:data-row="cell.row">
-					{{ index + 1 }}
 				</div>
 			</div>
 		</div>
