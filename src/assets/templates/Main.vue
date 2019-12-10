@@ -1,7 +1,7 @@
 <template>
 	<section>
 		
-		<preview v-show="!start"
+		<preview v-if="!start"
 			@start="begin"></preview>
 		<surface v-show="start"></surface>
 		<dungeon></dungeon>
@@ -27,7 +27,7 @@
 	  store,
 		data() {
       return {
-				start: false,
+				start: true,
 	    }
 		},
     computed: {
