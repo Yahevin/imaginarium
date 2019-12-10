@@ -4,15 +4,17 @@
 @import './mixins';
 @import './animation';
 
+//Parts
+@import 'parts/index';
 
-//PARTS
-@import './parts/background.scss';
-@import './parts/leader-board.scss';
-@import './parts/join-page.scss';
-@import './parts/player-style.scss';
-@import './parts/game.scss';
-@import './parts/cards.scss';
-@import './parts/preview.scss';
+//MODULES
+@import './modules/background.scss';
+@import './modules/leader-board.scss';
+@import './modules/join-page.scss';
+@import './modules/player-style.scss';
+@import './modules/game.scss';
+@import './modules/cards.scss';
+@import './modules/preview.scss';
 
 h1 {
   @extend .font-big;
@@ -21,7 +23,7 @@ h1 {
 body {
   @extend .font-base;
 
-  & label, & input, & button, & form, & div, & section, & article, & main {
+  & label, & input, & button, & img, & form, & div, & section, & article, & main {
     display: block;
     box-sizing: border-box;
     font-family: inherit;

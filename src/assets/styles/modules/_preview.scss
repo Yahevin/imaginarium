@@ -1,0 +1,29 @@
+.preview {
+  @extend .full-screen;
+  &__section {
+    @extend .full-screen;
+  }
+  &__mountains {
+    width: 100%;
+    margin-bottom: -45%;
+  }
+  &__abyss {
+    width: 100%;
+    position: relative;
+    z-index: 3;
+    & img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.preview-first {
+  &-enter-active {
+
+  }
+  &-leave-active {
+    transition: all 2s cubic-bezier(0.7, 0.2, 0.5, 1);
+    margin-top: -100vh;
+  }
+}
