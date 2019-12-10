@@ -12,16 +12,16 @@
   background-color: blue;
 
   &--move_top {
-    animation: move_top calc(1s * var(--step)) ease-out;
+    animation: move_top calc(500ms * var(--step)) ease-out;
   }
   &--move_right {
-    animation: move_right calc(1s * var(--step)) ease-out;
+    animation: move_right calc(500ms * var(--step)) ease-out;
   }
   &--move_bottom {
-    animation: move_bottom calc(1s * var(--step)) ease-out;
+    animation: move_bottom calc(500ms * var(--step)) ease-out;
   }
   &--move_left {
-    animation: move_left calc(1s * var(--step)) ease-out;
+    animation: move_left calc(500ms * var(--step)) ease-out;
   }
 }
 
