@@ -3,9 +3,13 @@
   @extend .flex-center;
   &-form {
     width: auto;
-    height: calc(100% - 200px);
+    height: 100%;
+    padding: 100px 0;
     display: flex;
     flex-direction: column;
+    @media screen and #{$phone} {
+      padding: 100px 8px;
+    }
     &__submit {
       @extend .submit-btn;
       margin: 32px auto 0 auto;
@@ -13,22 +17,21 @@
   }
   &__grid {
     height: 100%;
+    width: calc((100vh - 250px));
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: repeat(2,50%);
     justify-content: center;
     grid-gap: 16px;
+    grid-template-columns: repeat(3, minmax(auto, calc(33% - 32px /3)));
+    grid-template-rows: repeat(2, calc(50% - 8px));
     @media screen and #{$phone} {
-      grid-gap: 0;
+      height: calc((100vw - 16px));
+      width: 100%;
     }
   }
   &-radio {
     @extend .clickable;
     width: 100%;
     height: 100%;
-    @media screen and #{$phone} {
-      padding: 8px;
-    }
     &__label {
       @extend .absolute;
     }
@@ -44,7 +47,9 @@
       object-fit: contain;
       display: block;
       width: auto;
-      height: calc((100vh - 271px) / 2);
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
     }
   }
   &-question {

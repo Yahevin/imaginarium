@@ -54,6 +54,7 @@
     		started: false,
 	    }
 	  },
+	  
 	  watch: {
 		  gameAction: async function (newGame, oldGame) {
 		  	switch (newGame) {
