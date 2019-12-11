@@ -1,42 +1,44 @@
 <template>
 		<section class="join">
 					<form class="join-form"
-					      :class="{ 'form--empty_nick': nickEmpty, 'form--empty_room': roomEmpty }"
+					      :class="{ 'form--empty_nick': nickEmpty && formSubmitted,
+					                'form--empty_room': roomEmpty && formSubmitted }"
 					      @submit="newPlayer($event)"
 					      ref="form">
 							<input class="join-form__input"
 						        type="text"
+							      name="nickName"
 						        placeholder="Никнейм"
 						        v-model="nickName">
-							<div class="join-method">
-									<div class="join-radio">
-											<label class="join-radio__label"
-											       for="gameJoin">
-												Присоединиться
-											</label>
-											<input class="join-radio__btn"
-										        id="gameJoin"
-										        type="radio"
-										        :value="true"
-										        v-model="gameJoin">
-									</div>
-									<div class="join-radio">
-											<label class="join-radio__label"
-											       for="gameCreate">
-												Начать партию
-											</label>
-											<input class="join-radio__btn"
-										        id="gameCreate"
-										        type="radio"
-										        :value="false"
-										        v-model="gameJoin">
-									</div>
+							<div class="join-radio">
+									<input class="join-radio__btn"
+								       id="gameCreate"
+								       type="radio"
+								       :value="false"
+								       v-model="gameJoin">
+									<label class="join-radio__label"
+									       for="gameCreate">
+										Новая партия
+									</label>
+								
+									<input class="join-radio__btn"
+									       id="gameJoin"
+									       type="radio"
+									       :value="true"
+									       v-model="gameJoin">
+									<label class="join-radio__label"
+									       for="gameJoin">
+										Присоединиться
+									</label>
 							</div>
-							<input class="join-form__input"
-						        type="text"
-						        placeholder="id комнаты"
-										v-show="gameJoin"
-										v-model="roomId">
+							<transition name="input">
+								<input class="join-form__input"
+								       type="text"
+								       name="roomId"
+								       :placeholder="idPlaceholder"
+								       v-show="gameJoin"
+								       v-model="roomId">
+							</transition>
 							<input class="join-form__submit"
 							       type="submit">
 					</form>
@@ -54,6 +56,7 @@
         roomId: null,
         gameJoin: false,
 	      formSubmitted: false,
+	      idPlaceholder: 'id комнаты',
       }
     },
 	  computed: {
@@ -94,6 +97,9 @@
 			    success:(resp)=>{
 			    	if (resp.success) {
 					    this.setPlayer(resp);
+				    } else {
+					    this.idPlaceholder = this.roomId + ' не подходит';
+					    this.roomId = null;
 				    }
 			    },
 		    });

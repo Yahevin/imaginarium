@@ -3,9 +3,13 @@
 @import './fonts';
 @import './mixins';
 @import './animation';
+@import './defaults';
+@import './transitions';
 
 //Parts
-@import 'parts/index';
+@import './parts/darkness';
+@import './parts/mountain';
+@import './parts/form';
 
 //MODULES
 @import './modules/background.scss';
@@ -15,23 +19,3 @@
 @import './modules/game.scss';
 @import './modules/cards.scss';
 @import './modules/preview.scss';
-
-h1 {
-  @extend .font-big;
-}
-
-body {
-  @extend .font-base;
-
-  & label, & input, & button, & img, & form, & div, & section, & article, & main {
-    display: block;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: inherit;
-  }
-
-  font-family: 'Roboto-Bold', sans-serif;
-  margin: 0;
-}
-
-

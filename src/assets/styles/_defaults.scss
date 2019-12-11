@@ -1,0 +1,39 @@
+body {
+  @extend .font-base;
+
+  & label, & input, & button, & img, & form, & div, & section, & article, & main {
+    display: block;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  font-family: Oswald-Bold, sans-serif;
+  margin: 0;
+}
+
+input {
+  margin: 0;
+  outline: none;
+  border-width: 1px;
+  border-color: $peach;
+  border-style: solid;
+  transition: all 0.2s ease;
+  color: $dark-grey;
+
+  &:focus {
+    border-color: #fff;
+    box-shadow: 0 0 3px 3px $dark-green;
+    &::placeholder {
+      color: $dark-green;
+      opacity: 0.7;
+    }
+  }
+  &:not(:placeholder-shown) {
+    border-color: #fff;
+    box-shadow: 0 0 3px 3px $gold;
+  }
+  &::placeholder {
+    color: $dark-peach;
+  }
+}

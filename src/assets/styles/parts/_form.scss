@@ -1,0 +1,12 @@
+.form {
+  &--empty_nick {
+    input[name='nickName'] {
+      box-shadow: 0 0 12px 1px $red;
+    }
+  }
+  &--empty_room {
+    input[name='roomId'] {
+      box-shadow: 0 0 12px 1px $red;
+    }
+  }
+}

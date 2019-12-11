@@ -22,7 +22,6 @@
 			<button @click="showMyCards">My cards</button>
 			<button @click="showTable">Table</button>
 			<button @click="showBoard">Grid</button>
-			<button @click="getResults">update</button>
 		</nav>
 	</section>
 </template>
