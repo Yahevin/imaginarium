@@ -24,15 +24,18 @@ input {
   &:focus {
     border-color: #fff;
     box-shadow: 0 0 3px 3px $dark-green;
+
     &::placeholder {
       color: $dark-green;
       opacity: 0.7;
     }
   }
+
   &:not(:placeholder-shown) {
     border-color: #fff;
     box-shadow: 0 0 3px 3px $gold;
   }
+
   &::placeholder {
     color: $dark-peach;
   }

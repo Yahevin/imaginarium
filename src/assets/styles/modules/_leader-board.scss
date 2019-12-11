@@ -115,6 +115,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_right {
   0% {
     transform: translateX(calc(-100% * var(--step)));
@@ -123,6 +124,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_bottom {
   0% {
     transform: translateY(calc(-100% * var(--step)));
@@ -131,6 +133,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes move_left {
   0% {
     transform: translateX(calc(100% * var(--step)));
