@@ -1,0 +1,23 @@
+.input-enter-active {
+  animation: input-appear 0.25s;
+}
+
+.input-leave-active {
+  animation: input-appear 0.25s reverse;
+}
+
+@keyframes input-appear {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  60% {
+    height: auto;
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -6,14 +6,13 @@
           @start="getReady"></style-select>
 		<new-cards v-show="newShown"
 					@enough="showMyCards"></new-cards>
-		<mine-cards v-show="myCardsShown"
-					@cardSetDone="showTable"></mine-cards>
+		<mine-cards v-show="myCardsShown"></mine-cards>
 		<play-table v-show="tableShown"
           @endRound="newRound"></play-table>
 		<leader-board v-show="boardShown" :active="boardShown"></leader-board>
 		
 		<article class="game__btn_panel">
-			<button v-show="player.gameMaster && !gameRun && !styleUnset"
+			<button v-show="player.gameMaster && !gameRun && !styleUnset && !started"
 			        @click="startGame">start</button>
 		</article>
 		
@@ -23,7 +22,6 @@
 			<button @click="showMyCards">My cards</button>
 			<button @click="showTable">Table</button>
 			<button @click="showBoard">Grid</button>
-			<button @click="getResults">update</button>
 		</nav>
 	</section>
 </template>
@@ -53,6 +51,7 @@
 	  
 	  data() {
     	return {
+    		started: false,
 	    }
 	  },
 	  watch: {
@@ -70,6 +69,7 @@
 					  break;
 				  case 'all-card-set' :
 					  this.startGuess();
+					  this.showTable();
 					  break;
 				  case 'all-guess-done' :
 				  	this.getResults();
@@ -146,6 +146,7 @@
 			  },5000);
 		  },
 		  async startGame() {
+		  	this.started = true;
 			  await this.setDistribution();
 			  await this.createNewCards(6);
 			  await this.setAction('game-start');

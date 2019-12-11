@@ -1,10 +1,11 @@
 <template>
 	<section>
-		<h1>Hello World</h1>
 		
-		<surface></surface>
+		<preview v-if="!start"
+			@start="begin"></preview>
+		<surface v-show="start"></surface>
 		<dungeon></dungeon>
-		<game-play></game-play>
+		<game-play v-show="start"></game-play>
 	</section>
 </template>
 
@@ -13,20 +14,29 @@
 	import Surface from './Surface';
 	import Dungeon from './Dungeon';
 	import GamePlay from './GamePlay';
+	import Preview from './Preview';
 	
 	export default {
 	  name: "Main",
 	  components: {
-        Surface,
-        Dungeon,
-        GamePlay,
+      Surface,
+      Dungeon,
+      GamePlay,
+		  Preview,
 	  },
 	  store,
+		data() {
+      return {
+				start: true,
+	    }
+		},
     computed: {
 	  	
     },
     methods: {
-	  	
+	  	begin() {
+			  this.start = true;
+		  }
     },
 	}
 </script>

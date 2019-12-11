@@ -42,7 +42,7 @@
       @extend .invisible;
 
       &:checked + img {
-        box-shadow: 0 0 8px 2px #FFD700;
+        box-shadow: 0 0 8px 2px $gold;
         @extend .onTap;
       }
     }

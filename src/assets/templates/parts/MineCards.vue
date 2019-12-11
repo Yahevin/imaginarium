@@ -113,7 +113,6 @@
 				  url: url,
 				  data: data,
 				  success:()=>{
-					  this.$emit('cardSetDone');
 				  }
 			  });
 		  }

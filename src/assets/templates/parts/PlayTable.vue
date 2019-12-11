@@ -16,7 +16,7 @@
 					       :value="card"
 					       v-model="chosen">
 					<img class="cards-radio__img"
-					     :src="card.img_url">
+					     :src="image(card)">
 					<span class=""
 					      v-for="mark in card.marks"
 					      :key="mark.id"
@@ -85,6 +85,9 @@
 		  },
 		  canSubmit() {
     		return this.canGuess && this.chosen !== null;
+		  },
+		  showCards() {
+    		return this.game.action === 'all-card-set' || this.game.action === 'all-guess-done';
 		  }
 	  },
 	  watch: {
@@ -93,6 +96,9 @@
 		  }
 	  },
 	  methods: {
+    	image(card) {
+    		return this.showCards ? card.img_url : '';
+	    },
 		  cardView(card) {
 		  	this.view = card;
 		  },

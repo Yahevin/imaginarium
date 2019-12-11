@@ -8,23 +8,38 @@ class Figure {
 		this.playerStyle = iniData.playerStyle;
 		this.row = 10;
 		this.col = 9;
-		this.duration = 1000;
+		this.duration = 500;
+		this.countMode = +1;
 	}
 	shiftResolve(newPosition) {
 		let cells,
-				rounds = Math.floor(this.position / this.path.length),
+				rounds = Math.floor(Math.abs(this.position / this.path.length)),
 				currPos = this.position - rounds * this.path.length,
 				newPos = newPosition - rounds * this.path.length,
-				borderCrossing = newPos > this.path.length || newPos < 0;
+				borderCrossing = papersPlease(this) || newPos < 0 && currPos >= 0 || newPos >= 0 && currPos < 0;
+		
+		function papersPlease(z) {
+			if (newPos % z.path.length === 0 && z.position === 0){
+				z.position = newPos;
+				newPos = 0;
+				return false;
+			} else if (newPos >= z.path.length) {
+				newPos -= z.path.length;
+				currPos -= z.path.length;
+				return true;
+			} else {
+				return false;
+			}
+		}
 		
 		if (borderCrossing) {
 			if (currPos < newPos) {
-				newPos -= this.path.length;
 				cells = this.path.slice();
 				let negativeCells = cells.splice(currPos);
 				let positiveCells = cells.splice(0, newPos + 1);
 				negativeCells.push(...positiveCells);
 				cells = negativeCells;
+				this.countMode = 1;
 			} else {
 				cells = this.path.slice();
 				let positiveCells = cells.splice(0, currPos + 1);
@@ -33,16 +48,18 @@ class Figure {
 				negativeCells.reverse();
 				positiveCells.push(...negativeCells);
 				cells = positiveCells;
+				this.countMode = -1;
 			}
 		} else {
 			if (currPos < newPos) {
 				cells = this.path.slice(currPos, newPos + 1);
+				this.countMode = 1;
 			} else {
-				cells = this.path.slice(newPos, currPos  + 1);
+				cells = this.path.slice(newPos, currPos + 1);
 				cells.reverse();
+				this.countMode = -1;
 			}
 		}
-		
 		let journey = this.getPath(cells);
 		this.setLongJourney(journey);
 	}
@@ -119,7 +136,7 @@ class Figure {
 		
 		return new Promise(resolve => {
 			setTimeout(()=>{
-				z.position += step;
+				z.position += step * z.countMode;
 				$(z.el).removeClass('player--move_top');
 				resolve();
 			}
@@ -138,7 +155,7 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step;
+				z.position += step * z.countMode;
 				$(z.el).removeClass('player--move_right');
 				resolve();
 			}, time)
@@ -156,7 +173,7 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step;
+				z.position += step * z.countMode;
 				$(z.el).removeClass('player--move_bottom');
 				resolve();
 			}, time)
@@ -174,7 +191,7 @@ class Figure {
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
-				z.position += step;
+				z.position += step * z.countMode;
 				$(z.el).removeClass('player--move_left');
 				resolve();
 			}, time)
