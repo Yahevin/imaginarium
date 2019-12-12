@@ -4,13 +4,15 @@
 			<div class="board__grid">
 				<span class="board__player"
 			      v-for="partyMember in party"
-			      :id="'ref_' + partyMember.id">
+			      :id="'ref_' + partyMember.id"
+						:class="partyMember.player_style">
 				</span>
 				<div class="board__cell"
-						v-for="(cell) in cells"
-				     :ref="'cell-' + cell.row + '-' + cell.col"
+						v-for="(cell,index) in cells"
+			      :ref="'cell-' + cell.row + '-' + cell.col"
 						:data-col="cell.col"
-						:data-row="cell.row">
+						:data-row="cell.row"
+						:class="cellPurpose(index)">
 				</div>
 			</div>
 		</div>
@@ -35,6 +37,8 @@
 		    partyChanged: false,
 		    pathSet: new Set(),
 		    path: [],
+		    pathCell: [80,90,89,99,98,97,87,77,67,66,65,75,74,73,63,62,61,51,41,
+        31,32,33,43,44,45,35,25,24,14,4,5,6,7,17,27,28,38,48,49,59,69,70],
 	    }
 	  },
 	  props: {
@@ -93,7 +97,6 @@
 				  break;
 			  }
 		  }
-		
 		  this.path = this.path.map((item)=>{
 			  return {
 				  pos: item.pos,
@@ -104,7 +107,13 @@
 	  watch: {
 		  party: function (newParty,oldParty) {
 		  	if (newParty.length === oldParty.length) {
-				  this.partyChanged = true;
+				  newParty.forEach((newItem)=>{
+					  oldParty.forEach((oldItem)=>{
+					  	if (newItem.id === oldItem.id) {
+							  this.partyChanged = newItem.score !== oldItem.score ? true : this.partyChanged;
+						  }
+					  })
+				  });
 			  } else {
 		  		this.boardIni();
 			  }
@@ -117,6 +126,13 @@
 		  }
 	  },
 	  methods: {
+		  cellPurpose(index) {
+			  for (let item of this.pathCell) {
+				  if (item === index + 1) {
+					  return 'board__cell--path';
+				  }
+			  }
+		  },
 		  findNextCell(current) {
 		  	let siblings = this.getSiblings(current),
 				    resp;
@@ -162,7 +178,7 @@
 			  ];
 		  	
 			  return siblings.filter((item)=>{
-					if (this.$refs.hasOwnProperty(item.cell) && $(this.$refs[item.cell][0]).css('background-color') === 'rgb(52, 217, 226)') {
+					if (this.$refs.hasOwnProperty(item.cell) && $(this.$refs[item.cell][0]).hasClass('board__cell--path')) {
 							return {
 								cell: this.$refs[item.cell][0],
 								pos: item.pos,
@@ -173,8 +189,6 @@
 		  addNewFigure(partyMember) {
 			  let figure = new Figure({
 				  id: partyMember.id,
-				  nickName: partyMember.nickName,
-				  playerStyle: partyMember.playerStyle,
 				  position: +partyMember.score,
 				  path: this.path,
 				  el: '#ref_' + partyMember.id,

@@ -5,7 +5,6 @@ class Figure {
 		this.direction = 'left';
 		this.el = iniData.el;
 		this.path = iniData.path;
-		this.playerStyle = iniData.playerStyle;
 		this.row = 10;
 		this.col = 9;
 		this.duration = 500;
@@ -61,6 +60,7 @@ class Figure {
 			}
 		}
 		let journey = this.getPath(cells);
+		
 		this.setLongJourney(journey);
 	}
 	getPath(cells) {
@@ -131,13 +131,13 @@ class Figure {
 		this.row -= step;
 		
 		$(this.el).css('--step', step);
-		$(this.el).addClass('player--move_top');
+		$(this.el).addClass('board__player--move_top');
 		$(this.el).css('--row', this.row + '/' + (this.row + 1));
 		
 		return new Promise(resolve => {
 			setTimeout(()=>{
 				z.position += step * z.countMode;
-				$(z.el).removeClass('player--move_top');
+				$(z.el).removeClass('board__player--move_top');
 				resolve();
 			}
 			,time)
@@ -150,13 +150,13 @@ class Figure {
 		this.col += step;
 		
 		$(this.el).css('--step', step);
-		$(this.el).addClass('player--move_right');
+		$(this.el).addClass('board__player--move_right');
 		$(this.el).css('--col', this.col + '/' + (this.col + 1));
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
 				z.position += step * z.countMode;
-				$(z.el).removeClass('player--move_right');
+				$(z.el).removeClass('board__player--move_right');
 				resolve();
 			}, time)
 		})
@@ -168,13 +168,13 @@ class Figure {
 		this.row += step;
 		
 		$(this.el).css('--step', step);
-		$(this.el).addClass('player--move_bottom');
+		$(this.el).addClass('board__player--move_bottom');
 		$(this.el).css('--row', this.row + '/' + (this.row + 1));
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
 				z.position += step * z.countMode;
-				$(z.el).removeClass('player--move_bottom');
+				$(z.el).removeClass('board__player--move_bottom');
 				resolve();
 			}, time)
 		})
@@ -186,13 +186,13 @@ class Figure {
 		this.col -= step;
 		
 		$(this.el).css('--step', step);
-		$(this.el).addClass('player--move_left');
+		$(this.el).addClass('board__player--move_left');
 		$(this.el).css('--col', this.col + '/' + (this.col + 1));
 		
 		return new Promise((resolve) => {
 			setTimeout(function () {
 				z.position += step * z.countMode;
-				$(z.el).removeClass('player--move_left');
+				$(z.el).removeClass('board__player--move_left');
 				resolve();
 			}, time)
 		})
