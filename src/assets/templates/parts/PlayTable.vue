@@ -28,7 +28,12 @@
 			<input class="cards-form__submit"
 			       type="submit"
 			       :disabled="!canSubmit"
-			       v-show="canGuess">
+			       v-if="canGuess">
+			<div class="cards-form__submit"
+			        v-show="allDone && iAmGameMaster && canToEnd"
+			        @click="endRound">
+				Next round!
+			</div>
 		</form>
 		
 		<!--markers, seen while not all players choose-->
@@ -40,11 +45,7 @@
 			<!--</span>-->
 		<!--</article>-->
 		
-		<button class="cards-form__submit"
-			v-show="allDone && iAmGameMaster"
-			@click="endRound">
-				Next round!
-		</button>
+		
 	</section>
 </template>
 
@@ -61,11 +62,11 @@
 		  	view: null,
 			  chosen: null,
 			  notGuessed: true,
+			  canToEnd: true,
 		  }
 	  },
 	  computed: {
     	...mapGetters({
-		    tableCards: 'tableCards',
 		    player: 'player',
 		    game: 'game',
 		    marks: 'marks',
@@ -92,10 +93,14 @@
 		  myCard() {
     		return this.$store.getters.chosen;
 		  },
+		  tableCards() {
+    		return this.$store.getters.tableCards;
+		  },
 	  },
 	  watch: {
 		  gameAction: function () {
-			  this.notGuessed = true;
+			  this.notGuessed = this.game.action === 'game-start' ? true : this.notGuessed;
+			  this.canToEnd = this.game.action === 'game-start' ? true : this.canToEnd;
 		  }
 	  },
 	  methods: {
@@ -151,6 +156,7 @@
 			  });
 		  },
 		  endRound() {
+    		this.canToEnd = false;
 		    this.$emit('endRound');
 		  }
 	  },
