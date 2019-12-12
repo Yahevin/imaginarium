@@ -75,7 +75,7 @@
 	  },
 	  watch: {
       gameAction: function () {
-	      this.didntSet = this.game.action === 'game-start';
+	      this.didntSet = this.game.action === 'game-start' ? true : this.didntSet;
       }
 	  },
 	  methods: {
