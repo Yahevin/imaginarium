@@ -147,8 +147,6 @@
 		  	let z = this;
 		  	
 			  $(window).resize(function () {
-			  	
-			  	console.log('resize')
 				  z.cells = [];
 				  z.createCells();
 			  })
