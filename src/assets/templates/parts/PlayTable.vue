@@ -17,12 +17,11 @@
 					       v-model="chosen">
 					<img class="cards-radio__img"
 					     :src="image(card)">
-					<span class=""
+					<span class="cards__mark"
 					      v-for="mark in card.marks"
 					      :key="mark.id"
 					      v-show="allDone"
 					      :class="mark.player_style">
-						.
 					</span>
 				</div>
 			</article>
@@ -51,9 +50,10 @@
 
 <script>
 	import { mapGetters } from 'vuex';
-  import {store} from '../../js/store/index';
-  
-  export default {
+  import {store} from '@/assets/js/store/index';
+	import img from '@/assets/img/card_back.png';
+	
+	export default {
     name: "PlayTable",
     store,
 	  data() {
@@ -100,7 +100,7 @@
 	  },
 	  methods: {
     	image(card) {
-    		return this.showCards ? card.img_url : '@/img/card_back.png';
+    		return this.showCards ? card.img_url : img;
 	    },
 		  cardView(card) {
 		  	this.view = card;
