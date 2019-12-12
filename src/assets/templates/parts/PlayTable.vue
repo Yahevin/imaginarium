@@ -88,7 +88,10 @@
 		  },
 		  showCards() {
     		return this.game.action === 'all-card-set' || this.game.action === 'all-guess-done';
-		  }
+		  },
+		  myCard() {
+    		return this.$store.getters.chosen;
+		  },
 	  },
 	  watch: {
 		  gameAction: function () {
@@ -97,7 +100,7 @@
 	  },
 	  methods: {
     	image(card) {
-    		return this.showCards ? card.img_url : '';
+    		return this.showCards ? card.img_url : '@/img/card_back.png';
 	    },
 		  cardView(card) {
 		  	this.view = card;
@@ -107,6 +110,10 @@
 		  },
 		  cardGuessed(e) {
 			  e.preventDefault();
+			  if(this.chosen.card_id === this.myCard) {
+			  	return
+			  }
+			  
 			  this.notGuessed = false;
 			  
 			  let data = {
@@ -122,8 +129,11 @@
 				  data: data,
 				  success:(resp)=>{
 					  this.view = null;
-					  if (resp.iAmLast) {
+					  if (resp.hasOwnProperty('iAmLast') && resp.iAmLast) {
 					  	this.countTheScore();
+					  }
+					  if (!resp.success) {
+						  this.notGuessed = true;
 					  }
 				  },
 				  error:()=>{

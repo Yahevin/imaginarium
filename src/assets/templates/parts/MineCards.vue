@@ -75,7 +75,7 @@
 	  },
 	  watch: {
       gameAction: function () {
-	      this.didntSet = true;
+	      this.didntSet = this.game.action === 'game-start';
       }
 	  },
 	  methods: {
@@ -107,6 +107,9 @@
 					  card_id: this.chosen.card_id,
 					  img_url: this.chosen.img_url,
 				  };
+			
+			  this.$store.dispatch('setChosen', this.chosen.card_id);
+			  this.chosen = null;
 			
 			  $.ajax({
 				  type: 'POST',

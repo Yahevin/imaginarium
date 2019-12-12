@@ -21,6 +21,7 @@ export const store = new Vuex.Store({
 	  marks: [],
     party: [],
     question: '',
+    chosen: null,
   },
   actions: {
     setPlayer({commit}, note) {
@@ -54,6 +55,9 @@ export const store = new Vuex.Store({
           commit('SET_QUESTION', data.question)
         }
       });
+    },
+    setChosen({commit},data) {
+      commit('SET_CHOSEN', data)
     },
     async getQuestion({commit},data) {
       await $.ajax({
@@ -147,6 +151,9 @@ export const store = new Vuex.Store({
     SET_QUESTION(state,question) {
       state.question = question;
     },
+    SET_CHOSEN(state,chosen) {
+      state.chosen = chosen;
+    },
     GET_QUESTION(state,question) {
       state.question = question;
     },
@@ -215,6 +222,9 @@ export const store = new Vuex.Store({
 	  },
     question(state) {
       return state.question
+    },
+    chosen(state) {
+      return state.chosen
     },
   },
   modules: {}

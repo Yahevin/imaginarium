@@ -211,6 +211,7 @@ module.exports = async function(app, db) {
 		}
 	});
 	
+	
 	app.post('/card-main', async (req, res) => {
 		let handCardId = req.body.id,
 				cardId = req.body.card_id,
@@ -389,8 +390,21 @@ module.exports = async function(app, db) {
 				iAmLast = false,
 				userCount = 0,
 				userGuessed = 0,
-				userIds = [];
+				userIds = [],
+				checked = false;
 		
+		function checkPlayer(resolve) {
+			let checkPlayerReq = db.format(sql.sfw,
+				['user__table', 'user_id', userId]);
+			
+			db.query(checkPlayerReq, function(err, results) {
+				if (err) throw err;
+				if(results[0].hasOwnProperty('table_card_id')) {
+					checked = results[0].table_card_id !== parseInt(guessId);
+				}
+				return resolve();
+			});
+		}
 		function makeGuessCard(resolve) {
 			let makeGuessCardReq = db.format(sql.ii3,
 				['user__guess', 'user_id', 'guess_id', 'player_style', userId, guessId, playerStyle]);
@@ -447,18 +461,26 @@ module.exports = async function(app, db) {
 		}
 		
 		new Promise(resolve => {
-			makeGuessCard(resolve);
+			checkPlayer(resolve);
 		}).then(()=>{
-			new Promise(resolve => {
-				getCounts(resolve);
-			}).then(()=>{
-				if (iAmLast) {
-					changeGameStatus();
-				} else {
-					res.json({success: true, iAmLast: false});
-				}
-			})
-		});
+			if(checked) {
+				new Promise(resolve => {
+					makeGuessCard(resolve);
+				}).then(()=>{
+					new Promise(resolve => {
+						getCounts(resolve);
+					}).then(()=>{
+						if (iAmLast) {
+							changeGameStatus();
+						} else {
+							res.json({success: true, iAmLast: false});
+						}
+					})
+				});
+			} else {
+				res.json({success: false});
+			}
+		})
 	});
 	
 	
