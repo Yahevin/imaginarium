@@ -12,19 +12,20 @@
     }
     &__submit {
       @extend .submit-btn;
-      margin: 32px auto 0 auto;
+      margin: 16px auto 16px auto;
     }
   }
   &__grid {
-    height: 100%;
+    max-height: calc((100vh - 250px));
     width: calc((100vh - 250px));
     display: grid;
     justify-content: center;
+    align-content: center;
     grid-gap: 16px;
     grid-template-columns: repeat(3, minmax(auto, calc(33% - 32px /3)));
-    grid-template-rows: repeat(2, calc(50% - 8px));
+    grid-auto-rows: minmax(calc(50% - 8px), 1fr);
     @media screen and #{$phone} {
-      height: calc((100vw - 16px));
+      max-height: calc((100vw - 16px));
       width: 100%;
     }
   }
@@ -49,7 +50,6 @@
       width: auto;
       height: auto;
       max-width: 100%;
-      max-height: 100%;
     }
   }
   &-question {

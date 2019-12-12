@@ -23,9 +23,8 @@ input {
 
   &:focus {
     border-color: #fff;
-    box-shadow: 0 0 3px 3px $dark-green;
+    box-shadow: 0 0 3px 3px $dark-peach;
     &::placeholder {
-      color: $dark-green;
       opacity: 0.7;
     }
   }
