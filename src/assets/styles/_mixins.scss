@@ -93,6 +93,11 @@
   pointer-events: all;
   z-index: 2;
 }
+.just-visible {
+  position: relative;
+  pointer-events: none;
+  z-index: 2;
+}
 
 .full-screen {
   width: 100%;
