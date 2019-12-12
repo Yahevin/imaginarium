@@ -158,6 +158,14 @@ export const store = new Vuex.Store({
       state.question = question;
     },
     GET_TABLE_CARDS(state, cards) {
+      let j,temp;
+      
+      for(let i = cards.length - 1; i > 0; i--){
+        j = Math.floor(Math.random()*(i + 1));
+        temp = cards[j];
+        cards[j] = cards[i];
+        cards[i] = temp;
+      }
       state.tableCards = cards;
     },
     GET_NEW_CARDS(state, cards) {
