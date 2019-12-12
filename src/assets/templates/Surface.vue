@@ -8,6 +8,7 @@
 					:data-col="cell.col"
 					:data-row="cell.row"
 					:data-ord="cell.ord"
+				  :ref="'cell--' + cell.col + '-' + cell.row"
 					@mouseover="mouseOver($event.target)">
 			</div>
 		</div>
@@ -16,15 +17,18 @@
 </template>
 
 <script>
-  import {store} from '../js/store/index';
   import $ from "jquery";
-  
+  import {store} from '../js/store/index';
+	import getSiblings from '@/assets/js/mixins/surfaceCells'
+
+
   export default {
     name: "Surface",
     store,
 	  data() {
     	return {
     		cells: [],
+		    siblings: [],
 	    }
 	  },
 	  created() {
@@ -55,73 +59,58 @@
 		  },
 		  getColumns() {
 		  	let height = $(document).innerHeight(),
-				    width = $(document).innerWidth(),
-				    columns = Math.ceil(width / height* 9 * 1.6);
+				    width = $(document).innerWidth();
 		  	
-		  	return columns;
-		  },
-		  patternOne(el) {
-			  var currRow = $(el).data('row');
-			  var currCol = $(el).data('col');
-			  var $siblings = $(el).siblings().filter((index,item)=>{
-			  	$(item).removeClass('hovered-a').removeClass('hovered-b');
-			  	if ($(item).data('row') < (currRow + 2) && $(item).data('row') > (currRow - 2)) {
-			  		return $(item);
-				  }
-			  });
-			
-			  $siblings.each((index,item)=>{
-				  var rw = $(item).data('row');
-				  var cl = $(item).data('col');
-				
-				  var res1 = ((rw - 1 === currRow) && (cl === currCol))  ||
-					  (((cl - 1 === currCol) || (cl + 1 === currCol)) && (rw === currRow));
-				
-				  var res2 = ((cl + 1 === currCol) && ((rw + 1 === currRow) || (rw - 1 === currRow))) ||
-					  ((cl - 1 === currCol) && ((rw + 1 === currRow) || (rw - 1 === currRow))) ||
-					  ((cl === currCol) && (rw + 1 === currRow)) ||
-					  ((rw === currRow) && ((cl + 2 === currCol) || (cl - 2 === currCol))) ||
-					  ((rw - 1 === currRow) && ((cl + 2 === currCol) || (cl - 2 === currCol)));
-				
-				  if (res1) {
-					  $(item).addClass('hovered-a');
-				  } else if (res2) {
-					  $(item).addClass('hovered-b');
-				  }
-				  $(el).removeClass('hovered-b').addClass('hovered-a');
-				
-			  });
+		  	return Math.ceil(width / height* 9 * 1.6);
 		  },
 		  patternZero(el) {
-			  var currRow = $(el).data('row');
-			  var currCol = $(el).data('col');
-			  var $siblings = $(el).siblings().filter((index,item)=>{
-				  $(item).removeClass('hovered-a').removeClass('hovered-b');
-				  if ($(item).data('row') < (currRow + 2) && $(item).data('row') > (currRow - 2)) {
-					  return $(item);
-				  }
+			  let currRow = $(el).data('row');
+			  let currCol = $(el).data('col');
+			  
+			  this.siblings.forEach((item)=>{
+			  	$(item).removeClass('hovered-a').removeClass('hovered-b');
 			  });
+			  this.siblings = [];
 			
-			  $siblings.each((index,item)=>{
-				  var rw = $(item).data('row');
-				  var cl = $(item).data('col');
+			  let siblings1 = getSiblings.func01(currRow,currCol);
+			  let siblings2 = getSiblings.func02(currRow,currCol);
 				
-				  var res1 = ((rw + 1 === currRow) && (cl === currCol))  ||
-					  (((cl - 1 === currCol) || (cl + 1 === currCol)) && (rw === currRow));
+			  siblings1.forEach((item)=>{
+				  let el = 'cell--' + item.cl + '-' + item.rw;
 				
-				  var res2 = ((cl + 1 === currCol) && ((rw + 1 === currRow) || (rw - 1 === currRow))) ||
-					  ((cl - 1 === currCol) && ((rw + 1 === currRow) || (rw - 1 === currRow))) ||
-					  ((cl === currCol) && (rw - 1 === currRow)) ||
-					  ((rw === currRow) && ((cl + 2 === currCol) || (cl - 2 === currCol))) ||
-					  ((rw + 1 === currRow) && ((cl + 2 === currCol) || (cl - 2 === currCol)));
+				  $(this.$refs[el]).addClass('hovered-a');
+				  this.siblings.push(this.$refs[el]);
+			  });
+			  siblings2.forEach((item)=>{
+				  let el = 'cell--' + item.cl + '-' + item.rw;
 				
-				  if (res1) {
-					  $(item).addClass('hovered-a');
-				  } else if (res2) {
-					  $(item).addClass('hovered-b');
-				  }
-				  $(el).removeClass('hovered-b').addClass('hovered-a');
+				  $(this.$refs[el]).addClass('hovered-b');
+				  this.siblings.push(this.$refs[el]);
+			  });
+		  },
+		  patternOne(el) {
+			  let currRow = $(el).data('row');
+			  let currCol = $(el).data('col');
+			
+			  this.siblings.forEach((item)=>{
+				  $(item).removeClass('hovered-a').removeClass('hovered-b');
+			  });
+			  this.siblings = [];
+			
+			  let siblings1 = getSiblings.func11(currRow,currCol);
+			  let siblings2 = getSiblings.func12(currRow,currCol);
+			  
+			  siblings1.forEach((item)=>{
+				  let el = 'cell--' + item.cl + '-' + item.rw;
+
+				  $(this.$refs[el]).addClass('hovered-a');
+				  this.siblings.push(this.$refs[el]);
+			  });
+			  siblings2.forEach((item)=>{
+				  let el = 'cell--' + item.cl + '-' + item.rw;
 				
+				  $(this.$refs[el]).addClass('hovered-b');
+				  this.siblings.push(this.$refs[el]);
 			  });
 		  },
 		  appearing() {
