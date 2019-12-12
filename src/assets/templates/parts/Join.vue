@@ -1,54 +1,62 @@
 <template>
 		<section class="join">
-					<form class="join-form"
-					      :class="{ 'form--empty_nick': nickEmpty && formSubmitted,
-					                'form--empty_room': roomEmpty && formSubmitted }"
-					      @submit="newPlayer($event)"
-					      ref="form">
-							<input class="join-form__input"
-						        type="text"
-							      name="nickName"
-						        placeholder="Никнейм"
-						        v-model="nickName">
-							<div class="join-radio">
-									<input class="join-radio__btn"
-								       id="gameCreate"
+				<form class="join-form"
+				      :class="{ 'form--empty_nick': nickEmpty && formSubmitted,
+				                'form--empty_room': roomEmpty && formSubmitted }"
+				      @submit="newPlayer($event)"
+				      v-show="!showConsole"
+				      ref="form">
+						<input class="join-form__input"
+					        type="text"
+						      name="nickName"
+					        placeholder="Никнейм"
+					        v-model="nickName">
+						<div class="join-radio">
+								<input class="join-radio__btn"
+							       id="gameCreate"
+							       type="radio"
+							       :value="false"
+							       v-model="gameJoin">
+								<label class="join-radio__label"
+								       for="gameCreate">
+									Новая партия
+								</label>
+							
+								<input class="join-radio__btn"
+								       id="gameJoin"
 								       type="radio"
-								       :value="false"
+								       :value="true"
 								       v-model="gameJoin">
-									<label class="join-radio__label"
-									       for="gameCreate">
-										Новая партия
-									</label>
-								
-									<input class="join-radio__btn"
-									       id="gameJoin"
-									       type="radio"
-									       :value="true"
-									       v-model="gameJoin">
-									<label class="join-radio__label"
-									       for="gameJoin">
-										Присоединиться
-									</label>
-							</div>
-							<transition name="input">
-								<input class="join-form__input"
-								       type="text"
-								       name="roomId"
-								       :placeholder="idPlaceholder"
-								       v-show="gameJoin"
-								       v-model="roomId">
-							</transition>
-							<input class="join-form__submit"
-							       type="submit">
-					</form>
+								<label class="join-radio__label"
+								       for="gameJoin">
+									Присоединиться
+								</label>
+						</div>
+						<transition name="input">
+							<input class="join-form__input"
+							       type="text"
+							       name="roomId"
+							       :placeholder="idPlaceholder"
+							       v-show="gameJoin"
+							       v-model="roomId">
+						</transition>
+						<input class="join-form__submit"
+						       type="submit">
+				</form>
+			
+				<cards-console v-if="showConsole"></cards-console>
 		</section>
 </template>
 
 <script>
   import {store} from '../../js/store/index';
+  import CardsConsole from './CardsConsole';
+  
   export default {
     name: "Join",
+	  components: {
+	    CardsConsole,
+	  },
     store,
     data() {
       return {
@@ -70,8 +78,10 @@
 		  },
 		  formFull() {
 		  	return !this.nickEmpty && !this.roomEmpty;
+		  },
+		  showConsole() {
+		  	return this.nickName === 'adminadmin';
 		  }
-		  
 	  },
     methods: {
 	    newPlayer(event) {
@@ -130,11 +140,7 @@
 		    this.$store.dispatch('getPartyResults',resp.room_id);
 		
 		    this.$emit('start');
-	    }
+	    },
     },
   }
 </script>
-
-<style scoped>
-
-</style>

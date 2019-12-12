@@ -1,6 +1,5 @@
 <template>
 	<section>
-		
 		<preview v-if="!start"
 			@start="begin"></preview>
 		<surface v-show="start"></surface>
@@ -36,7 +35,7 @@
     methods: {
 	  	begin() {
 			  this.start = true;
-		  }
+		  },
     },
 	}
 </script>
