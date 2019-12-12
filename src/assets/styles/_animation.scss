@@ -6,6 +6,7 @@
     transform: translateY(0);
   }
 }
+
 @keyframes appear {
   0% {
     opacity: 0;
@@ -18,6 +19,7 @@
 .appear {
   animation: appear 0.2s ease;
 }
+
 .onTap {
   &:active {
     animation: onTapped 0.2s ease;
@@ -35,6 +37,7 @@
 
 .hue-rotate {
   position: relative;
+
   &::before {
     content: '';
     position: absolute;
@@ -44,8 +47,8 @@
     height: 100%;
     opacity: 0.2;
     animation: hue-rotate 5s infinite;
-    background: linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%),
-    linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),
-    linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%);
+    background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+    linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+    linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
   }
 }

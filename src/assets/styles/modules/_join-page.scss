@@ -16,10 +16,12 @@
       padding: 4px 8px;
       margin: 0 auto 30px auto;
     }
+
     &__submit {
       @extend .submit-btn;
     }
   }
+
   &-radio {
     margin: 30px 0;
     display: grid;
@@ -30,6 +32,7 @@
       grid-template-rows: auto 1fr;
       grid-gap: 10px;
     }
+
     &__label {
       padding: 4px 8px;
       color: #3333deb8;
@@ -45,9 +48,11 @@
       filter: contrast(1.2);
       transform: scale(0.95)
     }
+
     &__btn {
       @extend .invisible;
-      &:checked+label {
+
+      &:checked + label {
         opacity: 1;
         filter: contrast(1);
         transform: scale(1)

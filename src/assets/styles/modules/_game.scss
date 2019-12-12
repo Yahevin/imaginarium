@@ -1,6 +1,7 @@
 .game {
   @extend .absolute;
   @extend .flex-center;
+
   &__btn_panel {
     button {
       @extend .font-base;
@@ -20,6 +21,7 @@
   bottom: 0;
   height: 100px;
   width: 100%;
+
   & button {
     margin: 0 20px;
   }
