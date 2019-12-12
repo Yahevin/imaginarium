@@ -212,7 +212,7 @@
 			  }
 		  },
 		  async clearTheQuestion() {
-		  	if (this.question > 0) {
+		  	if (this.question.length > 0) {
 				  this.$store.dispatch('clearTheQuestion');
 			  }
 		  },
