@@ -517,27 +517,35 @@ module.exports = async function(app, db) {
 			});
 		}
 		function moveToBasket(resolve) {
-			cardsId.forEach((currentId,index)=> {
-				let moveToBasketReq = db.format(sql.ii2,
-					['in_basket', 'distribution_id', 'card_id', distribution.id, currentId]);
-				db.query(moveToBasketReq, function (err, results) {
-					if (err) throw err;
-					if(index >= (cardsId.length - 1)) {
-						return resolve();
-					}
+			if (cardsId.length > 0) {
+				cardsId.forEach((currentId, index) => {
+					let moveToBasketReq = db.format(sql.ii2,
+						['in_basket', 'distribution_id', 'card_id', distribution.id, currentId]);
+					db.query(moveToBasketReq, function (err, results) {
+						if (err) throw err;
+						if (index >= (cardsId.length - 1)) {
+							return resolve();
+						}
+					});
 				});
-			});
+			} else {
+				resolve();
+			}
 		}
 		function cleanTableCards() {
-			tableCards.forEach((currentId,index)=>{
-				let cleanTableCardsReq = db.format(sql.dfw, ['cards_on_table', 'id', currentId]);
-				db.query(cleanTableCardsReq, function (err, results) {
-					if (err) throw err;
-					if(index >= (tableCards.length - 1)) {
-						res.json({success: true});
-					}
+			if (tableCards.length > 0) {
+				tableCards.forEach((currentId, index) => {
+					let cleanTableCardsReq = db.format(sql.dfw, ['cards_on_table', 'id', currentId]);
+					db.query(cleanTableCardsReq, function (err, results) {
+						if (err) throw err;
+						if (index >= (tableCards.length - 1)) {
+							res.json({success: true});
+						}
+					});
 				});
-			});
+			} else {
+				res.json({success: true});
+			}
 		}
 		
 		new Promise(resolve => {
@@ -651,6 +659,7 @@ module.exports = async function(app, db) {
 			return diff < 0;
 		}
 		function clearBasket(resolveMain) {
+			inBasketCards = [];
 			new Promise(resolve => {
 				let clearReq = db.format(sql.dfw,['distribution','id',distributionId]);
 				db.query(clearReq, function (err, results) {
@@ -1277,10 +1286,10 @@ module.exports = async function(app, db) {
 		});
 	});
 	
+	
 	app.post('/add-card', async (req, res) => {
 		let url = req.body.img_url;
 		
-	
 		let addCardReq =  db.format(sql.ii1, ['cards', 'img_url', url]);
 		db.query(addCardReq, function (err, results) {
 			if (err) throw err;
