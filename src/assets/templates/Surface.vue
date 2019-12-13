@@ -12,16 +12,16 @@
 					@mouseover="mouseOver($event.target)">
 			</div>
 		</div>
-		<img class="bg__img" src="https://yastatic.net/s3/bro-bg-store/f509a2ab-80e4-420b-a8a7-f1e7df804c3a.webp">
+		<img class="bg__img" :src="bgImg">
 	</div>
 </template>
 
 <script>
   import $ from "jquery";
+  import img from '@/assets/img/bg-mount.jpg'
   import {store} from '../js/store/index';
 	import getSiblings from '@/assets/js/mixins/surfaceCells'
-
-
+  
   export default {
     name: "Surface",
     store,
@@ -29,6 +29,7 @@
     	return {
     		cells: [],
 		    siblings: [],
+		    bgImg: img,
 	    }
 	  },
 	  created() {
