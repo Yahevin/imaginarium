@@ -6,6 +6,7 @@
 				{{ question }}
 			</span>
 			<input class="cards-question__input"
+			       placeholder="Загадка"
 						 v-show="myTurn"
 						 v-model="questionAsk">
 		</article>
@@ -25,10 +26,20 @@
 					     :src="card.img_url">
 				</div>
 			</article>
-			<input class="cards-form__submit"
-			       v-show="canSet"
-			       :disabled="submitDisabled"
-			       type="submit">
+				<article class="cards-view"
+							v-show="chosen !== null">
+					<transition name="appear">
+						<div class="cards-view__wrap">
+							<img :src="chosenImg" class="cards-view__img">
+							<input class="cards-form__submit"
+							       v-show="canSet"
+							       :disabled="submitDisabled"
+							       type="submit">
+						</div>
+					</transition>
+					<div class="cards-view__bg"
+								 @click="chosen = null"></div>
+				</article>
 		</form>
 	</section>
 </template>
@@ -72,6 +83,9 @@
 		  submitDisabled() {
 		  	return this.chosen === null || this.questionAsk.length === 0 && this.myTurn;
 		  },
+		  chosenImg() {
+		  	return this.chosen !== null ? this.chosen.img_url : '';
+		  }
 	  },
 	  watch: {
       gameAction: function () {

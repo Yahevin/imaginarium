@@ -76,6 +76,7 @@
   color: green;
   border: 0;
   cursor: pointer;
+  flex-shrink: 0;
   clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
   -wibkit-clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
   @extend .onTap;
