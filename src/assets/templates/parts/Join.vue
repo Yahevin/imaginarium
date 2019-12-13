@@ -123,6 +123,7 @@
 			    },
 			    success:(resp)=>{
 				    this.setPlayer(resp);
+				    alert('Номер комнаты: ' + resp.room_id);
 			    }
 		    });
 	    },
