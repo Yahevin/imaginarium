@@ -1,0 +1,47 @@
+//Media queries
+$phone: '(max-width: 767px)';
+$pad: '(max-width: 1199px)';
+$desktop: '(min-width: 1200px)';
+
+//font-size
+$font-size-small-desc: 16px;
+$font-size-small-pad: 14px;
+$font-size-small-phone: 12px;
+
+$font-size-base-desc: 20px;
+$font-size-base-pad: 18px;
+$font-size-base-phone: 16px;
+
+$font-size-big-desc: 26px;
+$font-size-big-pad: 24px;
+$font-size-big-phone: 22px;
+
+//font-weight
+$font-weight-regular: 400;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 700;
+$font-weight-extra-bold: 800;
+$font-weight-light: 300;
+
+//line-height
+$line-height-small-desc: 22px;
+$line-height-small-pad: 20px;
+$line-height-small-phone: 18px;
+
+$line-height-base-desc: 28px;
+$line-height-base-pad: 24px;
+$line-height-base-phone: 22px;
+
+$line-height-big-desc: 32px;
+$line-height-big-pad: 30px;
+$line-height-big-phone: 28px;
+
+//colors
+$gold: #FFD700;
+$grey: #808080;
+$dark-grey: #4a4040;
+$green: #64ff64;
+$dark-green: #316731;
+$peach: #e89a9a;
+$dark-peach: #c38585;
+$red: red;

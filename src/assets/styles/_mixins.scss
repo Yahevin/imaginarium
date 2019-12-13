@@ -1,0 +1,106 @@
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+
+
+//Start fonts
+.font-small {
+  font-size: $font-size-small-desc;
+  line-height: $line-height-small-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-small-pad;
+    line-height: $line-height-small-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-small-phone;
+    line-height: $line-height-small-phone;
+  }
+}
+
+.font-base {
+  font-size: $font-size-base-desc;
+  line-height: $line-height-base-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-base-pad;
+    line-height: $line-height-base-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-base-phone;
+    line-height: $line-height-base-phone;
+  }
+}
+
+.font-big {
+  font-size: $font-size-big-desc;
+  line-height: $line-height-big-desc;
+  @media screen and #{$pad} {
+    font-size: $font-size-big-pad;
+    line-height: $line-height-big-pad;
+  }
+  @media screen and #{$phone} {
+    font-size: $font-size-big-phone;
+    line-height: $line-height-big-phone;
+  }
+}
+
+//End fonts
+
+// Start Element
+.absolute {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invisible {
+  height: 0;
+  visibility: hidden;
+  position: absolute;
+}
+
+.submit-btn {
+  margin: 0 auto;
+  width: 50px;
+  height: 50px;
+  background-color: green;
+  color: green;
+  border: 0;
+  cursor: pointer;
+  clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
+  -wibkit-clip-path: polygon(50% 100%, 5% 66%, 16% 51%, 45% 73%, 86% 9%, 100% 20%);
+  @extend .onTap;
+  @extend .appear;
+  @extend .clickable;
+
+  &:disabled {
+    background-color: darkslategrey;
+    color: darkslategrey;
+  }
+}
+
+.clickable {
+  position: relative;
+  pointer-events: all;
+  z-index: 2;
+}
+.just-visible {
+  position: relative;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.full-screen {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}

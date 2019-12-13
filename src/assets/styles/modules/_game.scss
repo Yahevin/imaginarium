@@ -1,0 +1,28 @@
+.game {
+  @extend .absolute;
+  @extend .flex-center;
+
+  &__btn_panel {
+    button {
+      @extend .font-base;
+      font-family: 'Roboto-Bold', sans-serif;
+      display: block;
+      width: 60px;
+      height: 60px;
+      background-color: orange;
+      @extend .clickable;
+    }
+  }
+}
+
+.nav {
+  @extend .flex-center;
+  position: absolute;
+  bottom: 0;
+  height: 100px;
+  width: 100%;
+
+  & button {
+    margin: 0 20px;
+  }
+}

@@ -1,0 +1,10 @@
+.console {
+  @extend .absolute;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & .join-form {
+    padding: 10vw;
+  }
+}
