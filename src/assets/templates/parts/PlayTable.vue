@@ -52,7 +52,7 @@
 <script>
 	import { mapGetters } from 'vuex';
   import {store} from '@/assets/js/store/index';
-	import img from '@/assets/img/card_back.png';
+	import img from '@/assets/img/card_back.jpg';
 	
 	export default {
     name: "PlayTable",
