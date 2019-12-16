@@ -25,11 +25,12 @@
     grid-template-columns: repeat(3, minmax(auto, calc(33% - 32px /3)));
     grid-auto-rows: calc(50% - 8px);
     @media screen and #{$phone} {
-      max-height: calc((100vh - 210px));
-      width: 100%;
+      max-height: calc((100vh - 260px));
+      width: calc(100vw - 16px);
     }
     @media screen and #{$phone} and ('min-height: 569px') {
-      width: calc((100vh - 210px)/ 9 * 4);
+      grid-template-columns: repeat(2, minmax(auto, calc(50% - 8px)));
+      grid-auto-rows: 31%;
     }
   }
   &-radio {
@@ -103,6 +104,7 @@
     }
     &__img {
       @include size(auto,calc(100% - 70px));
+      max-width: 100%;
       margin: 0 auto;
       object-fit: contain;
       object-position: center;
