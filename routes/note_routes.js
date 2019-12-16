@@ -72,10 +72,25 @@ module.exports = async function(app, db) {
 	app.post('/user-join', async (req, res) => {
 		let roomId = req.body.roomId,
 				nickName = req.body.nickName,
+				users = [],
 				roomExist = false,
 			  userExist = false,
 				newCount,
 				userId;
+		
+		
+		function getUsers(resolve) {
+			let getUsersIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getUsersIdReq, function (err, results) {
+				if (err) throw err;
+				if(results.length > 0) {
+					results.forEach((item)=>{
+						users.push(item.user_id);
+					})
+				}
+				return resolve();
+			});
+		}
 		
 		function getPlayersCount(resolve) {
 			let getPlayersCountReq = db.format(sql.sfw, ['room', 'id', roomId]);
@@ -121,16 +136,20 @@ module.exports = async function(app, db) {
 				if (err) throw err;
 				userExist = results.length > 0;
 				if (userExist) {
-					let data = {
-						success: true,
-						room_id: roomId,
-						user_id: results[0].id,
-						nick_name: nickName,
-						player_style: results[0].player_style,
-						game_master: results[0].game_master,
-						game_action: gameSt.prepare,
-					};
-					res.json(data);
+					results.forEach((item)=>{
+						if (users.includes(item.id)) {
+							let data = {
+								success: true,
+								room_id: roomId,
+								user_id: item.id,
+								nick_name: nickName,
+								player_style: item.player_style,
+								game_master: item.game_master,
+								game_action: gameSt.prepare,
+							};
+							res.json(data);
+						}
+					});
 				}
 				return resolve();
 			});
@@ -155,17 +174,21 @@ module.exports = async function(app, db) {
 				if (err) throw err;
 			});
 		}
-		
 		new Promise(resolve => {
-			getPlayersCount(resolve);
+			getUsers(resolve)
 		}).then(()=>{
-			if (roomExist) {
-				new Promise(resolve => {
-					userJoin(resolve)
-				})
-			}
+			new Promise(resolve => {
+				getPlayersCount(resolve);
+			}).then(()=>{
+				if (roomExist) {
+					new Promise(resolve => {
+						userJoin(resolve)
+					})
+				}
+			})
 		})
 	});
+	
 	
 	
 	app.post('/set-action', async (req, res) => {
@@ -427,8 +450,8 @@ module.exports = async function(app, db) {
 			});
 		}
 		function getUsersId(resolve) {
-			let getCardsIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
-			db.query(getCardsIdReq, function (err, results) {
+			let getUsersIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getUsersIdReq, function (err, results) {
 				if (err) throw err;
 				userCount = results.length;
 				userIds = results.map((item)=>{
