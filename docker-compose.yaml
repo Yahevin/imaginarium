@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      - DB_HOST=mysql
+      - DB_PASSWORD
+      - DB_USER
+      - DB_NAME
+      - TZ=Europe/Moscow
+    ports:
+      - "127.0.0.1:3970:8000"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - "MYSQL_DATABASE=${DB_NAME}"
+      - "MYSQL_USER=${DB_USER}"
+      - "MYSQL_PASSWORD=${DB_PASSWORD}"
+      - TZ=Europe/Moscow
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./dump:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+volumes:
+  mysql:
