@@ -26,20 +26,21 @@
 					     :src="card.img_url">
 				</div>
 			</article>
-				<article class="cards-view"
-							v-show="chosen !== null">
-					<transition name="appear">
-						<div class="cards-view__wrap">
-							<img :src="chosenImg" class="cards-view__img">
-							<input class="cards-form__submit"
-							       v-show="canSet"
-							       :disabled="submitDisabled"
-							       type="submit">
-						</div>
-					</transition>
+			<transition name="slow-visible">
+				<article class="cards-view" v-show="chosen !== null">
+					<div class="cards-view__wrap">
+						<transition name="cards-view">
+							<img :src="chosenImg" class="cards-view__img" v-show="chosen !== null">
+						</transition>
+						<input class="cards-form__submit"
+						       v-show="canSet"
+						       :disabled="submitDisabled"
+						       type="submit">
+					</div>
 					<div class="cards-view__bg"
-								 @click="chosen = null"></div>
+					     @click="chosen = null"></div>
 				</article>
+			</transition>
 		</form>
 	</section>
 </template>
@@ -55,6 +56,7 @@
 		    chosen: null,
 		    questionAsk: '',
 		    didntSet: true,
+		    chosenImg: '',
 	    }
 	  },
 	  computed: {
@@ -83,13 +85,13 @@
 		  submitDisabled() {
 		  	return this.chosen === null || this.questionAsk.length === 0 && this.myTurn;
 		  },
-		  chosenImg() {
-		  	return this.chosen !== null ? this.chosen.img_url : '';
-		  }
 	  },
 	  watch: {
       gameAction: function () {
 	      this.didntSet = this.game.action === 'game-start' ? true : this.didntSet;
+      },
+      chosen: function () {
+	      this.chosenImg = this.chosen !== null ? this.chosen.img_url : this.chosenImg;
       }
 	  },
 	  methods: {
