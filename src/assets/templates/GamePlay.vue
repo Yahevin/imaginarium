@@ -144,7 +144,7 @@
 			  
 			  setInterval(async ()=>{
 				  await this.ping();
-			  },5000);
+			  },2500);
 		  },
 		  async startGame() {
 		  	this.started = true;
