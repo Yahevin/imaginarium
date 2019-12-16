@@ -32,10 +32,11 @@
 						<transition name="cards-view">
 							<img :src="chosenImg" class="cards-view__img" v-show="chosen !== null">
 						</transition>
-						<input class="cards-form__submit"
-						       v-show="canSet"
+						<button class="cards-form__submit"
+						       v-show="canSet && chosen !== null"
 						       :disabled="submitDisabled"
 						       type="submit">
+						</button>
 					</div>
 					<div class="cards-view__bg"
 					     @click="chosen = null"></div>

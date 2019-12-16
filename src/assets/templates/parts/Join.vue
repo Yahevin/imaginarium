@@ -40,8 +40,9 @@
 							       v-show="gameJoin"
 							       v-model="roomId">
 						</transition>
-						<input class="join-form__submit"
-						       type="submit">
+						<button class="join-form__submit"
+						        type="submit">
+						</button>
 				</form>
 			
 				<cards-console v-if="showConsole"></cards-console>

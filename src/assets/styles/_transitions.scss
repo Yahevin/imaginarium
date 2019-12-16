@@ -46,12 +46,14 @@
 
 //Slow
 .slow-visible-enter-active, .slow-visible-leave-active {
+  transition: all 0.25s;
   & .cards-view__bg {
     transition: all 0.25s
   }
 }
 
 .slow-visible-enter, .slow-visible-leave-to {
+  transition: all 0.25s;
   & .cards-view__bg {
     opacity: 0;
   }
