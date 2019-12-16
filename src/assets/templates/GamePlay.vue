@@ -144,7 +144,7 @@
 			  
 			  setInterval(async ()=>{
 				  await this.ping();
-			  },5000);
+			  },2500);
 		  },
 		  async startGame() {
 		  	this.started = true;
@@ -273,7 +273,6 @@
 				  type: 'POST',
 				  url: '/turn-end',
 				  data: {
-				  	user_id: this.player.id,
 				  	room_id: this.gameId,
 				  },
 				  success: () => {

@@ -6,7 +6,8 @@
 			       class="join-form__input"
 			       placeholder="image-url"
 			       v-model="newCard">
-			<input type="submit" class="join-form__submit">
+			<button type="submit" class="join-form__submit">
+			</button>
 		</form>
 	</section>
 </template>

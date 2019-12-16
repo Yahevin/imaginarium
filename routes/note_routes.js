@@ -771,7 +771,9 @@ module.exports = async function(app, db) {
 
 	app.post('/turn-end', async (req, res) => {
 		let roomId = req.body.room_id,
-				userId = req.body.user_id;
+				usersId = [],
+				users = [],
+				gmId = null;
 		
 		function changeGameStatus(resolve) {
 			let changeGameStatusReq = db.format(sql.usw, ['room', 'game_action', gameSt.start, 'id', roomId]);
@@ -780,61 +782,60 @@ module.exports = async function(app, db) {
 					return resolve();
 			});
 		}
-		function demoteMe(resolve) {
-			let demoteMeReq = db.format(sql.usw, ['users', 'game_master', false, 'id', userId]);
+		function getUsers(resolve) {
+			let getUsersId = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			db.query(getUsersId, function(err, results) {
+				if (err) throw err;
+				results.forEach((item)=>{
+					usersId.push(item.user_id);
+				});
+				return resolve();
+			});
+		}
+		function findGM(resolve) {
+			usersId.forEach((currentId,index)=>{
+				let getUsers = db.format(sql.sfw, ['users', 'id', currentId]);
+				db.query(getUsers, function(err, results) {
+					if (err) throw err;
+					results.forEach((item)=>{
+						users.push(item);
+						if (item.game_master) {
+							gmId = item.id
+						}
+					});
+					if(index >= (usersId.length - 1)) {
+						return resolve();
+					}
+				});
+			});
+		}
+		function demoteGM(resolve) {
+			let demoteMeReq = db.format(sql.usw, ['users', 'game_master', false, 'id', gmId]);
 			db.query(demoteMeReq, function(err, results) {
 				if (err) throw err;
 				return resolve();
 			});
 		}
 		function findNewGM() {
-			let usersId = [],
-					users = [];
+			let current = 0,
+					next;
+				
+			users.forEach((item,index)=>{
+				if (+item.id === +gmId) {
+					current = index;
+				}
+			});
+			if (current < (users.length - 1)) {
+				next = users[current + 1];
+			} else {
+				next = users[0];
+			}
 			
-			new Promise(resolve => {
-				let getUsersId = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
-				db.query(getUsersId, function(err, results) {
-					if (err) throw err;
-					results.forEach((item)=>{
-						usersId.push(item.id);
-					});
-					return resolve();
-				});
-			}).then(()=>{
-				new Promise(resolve => {
-					usersId.forEach((currentId,index)=>{
-						let getUsers = db.format(sql.sfw, ['users', 'id', currentId]);
-						db.query(getUsers, function(err, results) {
-							if (err) throw err;
-							results.forEach((item)=>{
-								users.push(item);
-							});
-							if(index >= (usersId.length - 1)) {
-								return resolve();
-							}
-						});
-					});
-				}).then(()=>{
-					let current = 0,
-							next;
-					
-					users.forEach((item,index)=>{
-						if (+item.id === +userId) {
-							current = index;
-						}
-					});
-					if (current < (users.length - 1)) {
-						next = users[current + 1];
-					} else {
-						next = users[0];
-					}
-					
-					let setGM = db.format(sql.usw, ['users', 'game_master', true, 'id', next.id]);
-					db.query(setGM, function(err, results) {
-						if (err) throw err;
-						res.json({success: true});
-					});
-				})
+			
+			let setGM = db.format(sql.usw, ['users', 'game_master', true, 'id', next.id]);
+			db.query(setGM, function(err, results) {
+				if (err) throw err;
+				res.json({success: true});
 			});
 		}
 		
@@ -842,9 +843,17 @@ module.exports = async function(app, db) {
 			changeGameStatus(resolve);
 		}).then(()=>{
 			new Promise(resolve => {
-				demoteMe(resolve)
+				getUsers(resolve)
 			}).then(()=>{
-				findNewGM()
+				new Promise(resolve => {
+					findGM(resolve)
+				}).then(()=>{
+					new Promise(resolve => {
+						demoteGM(resolve)
+					}).then(()=>{
+						findNewGM()
+					})
+				})
 			})
 		});
 	});

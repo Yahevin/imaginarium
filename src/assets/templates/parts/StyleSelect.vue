@@ -17,9 +17,10 @@
 								</div>
 								<div class="style-grid__veil"
 										@click="clearChosen"></div>
-								<input type="submit"
+								<button type="submit"
 								       class="style__submit"
-								       v-show="styleSelected">
+								        v-show="styleSelected">
+								</button>
 						</article>
 				</form>
 		</section>
