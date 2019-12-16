@@ -11,29 +11,38 @@
 					<label class="cards-radio__label"
 					       :for="'tableCards-' + index"></label>
 					<input class="cards-radio__btn"
-					       :id="'tableCards-' + index"
 					       type="radio"
+					       :id="'tableCards-' + index"
 					       :value="card"
+					       :disabled="!showCards"
 					       v-model="chosen">
 					<img class="cards-radio__img"
 					     :src="image(card)">
 					<span class="cards__mark"
+					      v-show="allDone"
 					      v-for="mark in card.marks"
 					      :key="mark.id"
-					      v-show="allDone"
 					      :class="mark.player_style">
 					</span>
 				</div>
 			</article>
-			<input class="cards-form__submit"
-			       type="submit"
-			       :disabled="!canSubmit"
-			       v-if="canGuess">
-			<div class="cards-form__submit"
-			        v-show="allDone && iAmGameMaster && canToEnd"
-			        @click="endRound">
-				Next round!
-			</div>
+			
+			<transition name="slow-visible">
+				<article class="cards-view" v-show="chosen !== null">
+					<div class="cards-view__wrap">
+						<transition name="cards-view">
+							<img :src="chosenImg" class="cards-view__img" v-show="chosen !== null">
+						</transition>
+						<button class="cards-form__submit"
+						       type="submit"
+						       :disabled="!canSubmit"
+						       v-if="canGuess && chosen !== null">
+						</button>
+					</div>
+					<div class="cards-view__bg"
+					     @click="chosen = null"></div>
+				</article>
+			</transition>
 		</form>
 		
 		<!--markers, seen while not all players choose-->
@@ -44,7 +53,6 @@
 			      <!--:class="mark.player_style">-->
 			<!--</span>-->
 		<!--</article>-->
-		
 		
 	</section>
 </template>
@@ -62,7 +70,7 @@
 		  	view: null,
 			  chosen: null,
 			  notGuessed: true,
-			  canToEnd: true,
+			  chosenImg: '',
 		  }
 	  },
 	  computed: {
@@ -100,19 +108,15 @@
 	  watch: {
 		  gameAction: function () {
 			  this.notGuessed = this.game.action === 'game-start' ? true : this.notGuessed;
-			  this.canToEnd = this.game.action === 'game-start' ? true : this.canToEnd;
+		  },
+		  chosen: function () {
+			  this.chosenImg = this.chosen !== null ? this.chosen.img_url : this.chosenImg;
 		  }
 	  },
 	  methods: {
     	image(card) {
     		return this.showCards ? card.img_url : img;
 	    },
-		  cardView(card) {
-		  	this.view = card;
-		  },
-		  closeView() {
-			  this.view = null;
-		  },
 		  cardGuessed(e) {
 			  e.preventDefault();
 			  if(this.chosen.card_id === this.myCard) {
@@ -136,6 +140,7 @@
 					  this.view = null;
 					  if (resp.hasOwnProperty('iAmLast') && resp.iAmLast) {
 					  	this.countTheScore();
+					  	this.endRound();
 					  }
 					  if (!resp.success) {
 						  this.notGuessed = true;
@@ -156,8 +161,9 @@
 			  });
 		  },
 		  endRound() {
-    		this.canToEnd = false;
-		    this.$emit('endRound');
+    		setTimeout(()=>{
+			    this.$emit('endRound');
+		    },10000)
 		  }
 	  },
   }
