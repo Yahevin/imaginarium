@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Yahevin/imaginarium#readme",
   "devDependencies": {
     "@vue/cli": "^3.12.0",
+    "autoprefixer": "^9.7.4",
     "babel-loader": "^8.0.6",
     "browser-sync": "^2.26.7",
     "browser-sync-webpack-plugin": "^2.2.2",
@@ -32,10 +33,6 @@
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^4.2.0",
     "file-system": "^2.2.2",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-postcss": "^8.0.0",
-    "gulp-rename": "^1.4.0",
     "helpers": "0.0.6",
     "html-webpack-plugin": "3.2.0",
     "jquery": "^3.4.1",
@@ -48,8 +45,12 @@
     "nodemon": "^1.19.4",
     "postcss": "^7.0.18",
     "postcss-assets": "^5.0.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.0",
     "postcss-preset-env": "^6.4.0",
+    "postcss-scss": "^2.0.0",
+    "postcss-short": "^5.0.0",
     "request-promise": "^4.2.5",
     "sass-loader": "^8.0.0",
     "scss-loader": "0.0.1",
@@ -69,7 +70,7 @@
     "@babel/polyfill": "^7.7.0",
     "body-parser": "^1.19.0",
     "mongodb": "^3.3.4",
-    "postcss-short": "^5.0.0"
+    "vue": "^2.6.10"
   },
   "description": ""
 }

@@ -33,7 +33,23 @@ module.exports = {
         include: path.resolve(__dirname, 'src/assets'),
         use: ExtractTextPlugin.extract({
           fallback: 'vue-style-loader',
-          use: ['css-loader','sass-loader'],
+          use: [
+            {loader: 'css-loader', options: {  importLoaders: 1 }},
+            'postcss-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                // data: '@import "_variables"; @import "_mixins";',
+                // includePaths: [
+                //   path.join(__dirname, 'resources/assets/sass/utalents'),
+                //   path.join(__dirname, 'node_modules'),
+                // ],
+                // outputStyle: 'uncompressed',
+                sourceMap: true,
+                // minimize: !isDev,
+              },
+            },
+          ],
         }),
       },
       {

@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8000
+ENV NODE_ENV production
+RUN npm run build
 
+EXPOSE 8000
 CMD ["node", "server.js"]
