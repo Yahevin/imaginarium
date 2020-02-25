@@ -4,9 +4,10 @@ const bodyParser = require('body-parser');
 const config = require('./webpack.config.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const compiler = webpack(config);
+const cool = require('cool-ascii-faces');
 
 const app = express();
-const port = 8000;
+const port = process.env.PORT || 8000;
 const db = require('./routes/db/mydb');
 
 
@@ -16,9 +17,12 @@ app.use(webpackDevMiddleware(compiler, {
 }));
 app.use(express.json());
 
+app.get('/', (req, res) => res.render('index'));
+app.get('/cool', (req, res) => res.send(cool()));
 
 require('./routes/db/mydb');
 require('./routes')(app, db);
+
 
 
 app.listen(port, ()=>{

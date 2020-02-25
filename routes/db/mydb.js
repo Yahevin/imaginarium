@@ -3,13 +3,21 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+// conn = mysql.createConnection({
+// 	host     : process.env.DB_HOST,
+// 	user     : process.env.DB_USER,
+// 	password : process.env.DB_PASSWORD,
+// 	database : process.env.DB_NAME,
+// 	port: process.env.PORT || 3306,
+// });
+//
 conn = mysql.createConnection({
-	host     : process.env.DB_HOST,
-	user     : process.env.DB_USER,
-	password : process.env.DB_PASSWORD,
-	database : process.env.DB_NAME,
-	port: 3306,
+	host: "eu-cdbr-west-02.cleardb.net",
+	user: "b3c3d96cd6aef1",
+	password: "f94e55b6",
+	database: "heroku_eb487c497cd57d7"
 });
+
 
 conn.connect(function(err,result) {
 	if (err) throw err;
