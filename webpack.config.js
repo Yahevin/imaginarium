@@ -7,8 +7,30 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackProvideGlobalPlugin = require("webpack-provide-global-plugin");
 
-module.exports = {
-  mode: 'development',
+const isDevelopment = process.env.NODE_ENV ==='development';
+
+console.log(process.env.NODE_ENV);
+
+const plugins =  [
+  new CleanWebpackPlugin(),
+  new VueLoaderPlugin(),
+  new HtmlWebpackPlugin({template: './src/assets/index.html'}),
+  new ExtractTextPlugin('style.css'),
+  new WebpackProvideGlobalPlugin({
+    $: 'jquery',
+    jQuery: 'jquery'
+  }),
+];
+
+if(isDevelopment) {
+  plugins.push(new BrowserSyncPlugin({
+    host: 'localhost',
+    port: 8000,
+  },),)
+}
+
+let config = {
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   entry: {
     polyfill: '@babel/polyfill',
     app: './src/main.js',
@@ -39,14 +61,7 @@ module.exports = {
             {
               loader: 'sass-loader',
               options: {
-                // data: '@import "_variables"; @import "_mixins";',
-                // includePaths: [
-                //   path.join(__dirname, 'resources/assets/sass/utalents'),
-                //   path.join(__dirname, 'node_modules'),
-                // ],
-                // outputStyle: 'uncompressed',
                 sourceMap: true,
-                // minimize: !isDev,
               },
             },
           ],
@@ -83,8 +98,19 @@ module.exports = {
       jquery: "jquery/src/jquery",
     }
   },
+  
+  plugins: plugins,
+  
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
+    filename: 'js/[name].bundle.js',
+    chunkFilename: 'js/[id].chunk.js'
+  },
+};
 
-  devServer: {
+if(isDevelopment) {
+  config.devServer = {
     contentBase: './dist',
     compress: true,
     historyApiFallback: true,
@@ -94,28 +120,8 @@ module.exports = {
     port: 8000,
     stats: {
       normal: true
-    }
-  },
+    },
+  }
+}
 
-  plugins: [
-    new CleanWebpackPlugin(),
-    new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({template: './src/assets/index.html'}),
-    new ExtractTextPlugin('style.css'),
-    new BrowserSyncPlugin({
-      host: 'localhost',
-      port: 8000,
-    }),
-    new WebpackProvideGlobalPlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    }),
-  ],
-  
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-    filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[id].chunk.js'
-  },
-};
+module.exports = config;
