@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --progress",
-    "staging": "cross-env NODE_ENV=staging webpack",
+    "start": "cross-env NODE_ENV=production node server.js ",
+    "dev": "cross-env NODE_ENV=development nodemon server.js",
     "build": "cross-env NODE_ENV=production webpack",
-    "devServer": "nodemon server.js",
-    "dev-client": "webpack-dev-server --port 8000"
+    "dev-client": "webpack-dev-server --port 8000",
+    "testing": "cross-env NODE_ENV=development nodemon test.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,9 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Yahevin/imaginarium/issues"
+  },
+  "engines": {
+    "node": "8.6.0"
   },
   "homepage": "https://github.com/Yahevin/imaginarium#readme",
   "devDependencies": {
@@ -58,19 +61,21 @@
     "url-loader": "^2.2.0",
     "vue": "^2.6.10",
     "vue-loader": "^15.7.2",
+    "vue-router": "^3.1.6",
     "vue-template-compiler": "^2.6.10",
     "vuex": "^3.1.1",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.9.0",
-    "webpack-provide-global-plugin": "0.0.1"
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
     "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "mongodb": "^3.3.4",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "webpack": "^4.41.6",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-provide-global-plugin": "0.0.1"
   },
   "description": ""
 }
