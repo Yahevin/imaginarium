@@ -6,6 +6,8 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const WebpackProvideGlobalPlugin = require("webpack-provide-global-plugin");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const isDevelopment = process.env.NODE_ENV ==='development';
 
@@ -25,7 +27,7 @@ const plugins =  [
 if(isDevelopment) {
   plugins.push(new BrowserSyncPlugin({
     host: 'localhost',
-    port: 8000,
+    port: process.env.PORT,
   },),)
 }
 
@@ -117,7 +119,7 @@ if(isDevelopment) {
     hot: true,
     open: true,
     overlay: true,
-    port: 8000,
+    port: process.env.PORT,
     stats: {
       normal: true
     },
