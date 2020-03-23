@@ -1,43 +1,33 @@
-const sql = require('../mixins/sqlCommands');
-
+const Party = require('../models/Party');
+const Guess = require('../models/Guess');
 
 module.exports = function(app, db) {
-app.post('/get-marks', async (req, res) => {
-	let roomId = req.body.room_id,
-		userIds = [],
-		resp = [];
-	
-	function getUsersId(resolve) {
-		let getCardsIdReq = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
-		db.query(getCardsIdReq, function (err, results) {
-			if (err) throw err;
-			userIds = results.map((item)=>{
-				return item.user_id;
-			});
-			return resolve();
-		});
-	}
-	function getMarks() {
-		userIds.forEach((currentId, index)=>{
-			let getMarksReq = db.format(sql.sfw, ['user__guess', 'user_id', currentId]);
-			db.query(getMarksReq, function (err, results) {
-				if (err) throw err;
-				if (results.length > 0) {
-					resp.push(results[0]);
-				}
-				if(index >= (userIds.length - 1)) {
-					res.json(resp);
-				}
-			});
-		});
-	}
-	
-	new Promise(resolve => {
-		getUsersId(resolve)
-	}).then(()=>{
-		getMarks()
+	app.get('/get-marks', async (req, res) => {
+		
+		async function getUsersId() {
+			try {
+				const results = await Party.getUsersIn(app, db, req.body.room_id);
+				
+				return results.map((item) => {
+					return item.user_id;
+				});
+			}
+			catch (error) {
+				console.log(error);
+			}
+		}
+		async function getMembersGuess(membersId) {
+			try {
+				return await Guess.getByUsersId(app,db,membersId)
+			}
+			catch (error) {
+				console.log(error);
+			}
+		}
+		
+		const membersId = await getUsersId();
+		const guesses = await getMembersGuess(membersId);
+		
+		res.json(guesses);
 	});
-	
-	
-});
 };

@@ -12,9 +12,9 @@ const port = process.env.PORT || 8000;
 const db = require('./routes/db/mydb');
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-}));
+// app.use(webpackDevMiddleware(compiler, {
+//     publicPath: config.output.publicPath,
+// }));
 app.use(express.json());
 
 require('./routes/db/mydb');

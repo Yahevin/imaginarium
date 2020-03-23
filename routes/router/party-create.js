@@ -39,7 +39,7 @@ module.exports = function(app, db) {
 				});
 			});
 		}
-		function setQuestonField(resolve) {
+		function setQuestionField(resolve) {
 			let setQuestonFieldReq = db.format(sql.ii2, ["room__question", 'room_id','question', roomId, '']);
 			db.query(setQuestonFieldReq, function (err, results) {
 				if (err) throw err;
@@ -54,7 +54,7 @@ module.exports = function(app, db) {
 				playerCreate(resolve);
 			}).then(() => {
 				new Promise(resolve => {
-					setQuestonField(resolve);
+					setQuestionField(resolve);
 				}).then(()=>{
 					chainPlayer();
 				})

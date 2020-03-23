@@ -1,6 +1,7 @@
 module.exports = {
 	 sf: "SELECT * FROM ??",
 	sfw: "SELECT * FROM ?? WHERE ?? = ?",
+ sfwi: "SELECT * FROM ?? WHERE ?? IN (?)",
 	dfw: "DELETE FROM ?? WHERE ?? = ?",
 	
 	ii1: "INSERT INTO ?? ( ?? ) VALUES (?)",
