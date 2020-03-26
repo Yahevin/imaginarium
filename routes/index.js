@@ -1,7 +1,5 @@
 const addCard = require('./router/add-card');
-const cardFake = require('./router/card-fake');
 const cradGuess = require('./router/card-guess');
-const cardMain = require('./router/card-main');
 const countScore = require('./router/count-score');
 const createNewCards = require('./router/create-new-cards');
 const getMarks = require('./router/get-marks');
@@ -19,12 +17,11 @@ const tableCards  = require('./router/table-cards');
 const tableClear  = require('./router/table-clear');
 const turnEnd  = require('./router/turn-end');
 const userJoin  = require('./router/user-join');
+const putCard = require('./router/put-card');
 
 module.exports = function(app, db) {
 	addCard(app,db);
-	cardFake(app,db);
 	cradGuess(app,db);
-	cardMain(app,db);
 	countScore(app,db);
 	createNewCards(app,db);
 	getMarks(app,db);
@@ -42,4 +39,5 @@ module.exports = function(app, db) {
 	tableClear(app,db);
 	turnEnd(app,db);
 	userJoin(app,db);
+	putCard(app, db);
 };

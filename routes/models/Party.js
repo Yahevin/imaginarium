@@ -31,9 +31,9 @@ module.exports = {
 			return [];
 		})
 	},
-	getPlayersCount: async function (app, db, roomId) {
+	getPlayersCount: async function (app, db, room_id) {
 		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['room', 'id', roomId]);
+			let format = db.format(sql.sfw, ['room', 'id', room_id]);
 			
 			return db.query(format, function (err, results) {
 				if (err) reject(err);

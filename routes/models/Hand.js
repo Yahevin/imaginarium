@@ -41,4 +41,17 @@ module.exports = {
 			return [];
 		})
 	},
+	removeCard: async function (app, db, hand_card_id) {
+		return new Promise(async (resolve, reject) => {
+			let format = db.format(sql.dfw, ['cards_in_hand', 'id', hand_card_id]);
+			
+			return db.query(format, function (err, results) {
+				if (err) reject(err);
+				return resolve(true);
+			});
+		}).catch((err) => {
+			console.log(err);
+			return false;
+		})
+	},
 };
