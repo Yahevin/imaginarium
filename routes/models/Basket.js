@@ -1,9 +1,9 @@
 const sql = require('../mixins/sqlCommands');
 
 module.exports = {
-	getUsersIn: async function (app, db, roomId) {
+	getCards: async function (app, db, distribution_id) {
 		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			let format = db.format(sql.sfw, ['in_basket', 'distribution_id', distribution_id]);
 			
 			return db.query(format, function (err, results) {
 				if (err) reject(err);
@@ -14,34 +14,30 @@ module.exports = {
 			return [];
 		})
 	},
-	getUsersIdList: async function (app, db, roomId) {
+	clear: async function (app, db, distribution_id) {
 		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['user__room', 'room_id', roomId]);
+			let format = db.format(sql.dfw, ['distribution', 'id', distribution_id]);
 			
 			return db.query(format, function (err, results) {
 				if (err) reject(err);
-				
-				let users = results.map((item) => {
-					return item.user_id;
-				});
-				return resolve(users);
+				return resolve(true);
 			});
 		}).catch((error) => {
 			console.log(error);
-			return [];
-		})
+			return false;
+		});
 	},
-	getPlayersCount: async function (app, db, roomId) {
+	add: async function (app, db, room_id) {
 		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['room', 'id', roomId]);
+			let format = db.format(sql.ii1, ['distribution', 'room_id', room_id]);
 			
 			return db.query(format, function (err, results) {
 				if (err) reject(err);
-				return resolve(results[0].player_count);
+				return resolve(true);
 			});
 		}).catch((error) => {
 			console.log(error);
-			return 0;
-		})
+			return false;
+		});
 	},
 };

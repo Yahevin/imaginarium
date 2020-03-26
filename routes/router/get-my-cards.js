@@ -16,17 +16,8 @@ module.exports = function(app, db) {
 			}
 		}
 		
-		async function getHandCards(usersCardsList) {
-			try {
-				return await Hand.getCards(app, db, usersCardsList);
-			}
-			catch (error) {
-				console.log(error);
-			}
-		}
-		
 		const usersCardsList = await getUsersHandCardsId();
-		const usersCards = await getHandCards(usersCardsList);
+		const usersCards = await Hand.getCards(app, db, usersCardsList);
 		
 		res.json(usersCards);
 	});
