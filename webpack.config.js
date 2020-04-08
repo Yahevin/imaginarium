@@ -26,7 +26,7 @@ const plugins =  [
 
 if(isDevelopment) {
   plugins.push(new BrowserSyncPlugin({
-    host: 'localhost',
+    host: '127.0.0.1',
     port: process.env.PORT,
   },),)
 }
