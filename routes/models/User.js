@@ -63,4 +63,58 @@ module.exports = {
       throw {desc: 'Function failed: User.find', detail: error};
     })
   },
+  findGM:       function (app, db, players_id_list) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.sfwi, ['users', 'id', players_id_list]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          results.forEach((item) => {
+            if (item.game_master) {
+              return resolve(item.id);
+            }
+          });
+
+          return reject('GM not found');
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: User.findGM', detail: error};
+    })
+  },
+  demoteGM:     function (app, db, gm_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.usw, ['users', 'game_master', false, 'id', gm_id]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve();
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: User.demoteGM', detail: error};
+    })
+  },
+  setGM:        function (app, db, new_gm_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.usw, ['users', 'game_master', true, 'id', new_gm_id]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve();
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: User.setGM', detail: error};
+    })
+  },
 };
