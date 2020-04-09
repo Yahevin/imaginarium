@@ -1,10 +1,10 @@
 const sql = require('../mixins/sqlCommands');
 
 module.exports = {
-  create: function (app, db, nick_name) {
+  create:       function (app, db, nick_name, game_master = false) {
     return new Promise(async (resolve, reject) => {
       try {
-        let format = db.format(sql.ii3, ['users', 'nick_name','game_master','player_style', nick_name, false, null]);
+        let format = db.format(sql.ii3, ['users', 'nick_name','game_master','player_style', nick_name, game_master, false, null]);
         return db.query(format, function (err, results) {
           if (err) return reject(err);
           return resolve (results.insertId);
@@ -17,7 +17,7 @@ module.exports = {
       throw {desc: 'Function failed: User.create', detail: error};
     })
   },
-	gameMaster: function (app, db, user_id) {
+	gameMaster:   function (app, db, user_id) {
 		return new Promise(async (resolve, reject) => {
       try {
         let format = db.format(sql.sfw, ['users', 'id', user_id]);
@@ -38,7 +38,7 @@ module.exports = {
       throw {desc: 'Function failed: gameMaster', detail: error};
 		})
 	},
-  find: function (app, db, nick_name) {
+  find:         function (app, db, nick_name) {
     return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.sfw, ['users', 'nick_name', nick_name]);
