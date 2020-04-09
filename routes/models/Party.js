@@ -1,6 +1,24 @@
 const sql = require('../mixins/sqlCommands');
+const gameSt = require('../mixins/gameStatus');
 
 module.exports = {
+  create: function (app, db) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.ii2, ['room', 'game_action','player_count', gameSt.prepare, 1]);
+
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve(results.insertId);
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: Party.create', detail: error};
+    })
+  },
 	getUsersIn: function (app, db, room_id) {
 		return new Promise((resolve, reject) => {
       try {
