@@ -1,16 +1,22 @@
-const sql = require('../mixins/sqlCommands');
+const User = require('../models/User');
 
 
 module.exports = function(app, db) {
-app.post('/set-style', async (req, res) => {
-	let style = req.body.player_style,
-		userId = req.body.user_id,
-		setStyleReq = db.format(sql.usw,
-			['users', 'player_style', style, 'id', userId]);
-	
-	db.query(setStyleReq, function(err, results) {
-		if (err) throw err;
-		res.json({success: true});
-	});
-});
+  app.post('/set-style', async (req, res) => {
+    const style   = req.body.player_style,
+          user_id  = req.body.user_id;
+
+    try {
+      await User.setStyle(app, db, style, user_id);
+
+      return res.json ({
+        success: true,
+      });
+    } catch (error) {
+      return res.json ({
+        success: false,
+        error: error,
+      });
+    }
+  });
 };

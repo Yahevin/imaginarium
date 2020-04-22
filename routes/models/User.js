@@ -134,4 +134,21 @@ module.exports = {
       throw {desc: 'Function failed: User.setGM', detail: error};
     })
   },
+  setStyle: function (app, db, style, user_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.usw, ['users', 'player_style', style, 'id', user_id]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve();
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: User.setStyle', detail: error};
+    })
+  },
+
 };
