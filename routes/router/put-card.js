@@ -18,14 +18,6 @@ module.exports = function (app, db) {
 		const user_is_main = await User.gameMaster(user_id);
 		const insert_id = await Table.putCard(app, db, img_url, card_id, user_is_main);
 		
-		const config = {
-			user_id: user_id,
-			room_id: room_id,
-			table_card_id: insert_id,
-			card_id: card_id,
-			user_is_main: user_is_main,
-		};
-		
 		await Table.noteTheCard(app, db, user_id, room_id, insert_id, card_id, user_is_main);
 		
 		await Hand.removeCard(app, db, hand_card_id);
