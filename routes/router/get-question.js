@@ -8,12 +8,12 @@ module.exports = function(app, db) {
       const question = Guess.getQuestion (app, db, room_id);
 
       if (question.exist) {
-        res.json ({
+        return res.json ({
           success: true,
           question: question.data
         })
       } else {
-        res.json ({
+        return res.json ({
           success: false
         })
       }

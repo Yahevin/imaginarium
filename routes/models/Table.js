@@ -111,6 +111,26 @@ module.exports = {
       throw {desc: 'Function failed: Table.getCardsIdList', detail: error};
     })
   },
+  getCards: function (app, db, table_items_id_list) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.sfwi, ['cards_on_table', 'id', table_items_id_list]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          if(results.length > 0) {
+            return resolve (results);
+          } else {
+            return reject('result is empty');
+          }
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: Table.getCards', detail: error};
+    })
+  },
   clear: function (app, db, table_id_list) {
     return new Promise((resolve, reject) => {
       try {
