@@ -1,4 +1,3 @@
-const sql = require('../mixins/sqlCommands');
 const Guess = require('../models/Guess');
 
 

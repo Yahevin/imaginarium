@@ -1,8 +1,8 @@
 const sql = require('../mixins/sqlCommands');
 
 module.exports = {
-  create:       function (app, db, nick_name, game_master = false) {
-    return new Promise(async (resolve, reject) => {
+  create: function (app, db, nick_name, game_master = false) {
+    return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.ii3, ['users', 'nick_name','game_master','player_style', nick_name, game_master, false, null]);
         return db.query(format, function (err, results) {
@@ -17,8 +17,25 @@ module.exports = {
       throw {desc: 'Function failed: User.create', detail: error};
     })
   },
-	gameMaster:   function (app, db, user_id) {
-		return new Promise(async (resolve, reject) => {
+  getList: function (app, db, users_id_list) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.sfwi, ['users', 'id', users_id_list]);
+
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve (results);
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: User.getList', detail: error};
+    })
+  },
+	gameMaster: function (app, db, user_id) {
+		return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.sfw, ['users', 'id', user_id]);
 
@@ -38,7 +55,7 @@ module.exports = {
       throw {desc: 'Function failed: gameMaster', detail: error};
 		})
 	},
-  find:         function (app, db, nick_name) {
+  find: function (app, db, nick_name) {
     return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.sfw, ['users', 'nick_name', nick_name]);
@@ -63,7 +80,7 @@ module.exports = {
       throw {desc: 'Function failed: User.find', detail: error};
     })
   },
-  findGM:       function (app, db, players_id_list) {
+  findGM: function (app, db, players_id_list) {
     return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.sfwi, ['users', 'id', players_id_list]);
@@ -85,7 +102,7 @@ module.exports = {
       throw {desc: 'Function failed: User.findGM', detail: error};
     })
   },
-  demoteGM:     function (app, db, gm_id) {
+  demoteGM: function (app, db, gm_id) {
     return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.usw, ['users', 'game_master', false, 'id', gm_id]);
@@ -101,7 +118,7 @@ module.exports = {
       throw {desc: 'Function failed: User.demoteGM', detail: error};
     })
   },
-  setGM:        function (app, db, new_gm_id) {
+  setGM: function (app, db, new_gm_id) {
     return new Promise((resolve, reject) => {
       try {
         let format = db.format(sql.usw, ['users', 'game_master', true, 'id', new_gm_id]);
