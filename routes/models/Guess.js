@@ -45,7 +45,7 @@ module.exports = {
           if (results.length > 0) {
             return resolve({
               exist: true,
-              data: results[0]
+              data: results[0].question
             });
           } else {
             return resolve({
