@@ -99,5 +99,40 @@ module.exports = {
       throw {desc: 'Function failed: Guess.setQuestion', detail: error};
     });
   },
+  make: function (app, db, user_id, guess_id, player_style) {
+    return new Promise((resolve) => {
+      try {
+        let format = db.format(sql.ii3, ['user__guess', 'user_id', 'guess_id', 'player_style', user_id, guess_id, player_style]);
+
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve({
+            success: true
+          })
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: Guess.make', detail: error};
+    });
+  },
+  getVoteList: function (app, db, users_id_list) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.sfwi, ['user__guess', 'user_id', users_id_list]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve(results);
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: Guess.getVoteList', detail: error};
+    })
+  },
 };
 

@@ -48,15 +48,18 @@ module.exports = {
 	},
 	getCardsCount: function (app, db, room_id) {
 		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['room__table', 'room_id', room_id]);
-			
-			db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(results.length);
-			});
+		  try {
+        let format = db.format (sql.sfw, ['room__table', 'room_id', room_id]);
+
+        db.query (format, function (err, results) {
+          if (err) return reject(err);
+          return resolve (results.length);
+        });
+      } catch (error) {
+        return reject(error);
+      }
 		}).catch((error) => {
-			console.log(error);
-			return false;
+      throw {desc: 'Function failed: Table.getCardsCount', detail: error};
 		})
 	},
   getItemsIdList: function (app, db, room_id) {
@@ -146,5 +149,25 @@ module.exports = {
     }).catch((error) => {
       throw {desc: 'Function failed: Table.clear', detail: error};
     })
-  }
+  },
+  getItem: function (app, db, user_id) {
+    return new Promise((resolve, reject) => {
+      try {
+        let format = db.format(sql.sfw, ['user__table', 'user_id', user_id]);
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          if (results.length > 0) {
+            return resolve (results[0]);
+          } else {
+            return reject('result is empty');
+          }
+        });
+      }
+      catch (error) {
+        return reject(error);
+      }
+    }).catch((error) => {
+      throw {desc: 'Function failed: Table.getItem', detail: error};
+    })
+  },
 };
