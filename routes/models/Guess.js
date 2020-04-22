@@ -18,10 +18,10 @@ module.exports = {
       throw {desc: 'Function failed: setQuestionField', detail: error};
     })
   },
-	getByUsersId: function (app, db, usersIdList) {
+	getByUsersId: function (app, db, users_id_list) {
 		return new Promise((resolve) => {
       try {
-        let format = db.format(sql.sfwi, ['user__guess', 'user_id', usersIdList]);
+        let format = db.format(sql.sfwi, ['user__guess', 'user_id', users_id_list]);
 
         return db.query(format, function (err, results) {
           if (err) return reject(err);
