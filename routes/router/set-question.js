@@ -1,35 +1,29 @@
 const sql = require('../mixins/sqlCommands');
+const Guess = require('../models/Guess');
 
 
 module.exports = function(app, db) {
 	app.post('/set-question', async (req, res) => {
-		let roomId = req.body.room_id,
+		let room_id = req.body.room_id,
 			question = req.body.question;
-		
-		let checkQuestionReq = db.format(sql.sfw, ['room__question', 'room_id', roomId]);
-		db.query(checkQuestionReq, function (err, results) {
-			if (err) throw err;
-			if (results.length > 0) {
-				setQuestion();
-			} else {
-				createQuestion();
-			}
-		});
-		
-		function createQuestion() {
-			let createQuestionReq = db.format(sql.ii2, ['room__question', 'question', 'room_id', question, roomId]);
-			db.query(createQuestionReq, function (err, results) {
-				if (err) throw err;
-				res.json({success: true});
-			});
-		}
-		
-		function setQuestion() {
-			let setQuestionReq = db.format(sql.usw, ['room__question', 'question', question, 'room_id', roomId]);
-			db.query(setQuestionReq, function (err, results) {
-				if (err) throw err;
-				res.json({success: true});
-			});
-		}
+
+    try {
+      const guess = await Guess.getQuestion(app, db, room_id);
+
+      if (guess.exist) {
+        await Guess.setQuestion(app, db, question, room_id);
+      } else {
+        await Guess.createQuestion(app, db, question, room_id);
+      }
+
+      return res.json({
+        success: true,
+      })
+    } catch(error) {
+      return res.json({
+        success: false,
+        error: error,
+      });
+    }
 	});
 };
