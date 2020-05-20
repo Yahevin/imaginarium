@@ -165,6 +165,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
 		" card_id INT, " +
+		" img_url VARCHAR(255), " +
 		" FOREIGN KEY (user_id) REFERENCES users(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
