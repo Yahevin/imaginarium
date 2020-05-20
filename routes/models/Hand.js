@@ -54,4 +54,37 @@ module.exports = {
 			return false;
 		})
 	},
+  takeTo: async function (app, db, cards) {
+		return new Promise(async (resolve, reject) => {
+		  const row = cards.map((item)=>{
+        return [item.card_id, item.img_url]
+      });
+
+			const format = db.format(sql.im2, ['cards_in_hand', 'card_id', 'img_url', row]);
+
+			return db.query(format, function (err, results) {
+				if (err) return reject(err);
+				return resolve(results);
+			});
+		}).catch((error) => {
+      throw {desc: 'Function failed: takeTo', detail: error};
+		})
+	},
+  chainTo: function (direction) {
+	  return function (app, db, id , hand_items_id_list) {
+      const row = hand_items_id_list.map((item)=>{
+          return [id, item];
+      });
+      const format =  db.format(sql.im2, [direction, 'user_id', 'hand_card_id', row]);
+
+      return new Promise((resolve, reject) => {
+        return db.query(format, function (err, results) {
+          if (err) return reject(err);
+          return resolve(true);
+        });
+      }).catch((error) => {
+        throw {desc: 'Function failed: takeTo', detail: error};
+      })
+    }
+  },
 };
