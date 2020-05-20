@@ -2,7 +2,7 @@ const sql = require('../mixins/sqlCommands');
 
 module.exports = {
 	getSortedByRoom: function (app, db, room_id) {
-		return new Promise((resolve) => {
+		return new Promise((resolve,reject) => {
 			let format = db.format(sql.sfw, ['distribution', 'room_id', room_id]);
 			
 			return db.query(format, function (err, results) {
@@ -14,7 +14,7 @@ module.exports = {
 		})
 	},
 	getCardShelter: function (app, db) {
-		return new Promise((resolve) => {
+		return new Promise((resolve,reject) => {
 			let format = db.format(sql.sf, ['cards']);
 			
 			return db.query(format, function (err, results) {
@@ -26,7 +26,7 @@ module.exports = {
 		})
 	},
   getSelf: function (app, db, room_id) {
-    return new Promise((resolve) => {
+    return new Promise((resolve,reject) => {
       try {
         let format = db.format(sql.sfw, ['distribution', 'room_id', room_id]);
 
@@ -47,7 +47,7 @@ module.exports = {
     })
   },
   moveToBasket: function (app, db, distribution, cards_id_list) {
-    return new Promise((resolve) => {
+    return new Promise((resolve,reject) => {
       try {
         const row = cards_id_list.map((item)=>{
           return [distribution,item]
