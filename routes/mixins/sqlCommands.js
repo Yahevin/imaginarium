@@ -19,4 +19,14 @@ module.exports = {
 	
 	usw: "UPDATE ?? SET ?? = ? WHERE ?? = ?",
  ussw: "UPDATE ?? SET ?? = ?, ?? = ? WHERE ?? = ?",
+
+ insertVar (arr) {
+    return arr.reduce((accum,item,index)=>{
+      if(index !== 1) {
+        return accum + ' ,(?)';
+      } else {
+        return accum
+      }
+    }, 'INSERT INTO ?? ( ?? ) VALUES (?)');
+  },
 };
