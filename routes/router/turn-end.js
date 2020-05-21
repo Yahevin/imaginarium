@@ -12,11 +12,11 @@ module.exports = function(app, db) {
       await Game.setStatus(app, db, gameSt.start, room_id);
 
       const users_id_list  =  await Party.getUsersIdList(app, db, room_id);
-      const gm_id          =  await User.findGM(app, db, users_id_list);
+      const gm_id          =  await User.findGM(app, db, room_id, users_id_list);
       const new_gm_id      =  findNewGM(users_id_list, gm_id);
 
-      await User.demoteGM(app, db, gm_id);
-      await User.setGM(app, db, new_gm_id);
+      await User.demoteGM(app, db, gm_id, room_id);
+      await User.setGM(app, db, new_gm_id, room_id);
 
       return res.json({
         success: true,
