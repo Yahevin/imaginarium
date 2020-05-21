@@ -1,23 +1,25 @@
 const sql = require('../mixins/sqlCommands');
+const cardStatus = require('../mixins/cardStatus');
+const dbQuery = require('../mixins/dbQuery');
 
 module.exports = {
-	setCards: function (app, db, users_id_list, card_pool, cards_count) {
-		let row = [];
-		return new Promise(async (resolve, reject) => {
-			users_id_list.forEach((user_id) => {
-				for (let i = 0; i < cards_count; i++) {
-					row.push([user_id, card_pool[i].id, card_pool[i].img_url]);
-				}
-				card_pool.splice(0, cards_count);
-			});
-			let reqFormat = db.format(sql.im3, ['new_cards', 'user_id','card_id','img_url', row]);
+	setCards: async function (app, db, room_id, users_id_list, card_pool, cards_count) {
+		const row = users_id_list.map((user_id) => {
+      for (let i = 0; i < cards_count; i++) {
+        row.push([
+          card_pool[i].img_url,
+          card_pool[i].id,
+          user_id,
+          room_id,
+          cardStatus.new
+        ]);
+      }
+      card_pool.splice(0, cards_count);
+    });
+    const format = db.format(sql.im5, ['cards' ,'img_url', 'origin_id', 'user_id', 'room_id', 'status', row]);
 
-      db.query (reqFormat, function (err, results) {
-        if (err) return reject (err);
-        return resolve (true);
-      });
-		}).catch((error) => {
-      throw {desc: 'Function failed:setCards', detail: error};
-		})
+    await dbQuery(format,db);
+
+    return {success: true};
 	},
 };
