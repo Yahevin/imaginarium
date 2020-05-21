@@ -41,7 +41,7 @@ module.exports = function(app, db) {
         });
       });
 
-      await Score.update(app, db, rewards);
+      await Score.updateLocal(app, db, room_id, rewards);
 
       return res.json ({
         success: true,
