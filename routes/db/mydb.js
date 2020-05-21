@@ -45,7 +45,7 @@ conn.connect(function(err,result) {
     " room_id INT, " +
     " game_master BOOLEAN, " +
     " player_style VARCHAR(255), " +
-		" FOREIGN KEY (user_id) REFERENCES users(id)" +
+		" FOREIGN KEY (user_id) REFERENCES user(id)" +
 		" ON DELETE CASCADE, " +
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
     " ON DELETE CASCADE, " +
@@ -102,13 +102,13 @@ conn.connect(function(err,result) {
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
     " ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(guess, function(err, results) {
 		if (err) throw err;
 	});
 
 
-  const basket = "CREATE TABLE IF NOT EXISTS shelter" +
+  const basket = "CREATE TABLE IF NOT EXISTS basket" +
     " (id INT not null AUTO_INCREMENT, " +
     " room_id INT, " +
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
@@ -127,7 +127,7 @@ conn.connect(function(err,result) {
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
 		" ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(question, function(err, results) {
 		if (err) throw err;
 	});
