@@ -1,20 +1,20 @@
 const gameSt = require('../mixins/gameStatus');
-const Table = require('../models/Table');
-const Party = require('../models/Party');
-const Guess = require('../models/Guess');
-const Game = require('../models/Game');
+const Table = require('../helpers/Table');
+const Party = require('../helpers/Party');
+const Guess = require('../helpers/Guess');
+const Game = require('../helpers/Game');
 
 
 module.exports = function(app, db) {
 	app.post('/card-guess', async (req, res) => {
 		const user_id = req.body.user_id,
-			room_id = req.body.room_id,
-			guess_id = req.body.guess_id,
-			player_style = req.body.player_style;
+          room_id = req.body.room_id,
+          guess_id = req.body.guess_id,
+          player_style = req.body.player_style;
 
 		try {
-		  const table_item = await Table.getItem(app, db, user_id);
-      const checked    = table_item.hasOwnProperty('table_card_id') && table_item.table_card_id !== parseInt(guess_id);
+		  const table_card = await Table.getCard(app, db, user_id, room_id);
+      const checked    = table_card.hasOwnProperty('table_card_id') && table_card.id !== parseInt(guess_id);
 
       if (!checked) {
         return res.json({success: false});

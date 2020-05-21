@@ -1,4 +1,4 @@
-const Table = require('../models/Table');
+const Table = require('../helpers/Table');
 
 
 module.exports = function(app, db) {
@@ -6,8 +6,7 @@ module.exports = function(app, db) {
 		const room_id = req.body.room_id;
 
     try {
-      const items_id_list = await Table.getItemsIdList(app, db, room_id);
-      const cards         = await Table.getCards(app, db, items_id_list);
+      const cards = await Table.getCards(app, db, room_id);
 
       return res.json ({
         success: true,

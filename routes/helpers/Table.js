@@ -1,199 +1,45 @@
 const sql = require('../mixins/sqlCommands');
+const cardStatus = require('../mixins/cardStatus');
+const isNotEmpty = require('../mixins/isNotEmpty');
+const dbQuery = require('../mixins/dbQuery');
 
 module.exports = {
-	putCard: function (app, db, img_url, card_id, is_main) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.ii3, ['cards_on_table', 'img_url', 'card_id', 'is_main', img_url, card_id, is_main]);
-			db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(results.insertId);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return null;
-		})
-	},
-	noteTheCard: async function (app, db, user_id, room_id, table_card_id, card_id, is_main) {
-		await this.noteToUser.apply(arguments);
-		await this.noteToRoom.apply(arguments);
-	},
-	noteToUser: function (app, db, user_id, room_id, table_card_id, card_id, is_main) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.ii3,
-				['user__table', 'user_id', 'table_card_id', 'is_main', user_id, table_card_id, is_main]);
-			
-			db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(true);
-			});
-			
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		})
-	},
-	noteToRoom: function (app, db, user_id, room_id, table_card_id, card_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.ii3,
-				['room__table', 'room_id', 'table_card_id', 'card_id', room_id, table_card_id, card_id]);
-			
-			db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(true);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		})
-	},
-  getItem: function (app, db, user_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['user__table', 'user_id', user_id]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if (results.length > 0) {
-            return resolve (results[0]);
-          } else {
-            return reject('result is empty');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getItem', detail: error};
-    })
-  },
-  getItems: function (app, db, id) {
-    return new Promise((resolve, reject) => {
-      try {
-        const format = id instanceof Array
-          ? db.format(sql.sfwi, ['user__table', 'user_id', id])
-          : db.format(sql.sfw,  ['room__table', 'room_id', id]);
+	putCard: async function (app, db, card_id) {
+    const format = db.format(sql.usw, ['cards', 'status', cardStatus.table, 'card_id', card_id]);
+    await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if(results.length > 0) {
-            return resolve (results);
-          } else {
-            return reject('result is empty');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getItemsIdList', detail: error};
-    })
-  },
-  getItemsIdList: function (app, db, id) {
-    return new Promise((resolve, reject) => {
-      try {
-        const format = id instanceof Array
-          ? db.format(sql.sfwi, ['user__table', 'user_id', id])
-          : db.format(sql.sfw,  ['room__table', 'room_id', id]);
+    return {success: true};
+	},
+  getCard: async function (app, db, user_id, room_id) {
+    const format = db.format(sql.sfwww, ['user__table', 'user_id', user_id, 'room_id', room_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if(results.length > 0) {
-            return resolve (
-              results.map((item) => {
-                if (item.hasOwnProperty ('table_card_id')) {
-                  return item.table_card_id;
-                }
-              })
-            );
-          } else {
-            return reject('result is empty');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getItemsIdList', detail: error};
-    })
+    if (isNotEmpty(results)) {
+      return results[0];
+    } else {
+      throw ('There is no users card on the table');
+    }
   },
-  getCards: function (app, db, table_items_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfwi, ['cards_on_table', 'id', table_items_id_list]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if(results.length > 0) {
-            return resolve (results);
-          } else {
-            return reject('result is empty');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getCards', detail: error};
-    })
-  },
-  getCardsCount: function (app, db, room_id) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let format = db.format (sql.sfw, ['room__table', 'room_id', room_id]);
+  getCards: async function (app, db, room_id) {
+    const format = db.format(sql.sfww,  ['cards', 'room_id', room_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
 
-        db.query (format, function (err, results) {
-          if (err) return reject(err);
-          return resolve (results.length);
-        });
-      } catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getCardsCount', detail: error};
-    })
+    if (isNotEmpty(results)) {
+      return results[0];
+    } else {
+      throw ('There is no such cards on the table');
+    }
   },
-  getCardsIdList: function (app, db, table_items_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfwi, ['cards_on_table', 'id', table_items_id_list]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if(results.length > 0) {
-            return resolve (
-              results.map((item) => {
-                if (item.hasOwnProperty('card_id')) {
-                  return item.card_id
-                }
-              })
-            );
-          } else {
-            return reject('result is empty');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.getCardsIdList', detail: error};
-    })
+  getCardsCount: async function (app, db, room_id) {
+    const format = db.format (sql.sfww, ['cards', 'room_id', room_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
+
+    return results.length;
   },
-  clear: function (app, db, table_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.dfwi, ['cards_on_table', 'id', table_id_list]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Table.clear', detail: error};
-    })
+  clear: async function (app, db, room_id, basket_id) {
+    const format = db.format(sql.ussww, ['cards', 'status', cardStatus.basket, 'basket_id', basket_id, 'room_id', room_id, 'status', cardStatus.table]);
+    await dbQuery(format,db);
+
+    return {success: true};
   },
 };
