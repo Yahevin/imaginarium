@@ -1,4 +1,4 @@
-const Guess = require('../models/Guess');
+const Guess = require('../helpers/Guess');
 
 
 module.exports = function(app, db) {

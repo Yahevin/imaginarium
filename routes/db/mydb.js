@@ -15,14 +15,14 @@ conn = mysql.createConnection(config);
 
 conn.connect(function(err,result) {
 	if (err) console.log(err);
-	
+
 	const user = "CREATE TABLE IF NOT EXISTS user" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" nick_name VARCHAR(255), " +
 		" password VARCHAR(255), " +
 		" score INT, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(user, function(err, results) {
 		if (err) throw err;
 	});
@@ -33,12 +33,12 @@ conn.connect(function(err,result) {
 		" game_action VARCHAR(255), " +
 		" player_count INT, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(room, function(err, results) {
 		if (err) throw err;
 	});
-	
-	
+
+
 	const user__room = "CREATE TABLE IF NOT EXISTS user__room" +
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
@@ -50,7 +50,7 @@ conn.connect(function(err,result) {
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
     " ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(user__room, function(err, results) {
 		if (err) throw err;
 	});
@@ -60,10 +60,22 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" img_url VARCHAR(255), " +
 		" PRIMARY KEY (id) )";
-	
+
 	conn.query(shelter, function(err, results) {
 		if (err) throw err;
 	});
+
+
+  const basket = "CREATE TABLE IF NOT EXISTS basket" +
+    " (id INT not null AUTO_INCREMENT, " +
+    " room_id INT, " +
+    " FOREIGN KEY (room_id) REFERENCES room(id)" +
+    " ON DELETE CASCADE, " +
+    " PRIMARY KEY (id) )";
+
+  conn.query(basket, function(err, results) {
+    if (err) throw err;
+  });
 
 
 	const card = "CREATE TABLE IF NOT EXISTS card" +
@@ -106,18 +118,6 @@ conn.connect(function(err,result) {
 	conn.query(guess, function(err, results) {
 		if (err) throw err;
 	});
-
-
-  const basket = "CREATE TABLE IF NOT EXISTS basket" +
-    " (id INT not null AUTO_INCREMENT, " +
-    " room_id INT, " +
-    " FOREIGN KEY (room_id) REFERENCES room(id)" +
-    " ON DELETE CASCADE, " +
-    " PRIMARY KEY (id) )";
-
-  conn.query(basket, function(err, results) {
-    if (err) throw err;
-  });
 
 
 	const question = "CREATE TABLE IF NOT EXISTS question" +

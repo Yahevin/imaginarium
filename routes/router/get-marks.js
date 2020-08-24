@@ -1,13 +1,13 @@
-const Party = require('../models/Party');
-const Guess = require('../models/Guess');
+const Party = require('../helpers/Party');
+const Guess = require('../helpers/Guess');
 
 module.exports = function(app, db) {
 	app.get('/get-marks', async (req, res) => {
-		
+
 		async function getUsersId() {
 			try {
 				const results = await Party.getUsersIn(app, db, req.body.room_id);
-				
+
 				return results.map((item) => {
 					return item.user_id;
 				});
@@ -24,10 +24,10 @@ module.exports = function(app, db) {
 				console.log(error);
 			}
 		}
-		
+
 		const membersId = await getUsersId();
 		const guesses = await getMembersGuess(membersId);
-		
+
 		res.json(guesses);
 	});
 };
