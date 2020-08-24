@@ -1,10 +1,10 @@
 const sql = require('../mixins/sqlCommands');
 
-const Hand = require('../models/Hand');
-const Party = require('../models/Party');
-const Basket = require('../models/Basket');
-const NewCards = require('../models/NewCards');
-const Distribution = require('../models/Distribution');
+const Hand = require('../helpers/Hand');
+const Party = require('../helpers/Party');
+const Basket = require('../helpers/Basket');
+const NewCards = require('../helpers/NewCards');
+const Distribution = require('../helpers/Distribution');
 
 module.exports = function(app, db) {
 	app.post('/create-new-cards', async (req, res) => {

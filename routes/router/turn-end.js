@@ -1,7 +1,7 @@
 const gameSt = require('../mixins/gameStatus');
-const Party = require('../models/Party');
-const Game = require('../models/Game');
-const User = require('../models/User');
+const Party = require('../helpers/Party');
+const Game = require('../helpers/Game');
+const User = require('../helpers/User');
 
 
 module.exports = function(app, db) {
