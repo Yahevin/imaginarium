@@ -1,11 +1,9 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const WebpackProvideGlobalPlugin = require("webpack-provide-global-plugin");
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -18,10 +16,6 @@ const plugins =  [
   new VueLoaderPlugin(),
   new HtmlWebpackPlugin({template: './src/assets/index.html'}),
   new ExtractTextPlugin('style.css'),
-  new WebpackProvideGlobalPlugin({
-    $: 'jquery',
-    jQuery: 'jquery'
-  }),
 ];
 
 if(isDevelopment) {
@@ -97,12 +91,9 @@ let config = {
     alias: {
       'vue$': 'vue/dist/vue.runtime.js',
       '@': path.resolve(__dirname, 'src'),
-      jquery: "jquery/src/jquery",
     }
   },
-  
   plugins: plugins,
-  
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
