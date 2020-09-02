@@ -17,6 +17,12 @@ module.exports = {
     const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
     return await dbQuery(format,db);
   },
+  getPlayerId: async function (app, db, user_id, room_id) {
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id,]);
+    const {id} = await dbQuery(format,db);
+
+    return id;
+  },
 	gameMaster: async function (app, db, user_id, room_id) {
     const format = db.format(sql.sfww, ['user__room', 'user_id', user_id, 'room_id', room_id]);
     const result = await dbQuery(format,db);

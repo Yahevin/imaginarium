@@ -82,15 +82,12 @@ conn.connect(function(err,result) {
     " (id INT not null AUTO_INCREMENT, " +
     " img_url VARCHAR(255), " +
     " origin_id INT, " +
-    " user_id INT, " +
-    " room_id INT, " +
+    " player_id INT, " +
     " basket_id INT, " +
     " status INT, " +
     " FOREIGN KEY (origin_id) REFERENCES shelter(id)" +
     " ON DELETE CASCADE, " +
-    " FOREIGN KEY (user_id) REFERENCES user(id)" +
-    " ON DELETE CASCADE, " +
-    " FOREIGN KEY (room_id) REFERENCES room(id)" +
+    " FOREIGN KEY (player_id) REFERENCES user__room(id)" +
     " ON DELETE CASCADE, " +
     " FOREIGN KEY (basket_id) REFERENCES basket(id)" +
     " ON DELETE CASCADE, " +
