@@ -54,6 +54,9 @@
 			player() {
 				return this.$store.getters.player;
 			},
+            gameId() {
+                return this.$store.getters.game.id;
+            },
 		},
 		methods: {
 			clearChosen() {
@@ -64,7 +67,8 @@
 				e.preventDefault();
 				let data = {
 					player_style: this.style,
-					user_id: this.player.id
+					user_id: this.player.id,
+					room_id: this.gameId,
 				};
 				
 				await this.$store.dispatch('setPlayerStyle', data);

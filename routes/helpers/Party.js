@@ -1,130 +1,61 @@
 const sql = require('../mixins/sqlCommands');
 const gameSt = require('../mixins/gameStatus');
+const dbQuery = require('../mixins/dbQuery');
+const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
-  create: function (app, db) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.ii2, ['room', 'game_action','player_count', gameSt.prepare, 1]);
+  create: async function (app, db) {
+    const format = db.format(sql.ii2, ['room', 'game_action','player_count', gameSt.prepare, 1]);
+    const results = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results.insertId);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Party.create', detail: error};
-    })
+    if (results.hasOwnProperty('insertId')) {
+      return results.insertId;
+    } else {
+      throw ('Party create failed. The insert id unknown');
+    }
   },
-	getUsersIn: function (app, db, room_id) {
-		return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+  exist: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['room', 'id', room_id]);
+    const results = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-		}).catch((error) => {
-			throw {desc: 'Function failed: getUsersIn', detail: error};
-		})
+    return isNotEmpty(results);
+  },
+  addPlayer: async function (app, db, room_id, user_id) {
+    const format = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', room_id, user_id]);
+    await dbQuery(format,db);
+
+    return {success: true};
+  },
+	getUsersIn: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+    return await dbQuery(format,db);
 	},
-	getUsersIdList: function (app, db, room_id) {
-		return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+	getPlayersIdList: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+    const results = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if(results.length > 0) {
-            let users = results.map ((item) => {
-              return item.user_id;
-            });
-            return resolve (users);
-          } else {
-            return resolve ([]);
-          }
-			  });
-      }
-      catch (error) {
-        return reject(error);
-      }
-		}).catch((error) => {
-      throw {desc: 'Function failed: getUsersIdList', detail: error};
-		})
+    if (isNotEmpty(results)) {
+      return results.map ((item) => {
+        return item.id;
+      });
+    } else {
+      throw ('The getUsersIdList failed. There is no users in this room');
+    }
 	},
-	getPlayersCount: function (app, db, room_id) {
-		return new Promise((resolve, reject) => {
-			let format = db.format(sql.sfw, ['room', 'id', room_id]);
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				if(results.length > 0 && results[0].hasOwnProperty('player_count')) {
-          return resolve(results[0].player_count);
-        } else {
-          reject('room_id is incorrect');
-        }
-			});
-		}).catch((error) => {
-      throw {desc: 'Function failed: getPlayersCount', detail: error};
-		})
+	getPlayersCount: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['room', 'id', room_id]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results) && results[0].hasOwnProperty('player_count')) {
+      return results[0].player_count;
+    } else {
+      throw ('The getPlayersCount failed. There is no users in this room');
+    }
 	},
-  exist: function (app, db, room_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['room', 'id', room_id]);
+  countUpdate: async function (app, db, new_count, room_id) {
+    const format = db.format(sql.usw, ['room', 'player_count', new_count, 'id', room_id]);
+    await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results.length > 0);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Party.exist', detail: error};
-    })
-  },
-  addPlayer: function (app, db, room_id, user_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', room_id, user_id]);
-
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: addPlayer', detail: error};
-    })
-  },
-  countUpdate: function (app, db, new_count, room_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.usw, ['room', 'player_count', new_count, 'id', room_id]);
-
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: addPlayer', detail: error};
-    })
-  },
+    return {success: true};
+  }
 };

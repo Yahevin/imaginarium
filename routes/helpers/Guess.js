@@ -1,138 +1,51 @@
 const sql = require('../mixins/sqlCommands');
+const dbQuery = require('../mixins/dbQuery');
+const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
-  setQuestionField: function (app, db, room_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.ii2, ['room__question', 'room_id','question', room_id, '']);
+  createQuestion: async function (app, db, room_id, question = '') {
+    const format = db.format(sql.ii2, ['question', 'room_id', room_id, 'question', question]);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: setQuestionField', detail: error};
-    })
+    await dbQuery(format,db);
+
+    return {success: true};
   },
-	getByUsersId: function (app, db, users_id_list) {
-		return new Promise((resolve) => {
-      try {
-        let format = db.format(sql.sfwi, ['user__guess', 'user_id', users_id_list]);
+  setQuestion: async function (app, db, room_id, question) {
+    const format = db.format(sql.usw, ['question', 'room_id', room_id, 'question', question]);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-		}).catch((error) => {
-      throw {desc: 'Function failed: Guess.getByUsersId', detail: error};
-    });
-	},
-  getQuestion: function (app, db, room_id) {
-    return new Promise((resolve) => {
-      try {
-        let format = db.format(sql.sfw, ['room__question', 'room_id', room_id]);
+    await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          if (results.length > 0) {
-            return resolve({
-              exist: true,
-              data: results[0].question
-            });
-          } else {
-            return resolve({
-              exist: false
-            })
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Guess.getQuestion', detail: error};
-    });
+    return {success: true};
   },
-  createQuestion: function (app, db, question, room_id) {
-    return new Promise((resolve) => {
-      try {
-        let format = db.format(sql.ii2, ['room__question', 'question', 'room_id', question, room_id]);
+  getQuestion: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['question', 'room_id', room_id]);
+    const results = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve({
-            success: true
-          })
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Guess.createQuestion', detail: error};
-    });
+    if (isNotEmpty(results) && results[0].hasOwnProperty('question')) {
+      return {
+        data: results[0].question,
+        exist: true
+      };
+    } else {
+      throw ('Question in not exist');
+    }
   },
-  setQuestion: function (app, db, question, room_id) {
-    return new Promise((resolve) => {
-      try {
-        let format = db.format(sql.usw, ['room__question', 'question', question, 'room_id', room_id]);
+  make: async function (app, db, player_id, card_id) {
+    const format = db.format(sql.ii2, ['guess', 'player_id', player_id, 'card_id', card_id]);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve({
-            success: true
-          })
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Guess.setQuestion', detail: error};
-    });
-  },
-  make: function (app, db, user_id, guess_id, player_style) {
-    return new Promise((resolve) => {
-      try {
-        let format = db.format(sql.ii3, ['user__guess', 'user_id', 'guess_id', 'player_style', user_id, guess_id, player_style]);
+    await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve({
-            success: true
-          })
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Guess.make', detail: error};
-    });
+    return {success: true};
   },
-  getVoteList: function (app, db, users_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfwi, ['user__guess', 'user_id', users_id_list]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve(results);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: Guess.getVoteList', detail: error};
-    })
+  getVoteList: async function (app, db, players_id_list) {
+    const format = db.format(sql.sfwi, ['guess', 'player_id', players_id_list]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results)) {
+      return results;
+    } else {
+      throw ('Nobody had voted');
+    }
   },
 };
 

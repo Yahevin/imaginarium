@@ -1,26 +1,31 @@
 const gameSt = require('../mixins/gameStatus');
-const Table = require('../models/Table');
-const Party = require('../models/Party');
-const Guess = require('../models/Guess');
-const Game = require('../models/Game');
+const Table = require('../helpers/Table');
+const Party = require('../helpers/Party');
+const Guess = require('../helpers/Guess');
+const Game = require('../helpers/Game');
+
+const User = require('../helpers/User');
 
 
 module.exports = function(app, db) {
 	app.post('/card-guess', async (req, res) => {
 		const user_id = req.body.user_id,
-			room_id = req.body.room_id,
-			guess_id = req.body.guess_id,
-			player_style = req.body.player_style;
+          room_id = req.body.room_id,
+          card_id = req.body.card_id;
 
 		try {
-		  const table_item = await Table.getItem(app, db, user_id);
-      const checked    = table_item.hasOwnProperty('table_card_id') && table_item.table_card_id !== parseInt(guess_id);
+		  const player_id  = await User.getPlayerId(app,db,user_id,room_id);
+		  const table_card = await Table.getCard(app, db, player_id);
+      const coincidence = table_card.id !== parseInt(card_id);
 
-      if (!checked) {
-        return res.json({success: false});
+      if (!coincidence) {
+        return res.json({
+          error: 'That`s your card',
+          success: false
+        });
       }
 
-      await Guess.make(app, db, user_id, guess_id, player_style);
+      await Guess.make(app, db, player_id, card_id);
 
       const users_id_list = await Party.getUsersIdList(app, db, room_id);
       const users_voted   = await Guess.getVoteList(app, db, users_id_list);
@@ -29,7 +34,7 @@ module.exports = function(app, db) {
       const last_vote     = voted_count === (user_count - 1);
 
       if (last_vote) {
-        await Game.setStatus(app, db, gameSt.allGuessDone, room_id);
+        await Game.setStatus(app, db, room_id, gameSt.allGuessDone);
 
         return res.json ({success: true, iAmLast: true});
       } else {

@@ -1,5 +1,5 @@
-const Party = require('../models/Party');
-const User = require('../models/User');
+const Party = require('../helpers/Party');
+const User = require('../helpers/User');
 
 
 module.exports = function(app, db) {

@@ -1,45 +1,45 @@
 const sql = require('../mixins/sqlCommands');
 
-const Hand = require('../models/Hand');
-const Party = require('../models/Party');
-const Basket = require('../models/Basket');
-const NewCards = require('../models/NewCards');
-const Distribution = require('../models/Distribution');
+const Hand = require('../helpers/Hand');
+const Party = require('../helpers/Party');
+const Basket = require('../helpers/Basket');
+const NewCards = require('../helpers/NewCards');
+const Distribution = require('../helpers/Distribution');
 
 module.exports = function(app, db) {
 	app.post('/create-new-cards', async (req, res) => {
 	  try {
       const room_id = req.body.room_id;
-      const cardsCount = req.body.cards_count;
+      const cards_count = req.body.cards_count;
 
-      const usersIdList = await Party.getUsersIdList (app, db, room_id);
-      const playersCount = await Party.getPlayersCount (app, db, room_id);
-      const handIdList = await Hand.getSortedByRoom (app, db, room_id);
-      const handCards = await Hand.getCards (app, db, handIdList);
-      const distributionId = await Distribution.getSortedByRoom (app, db, room_id);
-      const shelterCards = await Distribution.getCardShelter (app, db);
-      const basketCards = await Basket.getCards (app, db, distributionId);
+      const users_id_list = await Party.getUsersIdList (app, db, room_id);
+      const players_count = await Party.getPlayersCount (app, db, room_id);
+      const hand_id_list = await Hand.getSortedByRoom (app, db, room_id);
+      const hand_cards = await Hand.getCards (app, db, hand_id_list);
+      const basket_id = await Basket.getSelf (app, db, room_id);
+      const shelter_cards = await Distribution.getCardShelter (app, db);
+      const basket_cards = await Basket.getCards (app, db, distribution_id);
 
-      let basketCardsIdList = basketCards.map ((item) => {
+      let basket_cards_id_list = basket_cards.map ((item) => {
         return item.card_id;
       });
-      const shelterCardsIdList = shelterCards.map ((item) => {
+      const shelter_cards_id_list = shelter_cards.map ((item) => {
         return item.id;
       });
-      const handCardsIdList = handCards.map ((item) => {
+      const hand_cards_id_list = hand_cards.map ((item) => {
         return item.card_id;
       });
 
       function basketIsFull () {
-        return (shelterCardsIdList.length
-          - handCardsIdList.length
-          - basketCardsIdList.length
-          - playersCount * cardsCount) < 0;
+        return (shelter_cards_id_list.length
+          - hand_cards_id_list.length
+          - basket_cards_id_list.length
+          - players_count * cards_count) < 0;
       }
 
       function getRandomCards () {
-        let pool = shelterCardsIdList,
-          less = handCardsIdList.concat (basketCardsIdList),
+        let pool = shelter_cards_id_list,
+          less = hand_cards_id_list.concat (basket_cards_id_list),
           deletable;
 
         less.forEach ((id) => {
@@ -59,11 +59,11 @@ module.exports = function(app, db) {
       }
 
       async function resetBasket () {
-        const basketClear = await Basket.clear (app, db, distributionId);
-        const basketReset = await Basket.add (app, db, room_id);
+        const basketClear = await Basket.clear (app, db, basket_id);
+        const basketReset = await Basket.create (app, db, room_id);
 
         if (basketClear && basketReset) {
-          basketCardsIdList = [];
+          basket_cards_id_list = [];
         } else {
           res.json ({success: false, err: 'basket not cleared'});
         }
@@ -71,13 +71,13 @@ module.exports = function(app, db) {
 
       if (basketIsFull ()) await resetBasket ();
 
-      const cardsIdPool = getRandomCards ();
-      const cardPool = shelterCards.filter ((item) => {
-        return cardsIdPool.includes (item.id);
+      const card_id_pool = getRandomCards ();
+      const card_pool = shelter_cards.filter ((item) => {
+        return card_id_pool.includes (item.id);
       });
-      const cardsAreSet = await NewCards.setCards (app, db, usersIdList, cardPool, cardsCount);
+      const cards_are_set = await NewCards.setCards (app, db, room_id, users_id_list, card_pool, cards_count);
 
-      res.json ({success: cardsAreSet});
+      res.json ({success: cards_are_set});
     } catch (error) {
       res.json ({success: false, error: error});
     }

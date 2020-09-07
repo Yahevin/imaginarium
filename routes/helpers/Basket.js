@@ -1,43 +1,41 @@
 const sql = require('../mixins/sqlCommands');
+const dbQuery = require('../mixins/dbQuery');
+const isNotEmpty = require('../mixins/isNotEmpty');
+const cardStatus = require('../mixins/cardStatus');
 
 module.exports = {
-	getCards: async function (app, db, distribution_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.sfw, ['in_basket', 'distribution_id', distribution_id]);
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(results);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return [];
-		})
+	getCards: async function (app, db, room_id) {
+    const format = db.format(sql.sfww, ['cards', 'room_id', room_id, 'status', cardStatus.basket]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results)) {
+      return resolve(results);
+    } else {
+      throw ('There is no cards in basket');
+    }
 	},
-	clear: async function (app, db, distribution_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.dfw, ['distribution', 'id', distribution_id]);
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(true);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		});
+  getSelf: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['basket', 'room_id', room_id]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results)) {
+      return resolve(results[0].id);
+    } else {
+      throw ('Basket does`t exist');
+    }
+  },
+	clear: async function (app, db, basket_id) {
+    const format = db.format(sql.dfw, ['basket', 'id', basket_id]);
+
+    await dbQuery(format,db);
+
+    return {success: true};
 	},
-	add: async function (app, db, room_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.ii1, ['distribution', 'room_id', room_id]);
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(true);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		});
+	create: async function (app, db, room_id) {
+    const format = db.format(sql.ii1, ['basket', 'room_id', room_id]);
+
+    await dbQuery(format,db);
+
+    return {success: true};
 	},
 };

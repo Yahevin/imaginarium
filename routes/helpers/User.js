@@ -1,154 +1,88 @@
 const sql = require('../mixins/sqlCommands');
+const dbQuery = require('../mixins/dbQuery');
+const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
-  create: function (app, db, nick_name, game_master = false) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.ii3, ['users', 'nick_name','game_master','player_style', nick_name, game_master, false, null]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve (results.insertId);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.create', detail: error};
-    })
-  },
-  getList: function (app, db, users_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfwi, ['users', 'id', users_id_list]);
+  create: async function (app, db, nick_name) {
+    const format = db.format(sql.ii1, ['user', 'nick_name', nick_name]);
+    const result = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve (results);
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.getList', detail: error};
-    })
+    if (result.hasOwnProperty('insertId')) {
+      return result.insertId;
+    } else {
+      throw ('User create failed. The insert id unknown');
+    }
   },
-	gameMaster: function (app, db, user_id) {
-		return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['users', 'id', user_id]);
+  getList: async function (app, db, users_id_list) {
+    const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
+    return await dbQuery(format,db);
+  },
+  getPlayerId: async function (app, db, user_id, room_id) {
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id,]);
+    const {id} = await dbQuery(format,db);
 
-        return db.query(format, function (err, results) {
-          if (err) reject(err);
-          if (results.length > 0) {
-            return resolve (results[0].game_master);
-          } else {
-            reject('Did not found such user');
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-		}).catch((error) => {
-      throw {desc: 'Function failed: gameMaster', detail: error};
-		})
+    return id;
+  },
+	gameMaster: async function (app, db, user_id, room_id) {
+    const format = db.format(sql.sfww, ['user__room', 'user_id', user_id, 'room_id', room_id]);
+    const result = await dbQuery(format,db);
+
+    if (isNotEmpty(result)) {
+      return resolve (result[0].game_master);
+    } else {
+      throw ('Did not found such user');
+    }
 	},
-  find: function (app, db, nick_name) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfw, ['users', 'nick_name', nick_name]);
-        return db.query(format, function (err, results) {
-          if (err) reject(err);
-          if(results.length > 0) {
-            return resolve({
-              data: results[0],
-              exist: true,
-            });
-          } else {
-            return resolve({
-              exist: false,
-            });
-          }
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.find', detail: error};
-    })
-  },
-  findGM: function (app, db, players_id_list) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.sfwi, ['users', 'id', players_id_list]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          results.forEach((item) => {
-            if (item.game_master) {
-              return resolve(item.id);
-            }
-          });
+  find: async function (app, db, nick_name) {
+    const format  = db.format(sql.sfw, ['user', 'nick_name', nick_name]);
+    const results = await dbQuery(format,db);
 
-          return reject('GM not found');
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.findGM', detail: error};
-    })
+    if(isNotEmpty(results)) {
+      return {
+        data: results[0],
+        exist: true,
+      };
+    } else {
+      return {
+        exist: false,
+      };
+    }
   },
-  demoteGM: function (app, db, gm_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.usw, ['users', 'game_master', false, 'id', gm_id]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.demoteGM', detail: error};
-    })
-  },
-  setGM: function (app, db, new_gm_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.usw, ['users', 'game_master', true, 'id', new_gm_id]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.setGM', detail: error};
-    })
-  },
-  setStyle: function (app, db, style, user_id) {
-    return new Promise((resolve, reject) => {
-      try {
-        let format = db.format(sql.usw, ['users', 'player_style', style, 'id', user_id]);
-        return db.query(format, function (err, results) {
-          if (err) return reject(err);
-          return resolve();
-        });
-      }
-      catch (error) {
-        return reject(error);
-      }
-    }).catch((error) => {
-      throw {desc: 'Function failed: User.setStyle', detail: error};
-    })
-  },
+  findGM: async function (app, db, players_id_list) {
+    const format = db.format(sql.sfwi, ['user__room', 'id', players_id_list]);
+    const results = await dbQuery(format,db);
+    const err = 'The findGM failed. Did not found such user';
 
+    if (isNotEmpty(results)) {
+      const gm = results.filter((item) => {
+        return item.game_master;
+      });
+
+      if(gm.length === 0) {
+        throw (err);
+      } else {
+        return gm.id;
+      }
+    } else {
+      throw (err);
+    }
+  },
+  demoteGM: async function (app, db, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'game_master', false, 'player_id', player_id]);
+    await dbQuery(format,db);
+
+    return {success: true};
+  },
+  setGM: async function (app, db, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'player_id', player_id]);
+    await dbQuery(format,db);
+
+    return {success: true};
+  },
+  setStyle: async function (app, db, style, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'player_style', style, 'player_id', player_id]);
+    await dbQuery(format,db);
+
+    return {success: true};
+  },
 };

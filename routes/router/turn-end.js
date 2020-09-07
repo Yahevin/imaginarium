@@ -1,7 +1,7 @@
 const gameSt = require('../mixins/gameStatus');
-const Party = require('../models/Party');
-const Game = require('../models/Game');
-const User = require('../models/User');
+const Party = require('../helpers/Party');
+const Game = require('../helpers/Game');
+const User = require('../helpers/User');
 
 
 module.exports = function(app, db) {
@@ -9,11 +9,11 @@ module.exports = function(app, db) {
 		const room_id = req.body.room_id;
 
     try {
-      await Game.setStatus(app, db, gameSt.start, room_id);
+      await Game.setStatus(app, db, room_id, gameSt.start);
 
-      const users_id_list  =  await Party.getUsersIdList(app, db, room_id);
-      const gm_id          =  await User.findGM(app, db, users_id_list);
-      const new_gm_id      =  findNewGM(users_id_list, gm_id);
+      const players_id_list  =  await Party.getPlayersIdList(app, db, room_id);
+      const gm_id            =  await User.findGM(app, db, players_id_list);
+      const new_gm_id        =  findNewGM(players_id_list, gm_id);
 
       await User.demoteGM(app, db, gm_id);
       await User.setGM(app, db, new_gm_id);

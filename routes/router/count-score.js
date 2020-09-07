@@ -1,8 +1,8 @@
-const Party = require('../models/Party');
-const Guess = require('../models/Guess');
-const Table = require('../models/Table');
-const Score = require('../models/Score');
-const User = require('../models/User');
+const Party = require('../helpers/Party');
+const Guess = require('../helpers/Guess');
+const Table = require('../helpers/Table');
+const Score = require('../helpers/Score');
+const User = require('../helpers/User');
 
 module.exports = function(app, db) {
 	app.post('/count-score', async (req, res) => {
@@ -41,7 +41,7 @@ module.exports = function(app, db) {
         });
       });
 
-      await Score.update(app, db, rewards);
+      await Score.updateLocal(app, db, room_id, rewards);
 
       return res.json ({
         success: true,

@@ -1,3 +1,9 @@
+TODO:
+
+Привести все выводы ошибок к виду  throw {desc: 'Function failed: ' + caller_name, detail: error};
+
+
+
  *restart server*
  
  heroku restart --app imaginarium-vue

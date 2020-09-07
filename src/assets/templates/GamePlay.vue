@@ -9,13 +9,12 @@
 		<mine-cards v-show="myCardsShown"></mine-cards>
 		<play-table v-show="tableShown"
           @endRound="newRound"></play-table>
-		<leader-board v-show="boardShown" :active="boardShown"></leader-board>
-		
+
 		<article class="game__btn_panel">
 			<button v-show="player.gameMaster && !gameRun && !styleUnset && !started"
 			        @click="startGame">start</button>
 		</article>
-		
+
 		<nav
 			v-show="!playerUnknown"
 					class="nav game__btn_panel">
@@ -33,28 +32,26 @@
   import PlayTable from  './parts/PlayTable';
   import NewCards from './parts/NewCards';
   import MineCards from  './parts/MineCards';
-  import LeaderBoard from './parts/LeaderBoard';
   import toggle from '@/assets/js/mixins/templateToggle';
-  
+
   export default {
     name: "GamePlay",
     components: {
-      Join,
-	    PlayTable,
-			NewCards,
-	    MineCards,
-      LeaderBoard,
-	    StyleSelect,
+        Join,
+        PlayTable,
+        NewCards,
+        MineCards,
+        StyleSelect,
     },
     store,
 	  mixins: [toggle],
-	  
+
 	  data() {
     	return {
     		started: false,
 	    }
 	  },
-	  
+
 	  watch: {
 		  gameAction: async function (newGame, oldGame) {
 		  	switch (newGame) {
@@ -128,10 +125,10 @@
 		  },
 		  async playerReady() {
 			  await this.ping();
-			  
+
 			  if (this.gameRun) {
 				  let count = 6 - this.handCards.length;
-				
+
 				  if (count > 0) {
 					  // await this.setOnlyMyCards(count);
 				  }
@@ -141,7 +138,7 @@
 				  	this.showMyCards();
 				  }
 			  }
-			  
+
 			  setInterval(async ()=>{
 				  await this.ping();
 			  },2500);
@@ -157,7 +154,7 @@
 				  room_id: this.gameId,
 				  action: action,
 			  };
-		  	
+
 			  await $.ajax({
 				  type: 'POST',
 				  url: '/set-action',
@@ -183,7 +180,7 @@
 				  room_id: this.gameId,
 				  cards_count: count,
 			  };
-		  	
+
 		  	await new Promise(resolve => {
 				  $.ajax({
 					  type: 'POST',
@@ -200,9 +197,9 @@
 				  user_id: this.player.id,
 				  room_id: this.gameId,
 			  };
-		  	
+
 			  await this.$store.dispatch('getNewCards', data);
-			
+
 			  // this.showNew();
 				this.showMyCards();
 		  },
@@ -233,7 +230,7 @@
 				  user_id: this.player.id,
 				  room_id: this.gameId,
 			  };
-			
+
 			  await $.ajax({
 				  type: 'POST',
 				  url: '/ping',
@@ -241,7 +238,7 @@
 				  success: (resp)=>{
 					  this.$store.dispatch('setPlayerRole',resp.gameMaster);
 					  this.$store.dispatch('setGameAction',resp.gameAction);
-					  
+
 					  if (resp.gameAction === 'gm-card-set') {
 					  	this.$store.dispatch('getTableCards', this.gameId)
 					  } else if (resp.gameAction === 'all-card-set') {

@@ -1,7 +1,7 @@
 const gameSt = require('../mixins/gameStatus');
-const Party = require('../models/Party');
-const Guess = require('../models/Guess');
-const User = require('../models/User');
+const Party = require('../helpers/Party');
+const Guess = require('../helpers/Guess');
+const User = require('../helpers/User');
 
 module.exports = function(app, db) {
 	app.post('/party-create', async (req, res) => {

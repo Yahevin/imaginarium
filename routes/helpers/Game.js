@@ -1,30 +1,23 @@
 const sql = require('../mixins/sqlCommands');
+const dbQuery = require('../mixins/dbQuery');
+const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
-	status: async function (app, db, user_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = '';
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(results);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		})
+	getStatus: async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['room', 'room_id', room_id]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results)) {
+      return results[0].game_action;
+    } else {
+      throw ('Room did not found');
+    }
 	},
-	setStatus: async function (app, db, game_status, room_id) {
-		return new Promise(async (resolve, reject) => {
-			let format = db.format(sql.usw, ['room', 'game_action', game_status, 'id', room_id]);
-			
-			return db.query(format, function (err, results) {
-				if (err) reject(err);
-				return resolve(true);
-			});
-		}).catch((error) => {
-			console.log(error);
-			return false;
-		})
+	setStatus: async function (app, db, room_id, game_status ) {
+    const format = db.format(sql.usw, ['room', 'id', room_id, 'game_action', game_status]);
+
+    await dbQuery(format,db);
+
+    return {success: true};
 	},
 };
