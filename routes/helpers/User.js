@@ -48,8 +48,8 @@ module.exports = {
       };
     }
   },
-  findGM: async function (app, db, room_id, players_id_list) {
-    const format = db.format(sql.sfwwi, ['user__room', 'room_id', room_id, 'id', players_id_list]);
+  findGM: async function (app, db, players_id_list) {
+    const format = db.format(sql.sfwi, ['user__room', 'id', players_id_list]);
     const results = await dbQuery(format,db);
     const err = 'The findGM failed. Did not found such user';
 
@@ -67,20 +67,20 @@ module.exports = {
       throw (err);
     }
   },
-  demoteGM: async function (app, db, user_id, room_id) {
-    const format = db.format(sql.usw, ['user__room', 'game_master', false, 'user_id', user_id, 'room_id', room_id]);
+  demoteGM: async function (app, db, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'game_master', false, 'player_id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};
   },
-  setGM: async function (app, db, user_id, room_id) {
-    const format = db.format(sql.usww, ['user__room', 'game_master', true, 'user_id', user_id, 'room_id', room_id]);
+  setGM: async function (app, db, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'player_id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};
   },
-  setStyle: async function (app, db, style, user_id, room_id) {
-    const format = db.format(sql.usww, ['user__room', 'player_style', style, 'user_id', user_id, 'room_id', room_id]);
+  setStyle: async function (app, db, style, player_id) {
+    const format = db.format(sql.usw, ['user__room', 'player_style', style, 'player_id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};

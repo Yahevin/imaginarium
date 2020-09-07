@@ -34,7 +34,7 @@ module.exports = function(app, db) {
       const last_vote     = voted_count === (user_count - 1);
 
       if (last_vote) {
-        await Game.setStatus(app, db, gameSt.allGuessDone, room_id);
+        await Game.setStatus(app, db, room_id, gameSt.allGuessDone);
 
         return res.json ({success: true, iAmLast: true});
       } else {

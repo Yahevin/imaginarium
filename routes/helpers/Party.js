@@ -30,13 +30,13 @@ module.exports = {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     return await dbQuery(format,db);
 	},
-	getUsersIdList: async function (app, db, room_id) {
+	getPlayersIdList: async function (app, db, room_id) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const results = await dbQuery(format,db);
 
     if (isNotEmpty(results)) {
       return results.map ((item) => {
-        return item.user_id;
+        return item.id;
       });
     } else {
       throw ('The getUsersIdList failed. There is no users in this room');

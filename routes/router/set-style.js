@@ -8,11 +8,10 @@ module.exports = function(app, db) {
           room_id  = req.body.room_id;
 
     try {
-      const style_set = await User.setStyle(app, db, style, user_id, room_id);
+      const player_id = await User.getPlayerId(app,db, user_id, room_id);
+      const style_set = await User.setStyle(app, db, style, player_id);
 
-      return res.json ({
-        success: style_set,
-      });
+      return res.json (style_set);
     } catch (error) {
       return res.json ({
         success: false,

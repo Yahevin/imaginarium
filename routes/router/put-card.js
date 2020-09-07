@@ -25,10 +25,10 @@ module.exports = function (app, db) {
       }
 
       if (user_is_main) {
-        await Game.setStatus(app, db, gameSt.gmCardSet, room_id)
+        await Game.setStatus(app, db, room_id, gameSt.gmCardSet)
       } else {
         if (await iAmLast()) {
-          const statusSet = await Game.setStatus(app, db, gameSt.allCardSet, room_id);
+          const statusSet = await Game.setStatus(app, db, room_id, gameSt.allCardSet);
 
           res.json({success: statusSet});
         } else {
