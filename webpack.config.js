@@ -1,31 +1,19 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const dotenv = require('dotenv');
 dotenv.config();
 
 const isDevelopment = process.env.NODE_ENV ==='development';
-
 console.log(process.env.NODE_ENV);
 
 const plugins =  [
   new CleanWebpackPlugin(),
-  new VueLoaderPlugin(),
   new HtmlWebpackPlugin({template: './src/assets/index.html'}),
-  new ExtractTextPlugin('style.css'),
 ];
 
-if(isDevelopment) {
-  plugins.push(new BrowserSyncPlugin({
-    host: '127.0.0.1',
-    port: process.env.PORT,
-  },),)
-}
 
-let config = {
+const config = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   entry: {
     polyfill: '@babel/polyfill',
@@ -34,44 +22,10 @@ let config = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        include: path.resolve(__dirname, 'src/assets'),
-        options: {
-          scss: ['vue-style-loader','css-loader','sass-loader'],
-        }
-      },
-      {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /(node_modules)/,
         loader: 'babel-loader',
         include: path.resolve(__dirname, 'src/assets'),
-      },
-      {
-        test: /\.scss$/,
-        include: path.resolve(__dirname, 'src/assets'),
-        use: ExtractTextPlugin.extract({
-          fallback: 'vue-style-loader',
-          use: [
-            {loader: 'css-loader', options: {  importLoaders: 1 }},
-            'postcss-loader',
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        }),
-      },
-      {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts'
-          },
-        }],
       },
       {
         test: /\.(jpg|png)$/,
@@ -87,9 +41,8 @@ let config = {
     ],
   },
   resolve: {
-    extensions: [ '.js', '.vue','.scss','.png','jpg' ],
+    extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
     alias: {
-      'vue$': 'vue/dist/vue.runtime.js',
       '@': path.resolve(__dirname, 'src'),
     }
   },
