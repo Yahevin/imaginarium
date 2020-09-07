@@ -9,15 +9,14 @@ console.log(process.env.NODE_ENV);
 
 const plugins =  [
   new CleanWebpackPlugin(),
-  new HtmlWebpackPlugin({template: './src/assets/index.html'}),
+  new HtmlWebpackPlugin({template: './src/index.html'}),
 ];
 
 
 const config = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   entry: {
-    polyfill: '@babel/polyfill',
-    app: './src/main.js',
+    app: path.resolve(__dirname, 'src/index.tsx'),
   },
   module: {
     rules: [
@@ -25,11 +24,15 @@ const config = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /(node_modules)/,
         loader: 'babel-loader',
-        include: path.resolve(__dirname, 'src/assets'),
+        include: path.resolve(__dirname, 'src'),
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.(jpg|png)$/,
-        include: path.resolve(__dirname, 'src/assets/img'),
+        include: path.resolve(__dirname, 'src/img'),
         use: [{
           loader: 'file-loader',
           options: {
@@ -44,6 +47,7 @@ const config = {
     extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@styled': path.join(__dirname, 'src/styled-components'),
     }
   },
   plugins: plugins,

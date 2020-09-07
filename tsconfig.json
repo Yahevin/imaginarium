@@ -20,7 +20,7 @@
     ],
     "paths": {
       "@/*": [ "src/*" ],
-      "@styled/*": [ "src/styled-components/*" ],
+      "@styled/*": [ "src/styled-components/*" ]
     }
   },
   "exclude": [
