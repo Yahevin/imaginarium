@@ -100,15 +100,11 @@ conn.connect(function(err,result) {
 
   const guess = "CREATE TABLE IF NOT EXISTS guess" +
 		" (id INT not null AUTO_INCREMENT, " +
-		" guess_id INT, " +
-    " user_id INT, " +
-    " room_id INT, " +
-    " player_style VARCHAR(255), " +
-    " FOREIGN KEY (guess_id) REFERENCES card(id)" +
+		" card_id INT, " +
+    " player_id INT, " +
+    " FOREIGN KEY (card_id) REFERENCES card(id)" +
     " ON DELETE CASCADE, " +
-    " FOREIGN KEY (user_id) REFERENCES user(id)" +
-    " ON DELETE CASCADE, " +
-    " FOREIGN KEY (room_id) REFERENCES room(id)" +
+    " FOREIGN KEY (player_id) REFERENCES user__room(id)" +
     " ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 

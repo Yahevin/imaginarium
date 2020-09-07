@@ -6,7 +6,7 @@ module.exports = function(app, db) {
 		const room_id = req.body.room_id;
 
     try {
-      const cards = await Table.getCards(app, db, room_id);
+      const cards = await Table.getCardsList(app, db, room_id);
 
       return res.json ({
         success: true,

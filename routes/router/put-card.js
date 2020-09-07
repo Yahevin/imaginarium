@@ -19,9 +19,9 @@ module.exports = function (app, db) {
 
       async function iAmLast() {
         const players_count = await Party.getPlayersCount(app, db, room_id);
-        const cards_count = await Table.getCardsCount(app, db, room_id);
+        const cards         = await Table.getCardsList(app, db, room_id);
 
-        return parseInt(players_count) === parseInt(cards_count);
+        return parseInt(players_count) === parseInt(cards.length);
       }
 
       if (user_is_main) {
