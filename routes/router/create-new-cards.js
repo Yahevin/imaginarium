@@ -16,7 +16,7 @@ module.exports = function(app, db) {
       const players_count = await Party.getPlayersCount (app, db, room_id);
       const hand_id_list = await Hand.getSortedByRoom (app, db, room_id);
       const hand_cards = await Hand.getCards (app, db, hand_id_list);
-      const distribution_id = await Distribution.getSortedByRoom (app, db, room_id);
+      const basket_id = await Basket.getSelf (app, db, room_id);
       const shelter_cards = await Distribution.getCardShelter (app, db);
       const basket_cards = await Basket.getCards (app, db, distribution_id);
 
@@ -59,8 +59,8 @@ module.exports = function(app, db) {
       }
 
       async function resetBasket () {
-        const basketClear = await Basket.clear (app, db, distribution_id);
-        const basketReset = await Basket.add (app, db, room_id);
+        const basketClear = await Basket.clear (app, db, basket_id);
+        const basketReset = await Basket.create (app, db, room_id);
 
         if (basketClear && basketReset) {
           basket_cards_id_list = [];
