@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const config = require('./webpack.config.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const compiler = webpack(config);
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8000;
