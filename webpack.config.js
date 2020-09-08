@@ -47,7 +47,6 @@ const config = {
     extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@styled': path.join(__dirname, 'src/styled-components'),
     }
   },
   plugins: plugins,
