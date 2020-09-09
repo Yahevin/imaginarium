@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import {css} from "styled-components"
 import mediaQuery from "@/constants/mediaQuery";
 
-const PageSize = styled.css`
+const PageSize = css`
   max-width: 1300px;
   padding: 20px 40px;
   ${mediaQuery.phone} {
