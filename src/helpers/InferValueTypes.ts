@@ -1,0 +1,3 @@
+type InferValueTypes<T> = T extends {[key: string]: infer U} ? U : never;
+
+export default InferValueTypes;
