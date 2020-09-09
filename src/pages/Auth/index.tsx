@@ -8,12 +8,12 @@ import ButtonTheme from "@/constants/ButtonTheme";
 
 import Button from "@/components/Button";
 
-const AuthBox = styled.main`
+const AuthBox = styled.article`
   ${PageSize};
   ${Flex__c_sb};
 `;
 
-function Auth() {
+function AuthPage() {
 
     const enter = () => {
 
@@ -46,4 +46,4 @@ function Auth() {
     )
 }
 
-export default Auth;
+export default AuthPage;
