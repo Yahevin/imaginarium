@@ -18,8 +18,10 @@ const tableClear  = require('./router/table-clear');
 const turnEnd  = require('./router/turn-end');
 const userJoin  = require('./router/user-join');
 const putCard = require('./router/put-card');
+const registration = require('./router/registration');
 
 module.exports = function(app, db) {
+  registration(app,db);
 	addCard(app,db);
 	cradGuess(app,db);
 	countScore(app,db);
