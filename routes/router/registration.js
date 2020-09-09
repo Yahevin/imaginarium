@@ -2,8 +2,6 @@ const User = require('../helpers/User');
 
 module.exports = function(app, db) {
   app.post('/registration', async function(req, res) {
-    console.log(req.body);
-
     const nick_name = req.body.nick_name;
     const password  = req.body.password;
 
