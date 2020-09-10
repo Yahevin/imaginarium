@@ -9,7 +9,7 @@ import PAGES from "@/constants/Pages";
 import PageSize from "@/styled/PageSize";
 import Spacer from "@/styled/Spacer";
 import Button from "@/components/Button";
-
+import deal from "@/helpers/deal";
 
 const ListedBtn = styled(Button)``;
 
@@ -47,21 +47,8 @@ function AuthPage() {
             nick_name: nick_name.current.value,
             password: password.current.value,
         };
-        const myHeaders = new Headers();
-        myHeaders.append('Content-Type', 'application/json');
+        const resp = await deal(url, 'POST', body);
 
-        const data = {
-            method: 'POST',
-            headers: myHeaders,
-            body: JSON.stringify(body)
-        };
-
-        console.log('data', data);
-
-        const resp = await fetch(url, data).then((response) => response.json());
-
-
-        console.log(resp);
         if (resp.hasOwnProperty('success') && resp.success) {
             dispatch(PageAction.set(PAGES.MAIN));
         }
