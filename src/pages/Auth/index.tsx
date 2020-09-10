@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {PageAction} from "@/store/page/action";
+import {UserAction} from "@/store/user/action";
 
 import ButtonTheme from "@/constants/ButtonTheme";
 import PAGES from "@/constants/Pages";
@@ -69,6 +70,7 @@ function AuthPage() {
         };
         const resp = await deal(url, 'POST', body);
         if (resp.hasOwnProperty('success') && resp.success) {
+            dispatch(UserAction.setUserId(resp.user_id));
             dispatch(PageAction.set(PAGES.MAIN));
         } else {
             console.log(resp.error);

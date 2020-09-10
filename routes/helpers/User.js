@@ -18,9 +18,7 @@ module.exports = {
     const results = await dbQuery(format,db);
 
     if(isNotEmpty(results)) {
-      return {
-        data: results[0].id,
-      };
+      return results[0].id;
     } else {
       throw ('Such user not found');
     }
