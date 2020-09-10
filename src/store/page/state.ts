@@ -1,7 +1,7 @@
 import PAGES from "@/constants/Pages";
-import IPageReducer from "@/interfaces/IPageReducer";
+import IPageState from "@/interfaces/IPageState";
 
-const pageState: IPageReducer = {
+const pageState: IPageState = {
     page: PAGES.START
 };
 

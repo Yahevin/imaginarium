@@ -1,10 +1,10 @@
 import {SET_PAGE} from "@/store/actions";
 import pageState from "@/store/page/state";
 import {PageActionTypes} from "@/store/page/action";
-import IPageReducer from "@/interfaces/IPageReducer";
+import IPageState from "@/interfaces/IPageState";
 
 
-function pageReducer(state = pageState, action: PageActionTypes) : IPageReducer {
+function pageReducer(state = pageState, action: PageActionTypes) : IPageState {
     switch (action.type) {
         case SET_PAGE: {
             return {

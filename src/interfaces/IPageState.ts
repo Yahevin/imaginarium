@@ -1,7 +1,7 @@
 import PAGES from "@/constants/Pages";
 
-interface IPageReducer {
+interface IPageState {
     page: PAGES
 }
 
-export default  IPageReducer;
+export default  IPageState;
