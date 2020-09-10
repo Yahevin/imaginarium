@@ -1,4 +1,4 @@
-import InferValueTypes from "@/helpers/InferValueTypes";
+import InferValueTypes from "@/types/InferValueTypes";
 import {SET_USER_ID} from "@/store/actions";
 import {SET_USER_SCORE} from "@/store/actions";
 

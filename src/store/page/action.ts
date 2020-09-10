@@ -1,4 +1,4 @@
-import InferValueTypes from "@/helpers/InferValueTypes";
+import InferValueTypes from "@/types/InferValueTypes";
 import {SET_PAGE} from "@/store/actions";
 import PAGES from "@/constants/Pages";
 

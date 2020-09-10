@@ -1,10 +1,15 @@
+import InferReducerType from "@/types/InferReducerType";
 import {combineReducers} from "redux";
 import pageReducer from "@/store/page/reducer";
 import userReducer from "@/store/user/reducer";
 
-const reducer = combineReducers({
+const reducers = {
     pageReducer,
     userReducer,
-});
+};
 
-export default reducer;
+const reducer = combineReducers(reducers);
+
+type TStore = InferReducerType<typeof reducers>
+
+export {reducer, TStore};

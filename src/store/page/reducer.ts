@@ -1,7 +1,7 @@
 import {SET_PAGE} from "@/store/actions";
 import pageState from "@/store/page/state";
 import {PageActionTypes} from "@/store/page/action";
-import IPageState from "@/interfaces/IPageState";
+import IPageState from "@/store/page/IPageState";
 
 
 function pageReducer(state = pageState, action: PageActionTypes) : IPageState {

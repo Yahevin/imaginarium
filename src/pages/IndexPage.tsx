@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from "react";
 import {useSelector} from "react-redux";
 import {Route, Switch, useHistory} from "react-router-dom";
 
-import IStore from "@/interfaces/IStore";
+import {TStore} from "@/store/reducer";
 
 import AuthPage from "@/pages/Auth";
 import StartPage from "@/pages/Start";
@@ -10,7 +10,7 @@ import StartPage from "@/pages/Start";
 
 function IndexPage() {
     const history = useHistory();
-    const page = useSelector((state: IStore) => state.pageReducer.page);
+    const page = useSelector((state:TStore) => state.pageReducer.page);
 
     useEffect(() => {
         const hash = window.location.hash;

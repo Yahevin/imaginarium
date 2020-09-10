@@ -2,7 +2,7 @@ import {SET_USER_ID} from "@/store/actions";
 import {SET_USER_SCORE} from "@/store/actions";
 import userState from "@/store/user/state";
 import {UserActionTypes} from "@/store/user/action";
-import IUserState from "@/interfaces/IUserState";
+import IUserState from "@/store/user/IUserState";
 
 function userReducer(state = userState, action: UserActionTypes) : IUserState {
     switch (action.type) {
