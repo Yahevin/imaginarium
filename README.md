@@ -3,6 +3,14 @@ TODO:
 Привести все выводы ошибок к виду  throw {desc: 'Function failed: ' + caller_name, detail: error};
 
 
+Сделать всплывающее окно вместо:
+```js
+if (resp.hasOwnProperty('success') && resp.success) {
+    // some action
+} else {
+    console.log(resp.error);
+}
+```
 
  *restart server*
  
