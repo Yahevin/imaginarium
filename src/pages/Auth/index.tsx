@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {PageAction} from "@/store/page/action";
@@ -10,8 +10,10 @@ import PageSize from "@/styled/PageSize";
 import Spacer from "@/styled/Spacer";
 import Button from "@/components/Button";
 import deal from "@/helpers/deal";
+import Input from "@/components/Input";
 
 const ListedBtn = styled(Button)``;
+const ListedInput = styled(Input)``;
 
 const AuthBox = styled.article`
   ${PageSize};
@@ -22,12 +24,20 @@ const AuthBox = styled.article`
   flex-direction: column;
   align-items: center;
 
+  & > ${ListedInput} + ${ListedBtn} {
+      margin: 60px 0 0 0;
+  }
+
+  & > ${ListedInput} + ${ListedInput} {
+      margin: 20px 0 0 0;
+  }
+
   & > ${ListedBtn} + ${ListedBtn} {
     margin: 40px 0 0 0;
   }
 `;
 
-enum controlButtons {
+enum view {
     initial,
     authenticate,
     registration
@@ -35,124 +45,88 @@ enum controlButtons {
 
 function AuthPage() {
     const dispatch = useDispatch();
-    const [control, setControl] = useState(controlButtons.initial);
-    const [valid, setValid] = useState(false);
+    const [control, setControl] = useState(view.initial);
+    const [isValid, setValid] = useState(false);
 
-    const password = useRef(null);
-    const nick_name = useRef(null);
+    const pass = useRef('');
+    const name = useRef('');
+
+    const validate = useCallback(() => {
+        setValid(name.current.length > 3 && pass.current.length > 5);
+    }, []);
+
+    const submit = useCallback(() => {
+        control === view.registration
+            ? createAccount()
+            : enterAccount()
+    }, [control]);
 
     const createAccount = useCallback(async () => {
         const url = window.location.origin + '/registration';
         const body = {
-            nick_name: nick_name.current.value,
-            password: password.current.value,
+            nick_name: name.current,
+            password: pass.current,
         };
         const resp = await deal(url, 'POST', body);
-
         if (resp.hasOwnProperty('success') && resp.success) {
             dispatch(PageAction.set(PAGES.MAIN));
+        } else {
+            console.log(resp.error);
         }
     }, []);
 
     const enterAccount = useCallback(() => {
     }, []);
 
-    const validateRegistry = useCallback(() => {
-        console.log('validateRegistry');
-        setValid(true);
-    }, []);
-
-    const startRegistry = useCallback(() => {
-        setControl(controlButtons.registration);
-    }, []);
-
-    const startAuth = useCallback(() => {
-        setControl(controlButtons.authenticate);
-    }, []);
-
-    const getBack = useCallback(() => {
-        setControl(controlButtons.initial);
-    }, []);
-
-    const initial = () => (
-        <>
-            <ListedBtn callback={startAuth}
-                       theme={ButtonTheme.light}
-                       size={'100%'}>
-                Войти
-            </ListedBtn>
-
-            <ListedBtn callback={startRegistry}
-                       theme={ButtonTheme.dark}
-                       size={'100%'}>
-                Создать аккаунт
-            </ListedBtn>
-        </>
+    const goToAuth = (
+        <ListedBtn key={'authBtn'}
+                   theme={ButtonTheme.light}
+                   size={'100%'}
+                   callback={() => {
+                       setControl(view.authenticate)
+                   }}>
+            Войти
+        </ListedBtn>
     );
-
-    const authenticate = () => (
-        <>
-            <input type="text"
-                   name="nick_name"
-                   ref={nick_name}/>
-            <input type="password"
-                   name="password"
-                   ref={password}/>
-
-            <ListedBtn callback={enterAccount}
-                       theme={valid ? ButtonTheme.green : ButtonTheme.red}
-                       size={'100%'}>
-                Готово
-            </ListedBtn>
-
-            <ListedBtn callback={startRegistry}
-                       theme={ButtonTheme.dark}
-                       size={'100%'}>
-                Создать аккаунт
-            </ListedBtn>
-        </>
+    const goToRegistry = (
+        <ListedBtn key={'registryBtn'}
+                   theme={ButtonTheme.dark}
+                   size={'100%'}
+                   callback={() => {
+                       setControl(view.registration)
+                   }}>
+            Создать аккаунт
+        </ListedBtn>
     );
-
-    const registration = () => (
-        <>
-
-            <input type="text"
-                   name="nick_name"
-                   ref={nick_name}
-                   onBlur={validateRegistry}/>
-            <input type="password"
-                   name="password"
-                   ref={password}
-                   onBlur={validateRegistry}/>
-
-            <ListedBtn callback={createAccount}
-                       theme={valid ? ButtonTheme.green : ButtonTheme.red}
-                       size={'100%'}>
-                Готово
-            </ListedBtn>
-
-            <ListedBtn callback={startAuth}
-                       theme={ButtonTheme.dark}
-                       size={'100%'}>
-                Войти в аккаунт
-            </ListedBtn>
-        </>
+    const inputs = (
+        <React.Fragment key={"inputs"}>
+            <ListedInput type="text"
+                         name="nick_name"
+                         placeholder="Login"
+                         default={name.current}
+                         onChange={(event) => {
+                             name.current = event.target.value;
+                             validate();
+                         }}/>
+            <ListedInput type="password"
+                         name="password"
+                         placeholder="Password"
+                         default={pass.current}
+                         onChange={(event) => {
+                             pass.current = event.target.value;
+                             validate();
+                         }}/>
+        </React.Fragment>
     );
-
-    const ButtonBox = () => { switch(control) {
-            case controlButtons.initial: {
-                return initial();
-            }
-            case controlButtons.authenticate: {
-                return authenticate();
-            }
-            case controlButtons.registration: {
-                return registration();
-            }
-        }
-    };
-
-
+    const submitBtn = (
+        <ListedBtn key={'submitBtn'}
+                   callback={submit}
+                   theme={isValid ? ButtonTheme.green : ButtonTheme.red}
+                   disabled={!isValid}
+                   size={'100%'}>
+            Готово
+        </ListedBtn>
+    );
 
     return (
         <AuthBox>
@@ -162,7 +136,15 @@ function AuthPage() {
 
             <Spacer/>
 
-            <ButtonBox/>
+            {control === view.initial
+                ? [goToAuth, goToRegistry]
+                : [inputs, submitBtn]}
+
+            {control === view.registration
+            && goToAuth}
+
+            {control === view.authenticate
+            && goToRegistry}
         </AuthBox>
     )
 }
