@@ -13,6 +13,18 @@ module.exports = {
       throw ('User create failed. The insert id unknown');
     }
   },
+  getId: async function (app, db, nick_name, password) {
+    const format  = db.format(sql.sfww, ['user', 'nick_name', nick_name, 'password', password]);
+    const results = await dbQuery(format,db);
+
+    if(isNotEmpty(results)) {
+      return {
+        data: results[0].id,
+      };
+    } else {
+      throw ('Such user not found');
+    }
+  },
   getList: async function (app, db, users_id_list) {
     const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
     return await dbQuery(format,db);

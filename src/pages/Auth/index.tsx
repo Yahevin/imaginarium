@@ -15,7 +15,7 @@ import Input from "@/components/Input";
 const ListedBtn = styled(Button)``;
 const ListedInput = styled(Input)``;
 
-const AuthBox = styled.article`
+const AuthBox = styled.form`
   ${PageSize};
   height: auto;
   min-height: 100vh;
@@ -57,12 +57,12 @@ function AuthPage() {
 
     const submit = useCallback(() => {
         control === view.registration
-            ? createAccount()
-            : enterAccount()
+            ? login('/registration')
+            : login('/authentication')
     }, [control]);
 
-    const createAccount = useCallback(async () => {
-        const url = window.location.origin + '/registration';
+    const login = useCallback(async (api) => {
+        const url = window.location.origin + api;
         const body = {
             nick_name: name.current,
             password: pass.current,
@@ -73,9 +73,6 @@ function AuthPage() {
         } else {
             console.log(resp.error);
         }
-    }, []);
-
-    const enterAccount = useCallback(() => {
     }, []);
 
     const goToAuth = (
@@ -129,7 +126,10 @@ function AuthPage() {
     );
 
     return (
-        <AuthBox>
+        <AuthBox onSubmit={(event) => {
+            event.preventDefault();
+            submit();
+        }}>
             <h1>
                 Imaginarium
             </h1>
