@@ -6,6 +6,14 @@ import IUserState from "@/store/user/IUserState";
 
 function userReducer(state = userState, action: UserActionTypes) : IUserState {
     switch (action.type) {
+        case "SET_USER": {
+            return {
+                ...state,
+                score: action.payload.score,
+                user_id: action.payload.user_id,
+                nick_name: action.payload.nick_name,
+            }
+        }
         case SET_USER_ID: {
             return {
                 ...state,

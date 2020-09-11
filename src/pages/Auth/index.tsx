@@ -43,6 +43,7 @@ enum view {
     authenticate,
     registration
 }
+let submitBlocked = false;
 
 function AuthPage() {
     const dispatch = useDispatch();
@@ -63,6 +64,9 @@ function AuthPage() {
     }, [control]);
 
     const login = useCallback(async (api) => {
+        if (submitBlocked) return;
+        submitBlocked = true;
+
         const url = window.location.origin + api;
         const body = {
             nick_name: name.current,
@@ -70,9 +74,14 @@ function AuthPage() {
         };
         const resp = await deal(url, 'POST', body);
         if (resp.hasOwnProperty('success') && resp.success) {
-            dispatch(UserAction.setUserId(resp.user_id));
+            dispatch(UserAction.setUser({
+                score: parseInt(resp.score),
+                user_id: parseInt(resp.user_id),
+                nick_name: name.current})
+            );
             dispatch(PageAction.set(PAGES.MAIN));
         } else {
+            submitBlocked = false;
             console.log(resp.error);
         }
     }, []);
