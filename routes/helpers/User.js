@@ -43,21 +43,6 @@ module.exports = {
       throw ('Did not found such user');
     }
 	},
-  find: async function (app, db, nick_name) {
-    const format  = db.format(sql.sfw, ['user', 'nick_name', nick_name]);
-    const results = await dbQuery(format,db);
-
-    if(isNotEmpty(results)) {
-      return {
-        data: results[0],
-        exist: true,
-      };
-    } else {
-      return {
-        exist: false,
-      };
-    }
-  },
   findGM: async function (app, db, players_id_list) {
     const format = db.format(sql.sfwi, ['user__room', 'id', players_id_list]);
     const results = await dbQuery(format,db);
