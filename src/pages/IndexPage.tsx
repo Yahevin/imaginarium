@@ -6,6 +6,7 @@ import {TStore} from "@/store/reducer";
 
 import AuthPage from "@/pages/Auth";
 import StartPage from "@/pages/Start";
+import MainPage from "@/pages/Main";
 
 
 function IndexPage() {
@@ -26,9 +27,7 @@ function IndexPage() {
         <Switch>
             <Route exact path={'/'} component={StartPage}/>
             <Route exact path={'/auth'} component={AuthPage}/>
-            <Route exact path={'/main'}>
-                <h1>Hello</h1>
-            </Route>
+            <Route exact path={'/main'} component={MainPage}/>
         </Switch>
     )
 }
