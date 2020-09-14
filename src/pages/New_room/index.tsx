@@ -36,13 +36,9 @@ function NewRoom() {
                 body: {user_id}
             });
 
-            if(response.success) {
-                dispatch(PartyAction.setId(response.room_id));
-                dispatch(PartyAction.setGAction(response.game_action));
-                dispatch(PageAction.set(PAGES.LOBBY));
-            } else {
-                throw(response.error);
-            }
+            dispatch(PartyAction.setId(response.room_id));
+            dispatch(PartyAction.setGAction(response.game_action));
+            dispatch(PageAction.set(PAGES.LOBBY));
         } catch (e) {
             console.log(e);
         }

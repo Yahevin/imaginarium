@@ -10,7 +10,15 @@ const deal: Imagick = async ({url, method, body}) => {
         body: JSON.stringify(body)
     };
 
-    return await fetch(url, data).then((response) => response.json());
+    return await fetch(url, data).then(async (response) => {
+        const resp = await response.json();
+
+        if (resp.success) {
+            return resp;
+        } else {
+            throw (resp.error)
+        }
+    });
 };
 
 export default deal;
