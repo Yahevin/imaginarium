@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import COLOR from "@/constants/Color";
+import InputHandler from "@/interfaces/InputHandler";
 
 const StyledInput = styled.input`
     width: 100%;
@@ -19,7 +20,7 @@ interface IProps {
     default: string,
     placeholder: string,
     className?: string,
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onChange: InputHandler;
 }
 
 function Input(props: IProps) {
