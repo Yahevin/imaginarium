@@ -2,9 +2,6 @@ import React, {useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 
-import COLOR from "@/constants/Color";
-import PageSize from "@/styled/PageSize";
-import FlexRow from "@/styled/FlexRow";
 
 import Avatar from "@/components/Avatar";
 import ThinButton from "@/components/ThinButton";
@@ -13,14 +10,16 @@ import ProgressBar from "@/components/ProgressBar";
 import {UserAction} from "@/store/user/action";
 import {PageAction} from "@/store/page/action";
 import PAGES from "@/constants/Pages";
+import COLOR from "@/constants/Color";
 import {TStore} from "@/store/reducer";
 import Font_large from "@/styled/Font_large";
 
 
-const Wrap = styled.header`
+const Wrap = styled.div`
+  margin: 0 auto;
+  display: flex;
   max-width: 1300px;
   padding: 30px 60px;
-  background-color: ${COLOR.dark_bg};
   color: ${COLOR.slate};
 `;
 const UserInfo = styled.div`
@@ -50,19 +49,17 @@ function UserAbout() {
 
     return (
         <Wrap>
-            <FlexRow>
-                <Avatar nick_name={nick_name} score={score}/>
-                <UserInfo>
-                    <p>
-                        {nick_name}
-                    </p>
-                    <ProgressBar score={score}/>
+            <Avatar nick_name={nick_name} score={score}/>
+            <UserInfo>
+                <p>
+                    {nick_name}
+                </p>
+                <ProgressBar score={score}/>
 
-                    <LogOut callback={logOut}>
-                        Выйти
-                    </LogOut>
-                </UserInfo>
-            </FlexRow>
+                <LogOut callback={logOut}>
+                    Выйти
+                </LogOut>
+            </UserInfo>
         </Wrap>
     )
 }
