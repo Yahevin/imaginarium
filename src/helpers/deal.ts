@@ -1,6 +1,6 @@
-type Imagick = (url:string, method: 'POST' | 'GET' | 'PUT' | 'DELETE', body:any) => any;
+type Imagick = (props:{url:string, method: 'POST' | 'GET' | 'PUT' | 'DELETE', body:any}) => any;
 
-const deal: Imagick = async (url, method, body) => {
+const deal: Imagick = async ({url, method, body}) => {
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 

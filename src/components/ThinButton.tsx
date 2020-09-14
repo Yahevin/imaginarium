@@ -10,6 +10,7 @@ const StyledButton = styled.button`
     color: ${COLOR.active};
     display: block;
     border: 0;
+    background: none;
 `;
 
 function ThinButton(props:IThinButton) {

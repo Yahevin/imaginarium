@@ -5,7 +5,7 @@ const COLOR = {
     green: '#4CAF50',
     active: '#666666',
     passive: '#C4C4C4',
-    dark_bg: '#EEEEEE',
+    dark_bg: '#682424',
     light_bg: '#f0efef',
     transparent: 'transparent',
 };

@@ -28,7 +28,7 @@ const Face = styled.div`
     height: 100%;
     left: 0;
     padding: 16% 16%;
-    background: ${getRandomColor()};
+    background: ${COLOR.white};
 `;
 const Level = styled.div`
     ${Round};
