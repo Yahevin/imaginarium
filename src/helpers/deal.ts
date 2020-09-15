@@ -11,12 +11,12 @@ const deal: Imagick = async ({url, method, body}) => {
     };
 
     return await fetch(url, data).then(async (response) => {
-        const resp = await response.json();
+        const {success, error, ...rest} = await response.json();
 
-        if (resp.success) {
-            return resp;
+        if (success) {
+            return rest;
         } else {
-            throw (resp.error)
+            throw (error)
         }
     });
 };
