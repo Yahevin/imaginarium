@@ -20,8 +20,10 @@ module.exports = {
 
         return isNotEmpty(results);
     },
-    addPlayer: async function (app, db, room_id, user_id) {
-        const format = db.format(sql.ii2, ['user__room', 'room_id', 'user_id', room_id, user_id]);
+    addPlayer: async function (app, db, room_id, user_id, game_master) {
+        const format = db.format(sql.ii3, ['user__room',
+                'room_id', 'user_id', 'game_master',
+                room_id, user_id, game_master ]);
         await dbQuery(format, db);
 
         return {success: true};

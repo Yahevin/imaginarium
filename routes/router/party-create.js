@@ -8,7 +8,7 @@ module.exports = function(app, db) {
 
     try {
       const room_id = await Party.create(app, db);
-      await Party.addPlayer(app, db, room_id, user_id);
+      await Party.addPlayer(app, db, room_id, user_id, true);
       await Guess.createQuestion(app, db, room_id);
 
       return res.json({

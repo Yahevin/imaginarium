@@ -38,7 +38,7 @@ module.exports = {
     const result = await dbQuery(format,db);
 
     if (isNotEmpty(result)) {
-      return resolve (result[0].game_master);
+      return result[0].game_master;
     } else {
       throw ('Did not found such user');
     }

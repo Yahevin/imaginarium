@@ -39,7 +39,7 @@ function HubPage() {
             const response = await deal({
                 url: '/user-join',
                 method: "POST",
-                body: {user_id, room_id: parseInt(wanted_party_id.current)},
+                body: {user_id, room_id: wanted_party_id.current},
             });
 
             dispatch(PartyAction.setId(wanted_party_id.current));
@@ -48,12 +48,11 @@ function HubPage() {
         } catch (e) {
             console.log(e)
         }
-
     }, []);
 
     const wanted_party_id = useRef(null);
     const inputHandler: InputHandler = (event) => {
-        wanted_party_id.current = event.target.value;
+        wanted_party_id.current = parseInt(event.target.value);
     };
 
     return (
