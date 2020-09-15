@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import styled, {css} from "styled-components";
-import getRandomColor from "@/helpers/getRandomColor";
+import IPlayer from "@/interfaces/IPlayer";
 import COLOR from "@/constants/Color";
 
 const Box = styled.div`
@@ -41,12 +41,11 @@ const Level = styled.div`
     background: ${COLOR.active};
 `;
 
-interface IAvatar {
-    nick_name: string,
-    score: number,
+interface IAvatar extends IPlayer {
+    className?: string;
 }
 
-function Avatar({nick_name, score}: IAvatar) {
+function Avatar({nick_name, score, className}: IAvatar) {
     const userName = useMemo(() => (nick_name[0] + nick_name[nick_name.length - 1]),
         [nick_name]);
     const userLevel = useMemo(() => (Math.floor(score / 100)),
@@ -72,7 +71,7 @@ function Avatar({nick_name, score}: IAvatar) {
     });
 
     return (
-        <Box>
+        <Box className={className}>
             <SubBox>
                 <Face ref={$face}>
                     {userName}
