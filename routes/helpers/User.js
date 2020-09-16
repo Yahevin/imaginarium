@@ -4,7 +4,7 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
   create: async function (app, db, nick_name, password) {
-    const format = db.format(sql.ii2, ['user', 'nick_name', 'password', nick_name, password]);
+    const format = db.format(sql.ii3, ['user', 'nick_name', 'password', 'experience', nick_name, password, 0]);
     const result = await dbQuery(format,db);
 
     if (result.hasOwnProperty('insertId')) {
@@ -13,19 +13,25 @@ module.exports = {
       throw ('User create failed. The insert id unknown');
     }
   },
-  getId: async function (app, db, nick_name, password) {
+  getUser: async function (app, db, nick_name, password) {
     const format  = db.format(sql.sfww, ['user', 'nick_name', nick_name, 'password', password]);
     const results = await dbQuery(format,db);
 
     if(isNotEmpty(results)) {
-      return results[0].id;
+      return results[0];
     } else {
       throw ('Such user not found');
     }
   },
   getList: async function (app, db, users_id_list) {
     const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
-    return await dbQuery(format,db);
+    const result = await dbQuery(format,db);
+
+    if (isNotEmpty(result)) {
+      return result;
+    } else {
+      throw ('Users not found')
+    }
   },
   getPlayerId: async function (app, db, user_id, room_id) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id,]);
@@ -38,26 +44,11 @@ module.exports = {
     const result = await dbQuery(format,db);
 
     if (isNotEmpty(result)) {
-      return resolve (result[0].game_master);
+      return result[0].game_master;
     } else {
       throw ('Did not found such user');
     }
 	},
-  find: async function (app, db, nick_name) {
-    const format  = db.format(sql.sfw, ['user', 'nick_name', nick_name]);
-    const results = await dbQuery(format,db);
-
-    if(isNotEmpty(results)) {
-      return {
-        data: results[0],
-        exist: true,
-      };
-    } else {
-      return {
-        exist: false,
-      };
-    }
-  },
   findGM: async function (app, db, players_id_list) {
     const format = db.format(sql.sfwi, ['user__room', 'id', players_id_list]);
     const results = await dbQuery(format,db);

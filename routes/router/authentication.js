@@ -6,11 +6,12 @@ module.exports = function(app, db) {
     const password  = req.body.password;
 
     try {
-      const user_id = await User.getId(app, db, nick_name, password);
+      const {experience, user_id} = await User.getUser(app, db, nick_name, password);
 
       return res.json({
         success: true,
         user_id: user_id,
+        experience: experience,
       })
     }
     catch(error) {
