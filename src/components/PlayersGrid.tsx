@@ -16,7 +16,7 @@ const Grid = styled.section`
   grid-template-rows: 1fr;
   grid-auto-rows: 1fr;
   grid-auto-flow: row;
-  grid-gap: 20px 40px;
+  grid-gap: 40px 10px;
 `;
 const Grid__item = styled.div`
   & > ${Player} {

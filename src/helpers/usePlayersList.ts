@@ -10,13 +10,13 @@ function usePlayersList(): [IPlayer[], () => Promise<void>] {
 
     const updatePlayers = useCallback(async () => {
         try {
-            const {playersList} = await deal({
+            const {List} = await deal({
                 url: '/get-players',
                 method: "POST",
                 body: {room_id},
             });
 
-            setPlayers(playersList);
+            setPlayers(List);
         } catch (e) {
             console.log(e);
         }

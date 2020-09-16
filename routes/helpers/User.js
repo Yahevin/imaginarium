@@ -25,7 +25,13 @@ module.exports = {
   },
   getList: async function (app, db, users_id_list) {
     const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
-    return await dbQuery(format,db);
+    const result = await dbQuery(format,db);
+
+    if (isNotEmpty(result)) {
+      return result;
+    } else {
+      throw ('Users not found')
+    }
   },
   getPlayerId: async function (app, db, user_id, room_id) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id,]);
