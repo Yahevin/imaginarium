@@ -40,7 +40,7 @@ function UserAbout() {
     const dispatch = useDispatch();
 
     const nick_name = useSelector((state:TStore) => state.userReducer.nick_name);
-    const score = useSelector((state:TStore) => state.userReducer.score);
+    const experience = useSelector((state:TStore) => state.userReducer.experience);
 
     const logOut = useCallback(() => {
         dispatch(UserAction.setUserId(null));
@@ -49,12 +49,12 @@ function UserAbout() {
 
     return (
         <Wrap>
-            <Avatar nick_name={nick_name} score={score}/>
+            <Avatar nick_name={nick_name} experience={experience}/>
             <UserInfo>
                 <p>
                     {nick_name}
                 </p>
-                <ProgressBar score={score}/>
+                <ProgressBar experience={experience}/>
 
                 <LogOut callback={logOut}>
                     Выйти

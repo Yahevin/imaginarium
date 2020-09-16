@@ -4,7 +4,7 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
   create: async function (app, db, nick_name, password) {
-    const format = db.format(sql.ii3, ['user', 'nick_name', 'password', 'score', nick_name, password, 0]);
+    const format = db.format(sql.ii3, ['user', 'nick_name', 'password', 'experience', nick_name, password, 0]);
     const result = await dbQuery(format,db);
 
     if (result.hasOwnProperty('insertId')) {

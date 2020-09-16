@@ -40,7 +40,7 @@ function PlayersGrid({players}: IPlayersGrid) {
     const GridContent = useMemo(() => {
         return players.map((item, index) => (
             <Grid__item key={item.nick_name}>
-                <Player nick_name={item.nick_name} score={item.score}/>
+                <Player nick_name={item.nick_name} experience={item.experience}/>
                 <h5>
                     {item.nick_name}
                 </h5>

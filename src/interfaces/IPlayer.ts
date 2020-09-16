@@ -1,6 +1,6 @@
 interface IPlayer {
     nick_name: string,
-    score: number,
+    experience: number,
 }
 
 export default IPlayer;

@@ -9,7 +9,7 @@ function userReducer(state = userState, action: UserActionTypes) : IUserState {
         case "SET_USER": {
             return {
                 ...state,
-                score: action.payload.score,
+                experience: action.payload.experience,
                 user_id: action.payload.user_id,
                 nick_name: action.payload.nick_name,
             }
@@ -23,7 +23,7 @@ function userReducer(state = userState, action: UserActionTypes) : IUserState {
         case SET_USER_SCORE: {
             return {
                 ...state,
-                score: action.payload
+                experience: action.payload
             }
         }
         default: {

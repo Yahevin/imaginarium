@@ -29,8 +29,8 @@ const Digit = styled.span`
     margin: 0 0 0 8px;
 `;
 
-function ProgressBar({score}: {score:number}) {
-    const remainder = score % 100;
+function ProgressBar({experience}: {experience:number}) {
+    const remainder = experience % 100;
 
     return (
         <Bar>

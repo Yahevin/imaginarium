@@ -18,10 +18,10 @@ const UserAction = {
             payload: id,
         }
     },
-    setUserScore: function (score: number) {
+    setUserScore: function (experience: number) {
         return {
             type: SET_USER_SCORE,
-            payload: score,
+            payload: experience,
         }
     }
 };

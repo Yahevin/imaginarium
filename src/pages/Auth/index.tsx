@@ -72,12 +72,12 @@ function AuthPage() {
             nick_name: name.current,
             password: pass.current,
         };
-        const resp = await deal(url, 'POST', body);
+        const resp = await deal({url, method:'POST', body});
         if (resp.hasOwnProperty('success') && resp.success) {
             dispatch(UserAction.setUser({
-                score: parseInt(resp.score),
+                nick_name: name.current,
                 user_id: parseInt(resp.user_id),
-                nick_name: name.current})
+                experience: parseInt(resp.experience),})
             );
             dispatch(PageAction.set(PAGES.MAIN));
         } else {

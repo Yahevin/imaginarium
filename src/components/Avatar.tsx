@@ -45,11 +45,11 @@ interface IAvatar extends IPlayer {
     className?: string;
 }
 
-function Avatar({nick_name, score, className}: IAvatar) {
+function Avatar({nick_name, experience, className}: IAvatar) {
     const userName = useMemo(() => (nick_name[0] + nick_name[nick_name.length - 1]),
         [nick_name]);
-    const userLevel = useMemo(() => (Math.floor(score / 100)),
-        [score]);
+    const userLevel = useMemo(() => (Math.floor(experience / 100)),
+        [experience]);
 
     const $face = useRef(null);
 

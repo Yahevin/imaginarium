@@ -20,7 +20,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" nick_name VARCHAR(255), " +
 		" password VARCHAR(255), " +
-		" score INT, " +
+		" experience INT, " +
 		" PRIMARY KEY (id) )";
 
 	conn.query(user, function(err, results) {
@@ -43,6 +43,7 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" user_id INT, " +
     " room_id INT, " +
+    " score INT, " +
     " game_master BOOLEAN, " +
     " player_style VARCHAR(255), " +
 		" FOREIGN KEY (user_id) REFERENCES user(id)" +

@@ -6,12 +6,12 @@ module.exports = function(app, db) {
     const password  = req.body.password;
 
     try {
-      const {score, user_id} = await User.getId(app, db, nick_name, password);
+      const {experience, user_id} = await User.getId(app, db, nick_name, password);
 
       return res.json({
         success: true,
         user_id: user_id,
-        score: score,
+        experience: experience,
       })
     }
     catch(error) {
