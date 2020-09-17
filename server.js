@@ -14,32 +14,33 @@ const app = express();
 const port = process.env.PORT;
 const db = require('./routes/db/mydb');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(webpackDevMiddleware(compiler, {
-    publicPath: config.output.publicPath,
+  publicPath: config.output.publicPath,
 }));
 app.use(express.json());
 
 require('./routes/db/mydb');
 require('./routes')(app, db);
-require('./routes/ws')(app, db);
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
-wss.on('connection', (ws) => {
+const wss = new WebSocket.Server({server});
 
-  //connection is up, let's add a simple simple event
+wss.on('connection', (ws) => {
+  const Controller = new SocketController(app, db);
+
   ws.on('message', async (message) => {
-    const resolution = await SocketController;
-    //log the received message and send it back to the client
-    console.log('received: %s', message);
-    ws.send(`Hello, here server answer -> ${resolution}`);
+    await Controller.reduce(JSON.parse(message));
+  });
+
+  ws.on('close', async () => {
+    await Controller.terminate();
   });
 
   //send immediatly a feedback to the incoming connection
   ws.send('Hi there, I am a WebSocket server');
 });
 
-server.listen(port, ()=>{
+server.listen(port, () => {
   console.log(`My app listening on port ${server.address().port}`);
 });

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
 import {PageAction} from "@/store/page/action";
@@ -12,6 +12,7 @@ import Spacer from "@/styled/Spacer";
 import Button from "@/components/Button";
 import deal from "@/helpers/deal";
 import Input from "@/components/Input";
+import SocketReducer from "@/web-socket/reducer";
 
 const ListedBtn = styled(Button)``;
 const ListedInput = styled(Input)``;
@@ -72,17 +73,23 @@ function AuthPage() {
             nick_name: name.current,
             password: pass.current,
         };
-        const resp = await deal({url, method:'POST', body});
-        if (resp.hasOwnProperty('success') && resp.success) {
+        try {
+            const resp = await deal({url, method: 'POST', body});
+            const user_id = parseInt(resp.user_id);
+            const experience = parseInt(resp.experience);
+
+            SocketReducer.auth(user_id);
+
             dispatch(UserAction.setUser({
-                nick_name: name.current,
-                user_id: parseInt(resp.user_id),
-                experience: parseInt(resp.experience),})
+                    user_id: user_id,
+                    experience: experience,
+                    nick_name: name.current,
+                })
             );
             dispatch(PageAction.set(PAGES.MAIN));
-        } else {
+        } catch (error) {
             submitBlocked = false;
-            console.log(resp.error);
+            console.log(error);
         }
     }, []);
 
