@@ -6,12 +6,11 @@ module.exports = function (app, db) {
     try {
       const room_id = req.body.room_id;
 
-      const playersList = await Party.getPlayersList(app, db, room_id);
+      const playersList = await Party.getActivePlayersList(app, db, room_id);
       const usersIdList = await Party.getUsersIdList(app, db, room_id);
       const usersList   = await User.getList(app, db, usersIdList);
 
-
-      const List = playersList.map((player) => {
+      const party = playersList.map((player) => {
 
         const userIndex = usersList.findIndex((user)=>{
           return user.id === player.user_id;
@@ -31,7 +30,7 @@ module.exports = function (app, db) {
 
       return res.json({
         success: true,
-        List
+        party
       })
     } catch (error) {
       return res.json({

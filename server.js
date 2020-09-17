@@ -27,14 +27,16 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 
 wss.on('connection', (ws) => {
-  const Controller = new SocketController(app, db);
+  ws.controller = new SocketController(app, db, wss);
 
   ws.on('message', async (message) => {
-    await Controller.reduce(JSON.parse(message));
+    console.log('message', message);
+    await ws.controller.reduce(JSON.parse(message));
   });
 
   ws.on('close', async () => {
-    await Controller.terminate();
+    await ws.controller.terminate();
+    console.log('close', ws.controller.room_id);
   });
 
   //send immediatly a feedback to the incoming connection

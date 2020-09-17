@@ -1,3 +1,5 @@
+import updateParty from "@/helpers/updateParty";
+
 const socket = new WebSocket('ws://localhost:8000');
 
 socket.onopen = function(event) {
@@ -5,7 +7,16 @@ socket.onopen = function(event) {
 };
 
 socket.onmessage = function(event) {
-    console.log(`[message] Данные получены с сервера: ${event.data}`);
+    switch (event.data) {
+        case 'UPDATE_PARTY': {
+            console.log('[message] UPDATE_PARTY');
+            updateParty();
+            break;
+        }
+        default: {
+            console.log(`[message] Данные получены с сервера: ${event.data}`);
+        }
+    }
 };
 
 socket.onclose = function(event) {

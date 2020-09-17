@@ -57,13 +57,23 @@ module.exports = {
     }
   },
   getPlayersList: async function (app, db, room_id) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+    const format = db.format(sql.sfw, ['user__room', 'room_id']);
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results;
     } else {
       throw ('The getPlayersList failed. There is no users in this room');
+    }
+  },
+  getActivePlayersList: async function (app, db, room_id) {
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
+    const results = await dbQuery(format, db);
+
+    if (isNotEmpty(results)) {
+      return results;
+    } else {
+      throw ('The getActivePlayersList failed. There is no users in this room');
     }
   },
   setStatus: async function (app, db, room_id, game_action) {

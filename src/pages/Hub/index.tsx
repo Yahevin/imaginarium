@@ -1,21 +1,27 @@
 import React, {useCallback, useRef} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 
 import UserAbout from "@/pages/Hub/parts/UserAbout";
 import RecentGames from "@/pages/Hub/parts/RecentGames";
 import Button from "@/components/Button";
+import Input from "@/components/Input";
 import {Menu, Menu__item} from "@/styled/Menu";
 import Centered from "@/styled/Centered";
+
 import ButtonTheme from "@/constants/ButtonTheme";
 import COLOR from "@/constants/Color";
-import {useDispatch, useSelector} from "react-redux";
-import {PageAction} from "@/store/page/action";
 import PAGES from "@/constants/Pages";
-import Input from "@/components/Input";
+
 import InputHandler from "@/interfaces/InputHandler";
-import deal from "@/helpers/deal";
-import {TStore} from "@/store/reducer";
 import {PartyAction} from "@/store/party/action";
+import {TStore} from "@/store/reducer";
+import {PageAction} from "@/store/page/action";
+
+import updateParty from "@/helpers/updateParty";
+import deal from "@/helpers/deal";
+import SocketAction from "@/web-socket/action";
+
 
 const Header = styled.header`
   background-color: ${COLOR.dark_bg};
@@ -45,6 +51,7 @@ function HubPage() {
             dispatch(PartyAction.setId(wanted_party_id.current));
             dispatch(PartyAction.setGAction(response.game_action));
             dispatch(PageAction.set(PAGES.LOBBY));
+            SocketAction.join(wanted_party_id.current);
         } catch (e) {
             console.log(e)
         }

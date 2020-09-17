@@ -12,7 +12,7 @@ import Spacer from "@/styled/Spacer";
 import Button from "@/components/Button";
 import deal from "@/helpers/deal";
 import Input from "@/components/Input";
-import SocketReducer from "@/web-socket/reducer";
+import SocketAction from "@/web-socket/action";
 
 const ListedBtn = styled(Button)``;
 const ListedInput = styled(Input)``;
@@ -78,7 +78,7 @@ function AuthPage() {
             const user_id = parseInt(resp.user_id);
             const experience = parseInt(resp.experience);
 
-            SocketReducer.auth(user_id);
+            SocketAction.auth(user_id);
 
             dispatch(UserAction.setUser({
                     user_id: user_id,
