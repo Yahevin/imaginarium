@@ -1,5 +1,6 @@
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
+const Cards = require('./helpers/Cards');
 const gameStatus = require('./mixins/gameStatus');
 
 module.exports = class SocketController {
@@ -25,6 +26,7 @@ module.exports = class SocketController {
           this.player_id = await User.getPlayerId(this.app, this.db, this.user_id, room_id);
         } catch (error) {
           console.log(error);
+          // TODO send alert to re-auth;
         }
 
         this.makeUpdateParty();
@@ -43,6 +45,14 @@ module.exports = class SocketController {
     }
   }
 
+  sendToMyRoom(message) {
+    this.wss.clients.forEach((ws) => {
+      if (ws.controller.room_id === this.room_id) {
+        ws.send(message);
+      }
+    })
+  }
+
   async terminate() {
     if (this.room_id !== null) {
       try {
@@ -58,14 +68,6 @@ module.exports = class SocketController {
     }
   }
 
-  sendToMyRoom(message) {
-    this.wss.clients.forEach((ws) => {
-      if (ws.controller.room_id === this.room_id) {
-        ws.send(message);
-      }
-    })
-  }
-
   async makeUpdateParty() {
     await this.checkGameMaster();
 
@@ -76,11 +78,13 @@ module.exports = class SocketController {
     try {
       const active_players = await Party.getActivePlayersList(this.app, this.db, this.room_id);
       if (active_players.length < 3) return;
+      // Players count is enough
 
-      const gm_player = active_players.findIndex((item)=>{
+      const gm_player = active_players.findIndex((item) => {
         return item.game_master;
       });
       if (gm_player !== -1) return;
+      // Game master is not active player
       const new_gm_player_id = active_players[0].id;
 
       await Party.demoteGM(this.app, this.db, this.room_id);
@@ -94,10 +98,5 @@ module.exports = class SocketController {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async checkGameAction() {
-    const game_action = await Party.getStatus(this.app, this.db, this.room_id);
-    const players_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
   }
 };

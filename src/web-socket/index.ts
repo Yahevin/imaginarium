@@ -1,5 +1,6 @@
 import updateParty from "@/web-socket/helpers/updateParty";
 import updateRole from "@/web-socket/helpers/updateRole";
+import updateHand from "@/web-socket/helpers/updateHand";
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -11,13 +12,15 @@ socket.onmessage = function(event) {
     switch (event.data) {
         case 'UPDATE_PARTY': {
             console.log('[message] UPDATE_PARTY');
-            updateParty();
-            break;
+            return updateParty();
         }
         case 'UPDATE_ROLE': {
             console.log('[message] UPDATE_ROLE');
-            updateRole();
-            break;
+            return updateRole();
+        }
+        case 'UPDATE_HAND': {
+            console.log('[message] UPDATE_HAND');
+            return updateHand();
         }
         default: {
             console.log(`[message] Данные получены с сервера: ${event.data}`);
