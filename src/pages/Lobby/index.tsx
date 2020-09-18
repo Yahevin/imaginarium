@@ -17,6 +17,12 @@ function LobbyPage() {
     const dispatch = useDispatch();
     const players = useSelector((store: TStore) => store.partyReducer.players);
 
+    useEffect(()=>{
+        if (players.length >= 3) {
+            dispatch(PageAction.set(PAGES.GAME));
+        }
+    },[players]);
+
     const leaveParty = useCallback(() => {
         SocketAction.leave();
 

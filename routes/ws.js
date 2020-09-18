@@ -51,17 +51,16 @@ module.exports = class SocketController {
         const new_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
 
         await Party.countUpdate(this.app, this.db, this.room_id, new_count);
-
-        if (new_count < 3) {
-          this.makeUpdateParty();
-        }
+        this.makeUpdateParty();
       } catch (error) {
         console.log(error);
       }
     }
   }
 
-  makeUpdateParty() {
+  async makeUpdateParty() {
+    await this.checkGM();
+
     this.wss.clients.forEach((ws) => {
       if (ws.controller.room_id === this.room_id) {
         ws.send('UPDATE_PARTY');
@@ -69,4 +68,22 @@ module.exports = class SocketController {
     })
   }
 
+  async checkGM() {
+    try {
+      const active_players = await Party.getActivePlayersList(this.app, this.db, this.room_id);
+      if (active_players.length < 3) return;
+
+      const gm_player = active_players.findIndex((item)=>{
+        return item.game_master;
+      });
+      if (gm_player !== -1) return;
+
+      const new_gm_player_id = active_players[0].id;
+
+      await Party.demoteGM(this.app, this.db, this.room_id);
+      await User.setGM(this.app, this.db, new_gm_player_id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 };

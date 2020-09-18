@@ -79,7 +79,7 @@ module.exports = {
     return {success: true};
   },
   setGM: async function (app, db, player_id) {
-    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'player_id', player_id]);
+    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};

@@ -132,4 +132,10 @@ module.exports = {
 
     return {success: true};
   },
+  demoteGM: async function (app, db, room_id) {
+    const format = db.format(sql.usww, ['user__room', 'game_master', false, 'game_master', true, 'room_id', room_id]);
+    await dbQuery(format, db);
+
+    return {success: true};
+  },
 };
