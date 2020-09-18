@@ -20,14 +20,14 @@ module.exports = class SocketController {
       }
       case 'JOIN': {
         try {
-          const id = parseInt(message.payload);
-          this.room_id = id;
-
-          this.player_id = await User.getPlayerId(this.app, this.db, this.user_id, id);
-          this.makeUpdateParty();
+          const room_id = parseInt(message.payload);
+          this.room_id = room_id;
+          this.player_id = await User.getPlayerId(this.app, this.db, this.user_id, room_id);
         } catch (error) {
           console.log(error);
         }
+
+        this.makeUpdateParty();
         break;
       }
       case 'LEAVE': {
@@ -58,17 +58,21 @@ module.exports = class SocketController {
     }
   }
 
-  async makeUpdateParty() {
-    await this.checkGM();
-
+  sendToMyRoom(message) {
     this.wss.clients.forEach((ws) => {
       if (ws.controller.room_id === this.room_id) {
-        ws.send('UPDATE_PARTY');
+        ws.send(message);
       }
     })
   }
 
-  async checkGM() {
+  async makeUpdateParty() {
+    await this.checkGameMaster();
+
+    this.sendToMyRoom('UPDATE_PARTY');
+  }
+
+  async checkGameMaster() {
     try {
       const active_players = await Party.getActivePlayersList(this.app, this.db, this.room_id);
       if (active_players.length < 3) return;
@@ -90,5 +94,10 @@ module.exports = class SocketController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async checkGameAction() {
+    const game_action = await Party.getStatus(this.app, this.db, this.room_id);
+    const players_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
   }
 };
