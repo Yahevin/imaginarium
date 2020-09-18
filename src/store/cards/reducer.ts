@@ -1,7 +1,7 @@
 import CardsState from "@/store/cards/state";
 import ICardsState from "@/store/cards/ICardsState";
 import {CardsActionTypes} from "@/store/cards/action";
-import {SET_HAND_CARDS} from "@/store/actions";
+import {SET_HAND_CARDS, SET_SELECTED} from "@/store/actions";
 
 
 function cardsReducer(state = CardsState, action: CardsActionTypes) : ICardsState {
@@ -10,6 +10,12 @@ function cardsReducer(state = CardsState, action: CardsActionTypes) : ICardsStat
             return {
                 ...state,
                 hand: action.payload
+            }
+        }
+        case SET_SELECTED: {
+            return {
+                ...state,
+                selected: action.payload
             }
         }
         default: {
