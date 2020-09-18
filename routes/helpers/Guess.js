@@ -22,10 +22,7 @@ module.exports = {
     const results = await dbQuery(format,db);
 
     if (isNotEmpty(results) && results[0].hasOwnProperty('question')) {
-      return {
-        data: results[0].question,
-        exist: true
-      };
+      return results[0].question
     } else {
       throw ('Question in not exist');
     }
