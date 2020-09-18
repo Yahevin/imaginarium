@@ -73,4 +73,11 @@ module.exports = {
 
     return {success: true};
   },
+  createPool: async function (app, db, new_cards) {
+    const format = db.format(sql.im5, ['cards' ,'img_url', 'origin_id', 'player_id', 'basket_id', 'status', new_cards]);
+
+    await dbQuery(format, db);
+
+    return {success: true};
+  }
 };
