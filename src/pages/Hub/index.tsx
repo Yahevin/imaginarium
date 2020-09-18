@@ -37,7 +37,7 @@ function HubPage() {
 
     const dispatch = useDispatch();
     const openPartyCreating = () => {
-        dispatch(PageAction.set(PAGES.NEW_ROOM));
+        dispatch(PageAction.set(PAGES.CREATE));
     };
     const joinToParty = useCallback(async () => {
         try {

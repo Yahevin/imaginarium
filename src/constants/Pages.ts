@@ -2,7 +2,7 @@ enum PAGES {
     START = '/',
     AUTH = '/auth',
     MAIN = '/main',
-    NEW_ROOM = '/new_room',
+    CREATE = '/create',
     LOBBY = '/lobby',
     GAME = '/game',
 }

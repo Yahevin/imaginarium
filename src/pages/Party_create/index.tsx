@@ -20,7 +20,7 @@ const Content = styled.div`
 `;
 
 
-function NewRoom() {
+function PartyCreate() {
     const dispatch = useDispatch();
     const user_id = useSelector((store:TStore) => store.userReducer.user_id);
 
@@ -36,7 +36,7 @@ function NewRoom() {
                 body: {user_id}
             });
 
-            dispatch(PartyAction.setId(response.room_id));
+            dispatch(PartyAction.setPartyId(response.room_id));
             dispatch(PartyAction.setGAction(response.game_action));
             dispatch(PageAction.set(PAGES.LOBBY));
         } catch (e) {
@@ -71,4 +71,4 @@ function NewRoom() {
     )
 }
 
-export default NewRoom;
+export default PartyCreate;

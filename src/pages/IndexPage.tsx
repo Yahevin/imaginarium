@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, { useEffect} from "react";
 import {useSelector} from "react-redux";
 import {Route, Switch, useHistory} from "react-router-dom";
 
@@ -7,7 +7,7 @@ import {TStore} from "@/store/reducer";
 import AuthPage from "@/pages/Auth";
 import StartPage from "@/pages/Start";
 import HubPage from "@/pages/Hub";
-import NewRoom from "@/pages/New_room";
+import PartyCreate from "@/pages/Party_create";
 import LobbyPage from "@/pages/Lobby";
 
 
@@ -47,7 +47,7 @@ function IndexPage() {
             <Route exact path={'/'} component={StartPage}/>
             <Route exact path={'/auth'} component={AuthPage}/>
             <Route exact path={'/main'} component={HubPage}/>
-            <Route exact path={'/new_room'} component={NewRoom}/>
+            <Route exact path={'/create'} component={PartyCreate}/>
             <Route exact path={'/lobby'} component={LobbyPage}/>
         </Switch>
     )
