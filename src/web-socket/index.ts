@@ -1,6 +1,6 @@
-import updateParty from "@/web-socket/helpers/updateParty";
-import updateRole from "@/web-socket/helpers/updateRole";
-import updateHand from "@/web-socket/helpers/updateHand";
+import updateParty from "@/api-actions/updateParty";
+import updateRole from "@/api-actions/updateRole";
+import updateHand from "@/api-actions/updateHand";
 
 const socket = new WebSocket('ws://localhost:8000');
 

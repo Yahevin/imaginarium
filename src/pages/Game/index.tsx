@@ -6,7 +6,6 @@ import {PartyAction} from "@/store/party/action";
 import {PageAction} from "@/store/page/action";
 import {TStore} from "@/store/reducer";
 import PAGES from "@/constants/Pages";
-import updateHand from "@/web-socket/helpers/updateHand";
 import ThinButton from "@/components/ThinButton";
 import {Menu, Menu__item} from "@/styled/Menu";
 
@@ -22,9 +21,6 @@ function Game() {
         dispatch(PageAction.set(PAGES.MAIN));
     }, []);
 
-    useEffect(() => {
-        updateHand();
-    });
 
     return (
         <Menu>
