@@ -1,4 +1,5 @@
-import updateParty from "@/helpers/updateParty";
+import updateParty from "@/web-socket/helpers/updateParty";
+import updateRole from "@/web-socket/helpers/updateRole";
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -11,6 +12,11 @@ socket.onmessage = function(event) {
         case 'UPDATE_PARTY': {
             console.log('[message] UPDATE_PARTY');
             updateParty();
+            break;
+        }
+        case 'UPDATE_ROLE': {
+            console.log('[message] UPDATE_ROLE');
+            updateRole();
             break;
         }
         default: {

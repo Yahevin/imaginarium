@@ -21,8 +21,10 @@ const putCard = require('./router/put-card');
 const registration = require('./router/registration');
 const authentication = require('./router/authentication');
 const getPlayers = require('./router/get-players');
+const getRole  = require('./router/get-role');
 
 module.exports = function(app, db) {
+  getRole(app,db);
   getPlayers(app,db);
   authentication(app,db);
   registration(app,db);

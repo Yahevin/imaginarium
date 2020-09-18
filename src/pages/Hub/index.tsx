@@ -18,7 +18,6 @@ import {PartyAction} from "@/store/party/action";
 import {TStore} from "@/store/reducer";
 import {PageAction} from "@/store/page/action";
 
-import updateParty from "@/helpers/updateParty";
 import deal from "@/helpers/deal";
 import SocketAction from "@/web-socket/action";
 

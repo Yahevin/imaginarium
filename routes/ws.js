@@ -77,11 +77,16 @@ module.exports = class SocketController {
         return item.game_master;
       });
       if (gm_player !== -1) return;
-
       const new_gm_player_id = active_players[0].id;
 
       await Party.demoteGM(this.app, this.db, this.room_id);
       await User.setGM(this.app, this.db, new_gm_player_id);
+
+      this.wss.clients.forEach((ws) => {
+        if (ws.controller.user_id === active_players[0].user_id) {
+          ws.send('UPDATE_ROLE');
+        }
+      })
     } catch (error) {
       console.log(error);
     }
