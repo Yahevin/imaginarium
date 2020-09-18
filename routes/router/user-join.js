@@ -1,4 +1,5 @@
 const Party = require('../helpers/Party');
+const User = require('../helpers/User');
 
 module.exports = function (app, db) {
   app.post('/user-join', async function (req, res) {
@@ -18,11 +19,14 @@ module.exports = function (app, db) {
         }
 
         const game_action = await Party.getStatus(app, db, room_id);
+        const game_master = await User.gameMaster(app, db, player_id);
+
         const new_count = await Party.getPlayersCount(app, db, room_id);
         await Party.countUpdate(app, db, room_id, new_count);
 
         return res.json({
           game_action,
+          game_master,
           success: true,
         })
       } else {

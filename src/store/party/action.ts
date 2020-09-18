@@ -4,7 +4,7 @@ import GAME_ACTION from "@/constants/GAME_ACTION";
 import IPlayer from "@/interfaces/IPlayer";
 
 const PartyAction = {
-    setId: function(room_id: number) {
+    setPartyId: function(room_id: number) {
         return {
             type: SET_PARTY_ID,
             payload: room_id,

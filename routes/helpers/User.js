@@ -43,8 +43,8 @@ module.exports = {
       throw ('Player not found');
     }
   },
-	gameMaster: async function (app, db, user_id, room_id) {
-    const format = db.format(sql.sfww, ['user__room', 'user_id', user_id, 'room_id', room_id]);
+	gameMaster: async function (app, db, player_id) {
+    const format = db.format(sql.sfw, ['user__room', 'id', player_id]);
     const result = await dbQuery(format,db);
 
     if (isNotEmpty(result)) {

@@ -48,8 +48,9 @@ function HubPage() {
                 body: {user_id, room_id: wanted_party_id.current},
             });
 
-            dispatch(PartyAction.setId(wanted_party_id.current));
+            dispatch(PartyAction.setPartyId(wanted_party_id.current));
             dispatch(PartyAction.setGAction(response.game_action));
+            dispatch(PartyAction.setGameRole(response.game_master));
             dispatch(PageAction.set(PAGES.LOBBY));
             SocketAction.join(wanted_party_id.current);
         } catch (e) {
