@@ -26,7 +26,7 @@ function LobbyPage() {
     const leaveParty = useCallback(() => {
         SocketAction.leave();
 
-        dispatch(PartyAction.setId(null));
+        dispatch(PartyAction.setPartyId(null));
         dispatch(PageAction.set(PAGES.MAIN));
     }, []);
 

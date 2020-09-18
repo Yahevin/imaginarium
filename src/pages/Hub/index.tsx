@@ -41,16 +41,18 @@ function HubPage() {
     };
     const joinToParty = useCallback(async () => {
         try {
-            const response = await deal({
+            const {game_action, game_master} = await deal({
                 url: '/user-join',
                 method: "POST",
                 body: {user_id, room_id: wanted_party_id.current},
             });
 
             dispatch(PartyAction.setPartyId(wanted_party_id.current));
-            dispatch(PartyAction.setGAction(response.game_action));
-            dispatch(PartyAction.setGameRole(response.game_master));
+            dispatch(PartyAction.setGAction(game_action));
+            dispatch(PartyAction.setGameRole(game_master));
             dispatch(PageAction.set(PAGES.LOBBY));
+
+            // after this, will get command to update party list;
             SocketAction.join(wanted_party_id.current);
         } catch (e) {
             console.log(e)
