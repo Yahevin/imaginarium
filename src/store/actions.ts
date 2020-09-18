@@ -6,3 +6,4 @@ export const SET_GAME_ROLE = 'SET_GAME_ROLE' as 'SET_GAME_ROLE';
 export const SET_USER = 'SET_USER' as 'SET_USER';
 export const SET_USER_ID = 'SET_USER_ID' as 'SET_USER_ID';
 export const SET_USER_EXP = 'SET_USER_EXP' as 'SET_USER_EXP';
+export const SET_HAND_CARDS = 'SET_HAND_CARDS' as 'SET_HAND_CARDS';
