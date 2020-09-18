@@ -119,8 +119,11 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" question VARCHAR(255), " +
     " room_id INT, " +
+    " card_id INT, " +
     " FOREIGN KEY (room_id) REFERENCES room(id)" +
 		" ON DELETE CASCADE, " +
+    " FOREIGN KEY (card_id) REFERENCES card(id)" +
+    " ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 
 	conn.query(question, function(err, results) {

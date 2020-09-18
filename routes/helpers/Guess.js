@@ -3,15 +3,15 @@ const dbQuery = require('../mixins/dbQuery');
 const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
-  createQuestion: async function (app, db, room_id, question = '') {
-    const format = db.format(sql.ii2, ['question', 'room_id', 'question', room_id, question]);
+  createQuestion: async function (app, db, room_id, question = '', card_id = null) {
+    const format = db.format(sql.ii3, ['question', 'room_id', 'question', 'card_id', room_id, question, card_id]);
 
     await dbQuery(format,db);
 
     return {success: true};
   },
-  setQuestion: async function (app, db, room_id, question) {
-    const format = db.format(sql.usw, ['question', 'room_id', room_id, 'question', question]);
+  setQuestion: async function (app, db, room_id, question, card_id) {
+    const format = db.format(sql.ussw, ['question', 'question', question, 'card_id', card_id, 'room_id', room_id]);
 
     await dbQuery(format,db);
 
