@@ -1,7 +1,7 @@
 import InferValueTypes from "@/types/InferValueTypes";
 import {SET_USER} from "@/store/actions";
 import {SET_USER_ID} from "@/store/actions";
-import {SET_USER_SCORE} from "@/store/actions";
+import {SET_USER_EXP} from "@/store/actions";
 import IUserState from "@/store/user/IUserState";
 
 
@@ -18,9 +18,9 @@ const UserAction = {
             payload: id,
         }
     },
-    setUserScore: function (experience: number) {
+    setUserExperience: function (experience: number) {
         return {
-            type: SET_USER_SCORE,
+            type: SET_USER_EXP,
             payload: experience,
         }
     }

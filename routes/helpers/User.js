@@ -34,13 +34,17 @@ module.exports = {
     }
   },
   getPlayerId: async function (app, db, user_id, room_id) {
-    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id,]);
-    const {id} = await dbQuery(format,db);
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id]);
+    const results = await dbQuery(format,db);
 
-    return id;
+    if (isNotEmpty(results)) {
+      return results[0].id
+    } else {
+      throw ('Player not found');
+    }
   },
-	gameMaster: async function (app, db, user_id, room_id) {
-    const format = db.format(sql.sfww, ['user__room', 'user_id', user_id, 'room_id', room_id]);
+	gameMaster: async function (app, db, player_id) {
+    const format = db.format(sql.sfw, ['user__room', 'id', player_id]);
     const result = await dbQuery(format,db);
 
     if (isNotEmpty(result)) {
@@ -75,7 +79,7 @@ module.exports = {
     return {success: true};
   },
   setGM: async function (app, db, player_id) {
-    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'player_id', player_id]);
+    const format = db.format(sql.usw, ['user__room', 'game_master', true, 'id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};

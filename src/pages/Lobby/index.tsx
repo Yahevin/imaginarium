@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {PageAction} from "@/store/page/action";
 import {PartyAction} from "@/store/party/action";
@@ -9,14 +9,23 @@ import PAGES from "@/constants/Pages";
 import {Menu, Menu__item} from "@/styled/Menu";
 import PlayersGrid from "@/components/PlayersGrid";
 import ThinButton from "@/components/ThinButton";
-import usePlayersList from "@/helpers/usePlayersList";
+import SocketAction from "@/web-socket/action";
+import {TStore} from "@/store/reducer";
 
 
 function LobbyPage() {
     const dispatch = useDispatch();
-    const [players, updatePlayers] = usePlayersList();
+    const players = useSelector((store: TStore) => store.partyReducer.players);
+
+    useEffect(()=>{
+        if (players.length >= 3) {
+            dispatch(PageAction.set(PAGES.GAME));
+        }
+    },[players]);
 
     const leaveParty = useCallback(() => {
+        SocketAction.leave();
+
         dispatch(PartyAction.setId(null));
         dispatch(PageAction.set(PAGES.MAIN));
     }, []);

@@ -11,10 +11,18 @@ import NewRoom from "@/pages/New_room";
 import LobbyPage from "@/pages/Lobby";
 
 
+const reloadPrepare = (event: KeyboardEvent)=>{
+    if (event.code !== 'MetaLeft') return;
+
+    const path = window.location.pathname.slice(1);
+
+    window.location.pathname = '';
+    window.location.hash = path;
+};
 
 function IndexPage() {
     const history = useHistory();
-    const page = useSelector((state:TStore) => state.pageReducer.page);
+    const page = useSelector((state: TStore) => state.pageReducer.page);
 
     useEffect(() => {
         const hash = window.location.hash;
@@ -25,6 +33,14 @@ function IndexPage() {
     useEffect(() => {
         history.push(page);
     }, [page]);
+
+    useEffect(()=>{
+       window.addEventListener('keydown',reloadPrepare);
+
+       return ()=>{
+           window.removeEventListener('keydown',reloadPrepare);
+       }
+    });
 
     return (
         <Switch>

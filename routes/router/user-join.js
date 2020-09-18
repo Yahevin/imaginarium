@@ -1,4 +1,5 @@
 const Party = require('../helpers/Party');
+const User = require('../helpers/User');
 
 module.exports = function (app, db) {
   app.post('/user-join', async function (req, res) {
@@ -9,29 +10,29 @@ module.exports = function (app, db) {
       const roomExist = await Party.exist(app, db, room_id);
 
       if (roomExist) {
-        const newCount = await Party.getPlayersCount(app, db, room_id) + 1;
-        const userExist = await Party.includesUser(app, db, room_id, user_id);
-        const game_action = await Party.getStatus(app, db, room_id);
+        const {user_exist, player_id} = await Party.includesUser(app, db, user_id, room_id);
 
-        return res.json({
-          success: true,
-          userExist
-        });
-
-
-        if (!userExist) {
-          await Party.addPlayer(app, db, room_id, user_id, false);
+        if (!user_exist) {
+          await Party.addPlayer(app, db, user_id, room_id, false);
+        } else {
+          await Party.playerJoin(app, db, player_id);
         }
-        await Party.countUpdate(app, db, room_id, newCount);
+
+        const game_action = await Party.getStatus(app, db, room_id);
+        const game_master = await User.gameMaster(app, db, player_id);
+
+        const new_count = await Party.getPlayersCount(app, db, room_id);
+        await Party.countUpdate(app, db, room_id, new_count);
 
         return res.json({
           game_action,
+          game_master,
           success: true,
         })
       } else {
         return res.json({
           success: false,
-          error: 'Room not exist',
+          error: 'Room do not exist',
         })
       }
     } catch (error) {
