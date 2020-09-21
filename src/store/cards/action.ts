@@ -1,5 +1,5 @@
 import ICard from "@/interfaces/ICard";
-import {SET_HAND_CARDS, SET_SELECTED} from "@/store/actions";
+import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED} from "@/store/actions";
 import InferValueTypes from "@/types/InferValueTypes";
 
 const CardsAction = {
@@ -12,6 +12,12 @@ const CardsAction = {
     setSelected: function (card_id: ICard['id']) {
         return {
             type: SET_SELECTED,
+            payload: card_id
+        }
+    },
+    putToTable: function (card_id: ICard['id']) {
+        return {
+            type: PUT_TO_TABLE,
             payload: card_id
         }
     }
