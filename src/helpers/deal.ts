@@ -4,6 +4,8 @@ const deal: Imagick = async ({url, method, body}) => {
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
+    // TODO add to body room_id and user_id by default
+
     const data =  {
         method: method,
         headers: myHeaders,
