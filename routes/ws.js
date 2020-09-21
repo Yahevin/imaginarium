@@ -39,13 +39,19 @@ module.exports = class SocketController {
         this.makeUpdateParty();
         break;
       }
+      case 'START_GUESS': {
+        this.sendToMyRoom('SET_QUESTION', message.payload);
+        break;
+      }
       default: {
         return;
       }
     }
   }
 
-  sendToMyRoom(message) {
+  sendToMyRoom(type, payload) {
+    const message = JSON.stringify({type, payload});
+
     this.wss.clients.forEach((ws) => {
       if (ws.controller.room_id === this.room_id) {
         ws.send(message);
@@ -91,7 +97,7 @@ module.exports = class SocketController {
       await User.setGM(this.app, this.db, new_gm_player_id);
 
       this.wss.clients.forEach((ws) => {
-        if (ws.controller.user_id === active_players[0].user_id) {
+        if (ws.controller.player_id === active_players[0].id) {
           ws.send('UPDATE_ROLE');
         }
       })

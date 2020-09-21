@@ -4,13 +4,11 @@ import Button from "@/components/Button";
 import InputHandler from "@/interfaces/InputHandler";
 import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
-import {PartyAction} from "@/store/party/action";
-import GAME_ACTION from "@/constants/GAME_ACTION";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
+import SocketAction from "@/web-socket/action";
 
 function QuestInput() {
-    const dispatch = useDispatch();
     const room_id = useSelector((store: TStore) => store.partyReducer.room_id);
     const selected = useSelector((store: TStore) => store.cardsReducer.selected);
 
@@ -40,8 +38,9 @@ function QuestInput() {
                 body: {room_id, question, card_id: selected}
             });
 
-            dispatch(PartyAction.setQuestion(question));
-            dispatch(PartyAction.setGAction(GAME_ACTION.gmCardSet));
+            // after this action, will come command
+            // to update game_action and question
+            SocketAction.startGuess(question);
         } catch (error) {
             console.log(error);
         }

@@ -17,6 +17,12 @@ const SocketAction = {
         socket.send(JSON.stringify({
             type: 'LEAVE',
         }))
+    },
+    startGuess(question: string) : void {
+        socket.send(JSON.stringify({
+            type: 'START_GUESS',
+            payload: question
+        }))
     }
 };
 
