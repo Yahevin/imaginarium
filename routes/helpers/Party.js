@@ -103,7 +103,11 @@ module.exports = {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
     const results = await dbQuery(format, db);
 
-    return results.length;
+    if (isNotEmpty(results)) {
+      return results.length;
+    } else {
+      throw ('All players are inactive');
+    }
   },
   countUpdate: async function (app, db, room_id, new_count) {
     const format = db.format(sql.usw, ['room', 'player_count', new_count, 'id', room_id]);
