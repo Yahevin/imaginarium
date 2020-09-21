@@ -4,6 +4,7 @@ import updateHand from "@/api-actions/updateHand";
 import store from "@/store";
 import {PartyAction} from "@/store/party/action";
 import GAME_ACTION from "@/constants/GAME_ACTION";
+import updateAction from "@/api-actions/updateAction";
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -27,7 +28,12 @@ socket.onmessage = function(event) {
             console.log('[message] UPDATE_HAND');
             return updateHand();
         }
+        case 'UPDATE_ACTION': {
+            console.log('[message] UPDATE_ACTION');
+            return updateAction();
+        }
         case 'SET_QUESTION': {
+            console.log('[message] SET_QUESTION');
             store.dispatch(PartyAction.setQuestion(message.payload));
             store.dispatch(PartyAction.setGAction(GAME_ACTION.gmCardSet));
             return

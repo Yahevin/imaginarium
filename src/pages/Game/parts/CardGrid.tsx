@@ -8,6 +8,7 @@ import Button from "@/components/Button";
 import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
 import GAME_ACTION from "@/constants/GAME_ACTION";
+import SocketAction from "@/web-socket/action";
 
 const Grid = styled.div`
   margin: 0 auto;
@@ -42,15 +43,16 @@ function CardGrid() {
     }, []);
 
     const confirm_select = useCallback(async () => {
-        dispatch(CardsAction.putToTable(selected));
         await deal({
-            url: 'put-card',
+            url: '/put-card',
             body: {
                 card_id: selected
             },
         });
 
-    }, []);
+        SocketAction.putTheFake();
+        dispatch(CardsAction.putToTable(selected));
+    }, [selected]);
 
     const submit_disabled = useMemo(() => {
         return selected !== null;

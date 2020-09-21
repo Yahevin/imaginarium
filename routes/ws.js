@@ -1,6 +1,7 @@
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
 const Cards = require('./helpers/Cards');
+const Table = require('./helpers/Table');
 const gameStatus = require('./mixins/gameStatus');
 
 module.exports = class SocketController {
@@ -43,6 +44,10 @@ module.exports = class SocketController {
         this.sendToMyRoom('SET_QUESTION', message.payload);
         break;
       }
+      case 'PUT_THE_FAKE': {
+        this.maybeStartToGuess();
+        break;
+      }
       default: {
         return;
       }
@@ -67,6 +72,7 @@ module.exports = class SocketController {
         const new_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
 
         await Party.countUpdate(this.app, this.db, this.room_id, new_count);
+        await this.maybeStartToGuess();
         this.makeUpdateParty();
       } catch (error) {
         console.log(error);
@@ -76,7 +82,6 @@ module.exports = class SocketController {
 
   async makeUpdateParty() {
     await this.checkGameMaster();
-
     this.sendToMyRoom('UPDATE_PARTY');
   }
 
@@ -102,6 +107,24 @@ module.exports = class SocketController {
         }
       })
     } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async maybeStartToGuess() {
+    try {
+      const game_action = await Party.getStatus(this.app, this.db, this.room_id);
+      if (game_action !== gameStatus.gmCardSet) return;
+
+      const players_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
+      const table_cards = await Table.getCardsList(this.app, this.db, this.room_id);
+
+      if (parseInt(players_count) === parseInt(table_cards.length)) {
+        await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allCardSet);
+
+        this.sendToMyRoom('UPDATE_ACTION');
+      }
+    } catch(error) {
       console.log(error);
     }
   }
