@@ -76,6 +76,13 @@ module.exports = {
       throw ('The getActivePlayersList failed. There is no users in this room');
     }
   },
+  getActivePlayersIdList: async function (app, db, room_id) {
+    const active_players_list = await getActivePlayersList(app, db, room_id);
+
+    return active_players_list.map((item) => {
+      return item.id
+    })
+  },
   setStatus: async function (app, db, room_id, game_action) {
     const format = db.format(sql.usw, ['room', 'game_action', game_action, 'id', room_id]);
     await dbQuery(format, db);

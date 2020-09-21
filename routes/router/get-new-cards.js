@@ -1,109 +1,64 @@
-const sql = require('../mixins/sqlCommands');
+const Basket = require('../helpers/Basket');
+const Cards = require('../helpers/Cards');
+const User = require('../helpers/User');
 
+module.exports = function (app, db) {
+  app.get('/get-new-cards', async (req, res) => {
+    try {
+      const room_id = req.body.room_id,
+            user_id = req.body.user_id;
 
-module.exports = function(app, db) {
-app.post('/get-new-cards', async (req, res) => {
-	let userId = req.body.user_id,
-		roomId = req.body.room_id,
-		cardsIds = [],
-		resp = [],
-		handCardIds = [];
-	
-	
-	function getCardsId(resolve) {
-		let getCardsIdReq = db.format(sql.sfw, ['new_cards', 'user_id', userId]);
-		
-		db.query(getCardsIdReq, function(err, results) {
-			if (err) throw err;
-			results.forEach((item)=>{
-				cardsIds.push({id: item.card_id});
-			});
-			return resolve();
-		})
-	}
-	function getImages(resolve) {
-		cardsIds.forEach((item,index)=>{
-			let getImagesReq = db.format(sql.sfw, ['cards', 'id', item.id]);
-			
-			db.query(getImagesReq, function(err, results) {
-				if (err) throw err;
-				item.img_url = results[0].img_url;
-				
-				if(index === (cardsIds.length - 1)) {
-					return resolve();
-				}
-			})
-		});
-	}
-	function deleteTheCopy() {
-		let getCardsIdReq = db.format(sql.dfw, ['new_cards', 'user_id', userId]);
-		
-		db.query(getCardsIdReq, function(err, results) {
-			if (err) throw err;
-		})
-	}
-	function createHandCards(resolve) {
-		cardsIds.forEach((item,index)=>{
-			let createHandCardsReq = db.format(sql.ii2, ['cards_in_hand', 'card_id', 'img_url',  item.id, item.img_url]);
-			
-			db.query(createHandCardsReq, function(err, results) {
-				if (err) throw err;
-				handCardIds.push(results.insertId);
-				
-				if(index === (cardsIds.length - 1)) {
-					return resolve();
-				}
-			})
-		});
-	}
-	function chainWithRoom() {
-		handCardIds.forEach((currentId)=>{
-			let chainWithRoomReq = db.format(sql.ii2, ['room__hand', 'room_id', 'hand_card_id', roomId, currentId]);
-			
-			db.query(chainWithRoomReq, function(err, results) {
-				if (err) throw err;
-			});
-		});
-	}
-	function chainWithUser() {
-		handCardIds.forEach((currentId)=> {
-			let chainWithUserReq = db.format(sql.ii2, ['user__hand', 'user_id', 'hand_card_id', userId, currentId]);
-			
-			db.query(chainWithUserReq, function (err, results) {
-				if (err) throw err;
-			});
-		});
-	}
-	function getCards() {
-		handCardIds.forEach((currentId,index)=>{
-			let getCardsReq = db.format(sql.sfw, ['cards_in_hand', 'id', currentId]);
-			
-			db.query(getCardsReq, function(err, results) {
-				if (err) throw err;
-				resp.push(results[0]);
-				
-				if(index === (handCardIds.length - 1)) {
-					res.json(resp);
-				}
-			})
-		});
-	}
-	
-	new Promise(resolve => {
-		getCardsId(resolve)
-	}).then(()=>{
-		new Promise(resolve => {
-			getImages(resolve)
-		}).then(()=>{
-			new Promise(resolve => {
-				createHandCards(resolve);
-			}).then(()=>{
-				chainWithRoom();
-				chainWithUser();
-				deleteTheCopy();
-				getCards();
-			})
-		})
-	})
-});
+      const player_id = await User.getPlayerId(app, db, user_id, room_id);
+      const basket_id = await Basket.getSelf(app, db, room_id);
+      const my_cards  = await Cards.getAllMy(app, db, player_id);
+      let   new_cards = await Cards.getNew(app, db, basket_id);
+      const deficit = 6 - my_cards.length;
+
+      if (new_cards.length < deficit) {
+        await Cards.mixBasket(app, db, basket_id);
+        new_cards = await Cards.getNew(app, db, basket_id);
+      }
+
+      const {selected_id_list, selected_cards} = getSelected(new_cards, deficit);
+
+      await Cards.noteTaken(app, db, player_id, selected_id_list);
+
+      res.json({
+        success: true,
+        cards: selected_cards.map((card)=>{
+          return {
+            id: card.id,
+            img_url: card.img_url
+          }
+        }),
+      })
+    } catch (error) {
+
+      return res.json({
+        success: false,
+        error: error,
+      });
+    }
+  });
 };
+
+function getSelected(new_cards, deficit) {
+  const selected_id_list = [];
+  const selected_cards = [];
+
+  for (let i=0; i < deficit; i++) {
+    const index = new_cards.length * Math.floor(Math.random());
+    const randomItem = new_cards[index];
+
+    if (selected_id_list.includes(randomItem.id)) {
+      i--;
+    } else {
+      selected_id_list.push(randomItem.id);
+      selected_cards.push(randomItem);
+    }
+  }
+
+  if (selected_cards.length === 0) throw ('New cards not collected');
+
+  return {selected_cards, selected_id_list};
+}

@@ -11,6 +11,8 @@ import PlayersGrid from "@/components/PlayersGrid";
 import ThinButton from "@/components/ThinButton";
 import SocketAction from "@/web-socket/action";
 import {TStore} from "@/store/reducer";
+import updateHand from "@/api-actions/updateHand";
+import updateQuestion from "@/api-actions/updateQuestion";
 
 
 function LobbyPage() {
@@ -23,10 +25,15 @@ function LobbyPage() {
         }
     },[players]);
 
+    useEffect(() => {
+        updateHand();
+        updateQuestion();
+    });
+
     const leaveParty = useCallback(() => {
         SocketAction.leave();
 
-        dispatch(PartyAction.setId(null));
+        dispatch(PartyAction.setPartyId(null));
         dispatch(PageAction.set(PAGES.MAIN));
     }, []);
 

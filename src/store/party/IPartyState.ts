@@ -4,6 +4,7 @@ import IPlayer from "@/interfaces/IPlayer";
 interface IPartyState {
     room_id: number,
     players: IPlayer[],
+    question: string,
     game_master: boolean,
     game_action: GAME_ACTION,
 }

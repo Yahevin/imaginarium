@@ -1,4 +1,4 @@
-const Hand = require('../helpers/Hand');
+const Cards = require('../helpers/Cards');
 const User = require('../helpers/User');
 
 module.exports = function(app, db,) {
@@ -8,11 +8,16 @@ module.exports = function(app, db,) {
             user_id = req.body.user_id;
 
       const player_id = await User.getPlayerId(app, db, user_id, room_id);
-      const results = await Hand.getCards(app, db, player_id);
+      const cards = await Cards.getHand(app, db, player_id);
 
       res.json({
         success: true,
-        cards: results,
+        cards: cards.map((card)=>{
+          return {
+            id: card.id,
+            img_url: card.img_url
+          }
+        }),
       })
     } catch(error) {
 
@@ -21,24 +26,5 @@ module.exports = function(app, db,) {
         error: error,
       });
     }
-
-
-		async function getUsersHandCardsId() {
-			try {
-				const results = await Hand.getUsersCardList(app, db, req.body.user_id);
-
-				return results.map((item) => {
-					return item.hand_card_id;
-				});
-			}
-			catch (error) {
-				console.log(error);
-			}
-		}
-
-		const usersCardsList = await getUsersHandCardsId();
-		const usersCards = await Hand.getCards(app, db, usersCardsList);
-
-		res.json(usersCards);
 	});
 };
