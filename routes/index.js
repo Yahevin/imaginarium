@@ -22,8 +22,10 @@ const registration = require('./router/registration');
 const authentication = require('./router/authentication');
 const getPlayers = require('./router/get-players');
 const getRole  = require('./router/get-role');
+const getAction  = require('./router/get-action');
 
 module.exports = function(app, db) {
+  getAction(app,db);
   getRole(app,db);
   getPlayers(app,db);
   authentication(app,db);
