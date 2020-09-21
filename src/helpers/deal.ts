@@ -1,12 +1,15 @@
-type Imagick = (props:{url:string, method: 'POST' | 'GET' | 'PUT' | 'DELETE', body:any}) => any;
+import store from "@/store";
 
-const deal: Imagick = async ({url, method, body}) => {
+type Imagick = (props: { url: string, method?: 'POST' | 'GET' | 'PUT' | 'DELETE', body?: any }) => any;
+
+const deal: Imagick = async ({url, method = "POST", body = {}}) => {
+    const room_id = store.getState().partyReducer.room_id;
+    const user_id = store.getState().userReducer.user_id;
+    body = {user_id, room_id, ...body};
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
-    // TODO add to body room_id and user_id by default
-
-    const data =  {
+    const data = {
         method: method,
         headers: myHeaders,
         body: JSON.stringify(body)

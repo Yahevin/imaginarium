@@ -11,7 +11,6 @@ import {CardsAction} from "@/store/cards/action";
 
 function QuestInput() {
     const dispatch = useDispatch();
-    const room_id = useSelector((store: TStore) => store.partyReducer.room_id);
     const selected = useSelector((store: TStore) => store.cardsReducer.selected);
 
     const selectDone = useMemo(() => selected !== null, [selected]);
@@ -36,8 +35,7 @@ function QuestInput() {
         try {
             await deal({
                 url: '/set-question',
-                method: 'POST',
-                body: {room_id, question, card_id: selected}
+                body: {question, card_id: selected}
             });
 
             // remove selected card from hand

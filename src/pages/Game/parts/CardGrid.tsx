@@ -45,7 +45,6 @@ function CardGrid() {
         dispatch(CardsAction.putToTable(selected));
         await deal({
             url: 'put-card',
-            method: "POST",
             body: {
                 card_id: selected
             },

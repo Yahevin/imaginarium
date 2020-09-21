@@ -43,8 +43,7 @@ function HubPage() {
         try {
             const {game_action, game_master} = await deal({
                 url: '/user-join',
-                method: "POST",
-                body: {user_id, room_id: wanted_party_id.current},
+                body: {room_id: wanted_party_id.current},
             });
 
             dispatch(PartyAction.setPartyId(wanted_party_id.current));

@@ -32,7 +32,6 @@ function PartyCreate() {
         try {
             const response = await deal({
                 url: '/party-create',
-                method: "POST",
                 body: {user_id}
             });
 
