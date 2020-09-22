@@ -1,7 +1,5 @@
 const addCard = require('./router/add-card');
-const cradGuess = require('./router/card-guess');
-const countScore = require('./router/count-score');
-const createNewCards = require('./router/create-new-cards');
+const cardGuess = require('./router/card-guess');
 const getMarks = require('./router/get-marks');
 const getMyCards = require('./router/get-my-cards');
 const getNewCards = require('./router/get-new-cards');
@@ -31,9 +29,7 @@ module.exports = function(app, db) {
   authentication(app,db);
   registration(app,db);
 	addCard(app,db);
-	cradGuess(app,db);
-	countScore(app,db);
-	createNewCards(app,db);
+	cardGuess(app,db);
 	getMarks(app,db);
 	getMyCards(app,db);
 	getNewCards(app,db);

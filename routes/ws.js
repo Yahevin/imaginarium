@@ -129,22 +129,69 @@ module.exports = class SocketController {
 
         this.sendToMyRoom('UPDATE_ACTION');
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
   }
 
   async maybeCountResults() {
-    const users_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
-    const users_voted   = await Guess.getVoteList(this.app, this.db, users_id_list);
-    const voted_count   = users_voted.length;
-    const user_count    = users_id_list.length;
-    const last_vote     = voted_count === (user_count - 1);
+    try {
+      const users_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+      const users_voted = await Guess.getVoteList(this.app, this.db, users_id_list);
+      const voted_count = users_voted.length;
+      const user_count = users_id_list.length;
+      const last_vote = voted_count === (user_count - 1);
 
-    if (last_vote) {
-      await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allGuessDone);
+      if (last_vote) {
+        await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allGuessDone);
 
-      this.sendToMyRoom('UPDATE_ACTION');
+        await this.countResults();
+        this.sendToMyRoom('UPDATE_ACTION');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async countResults() {
+    try {
+      const players_list = Party.getActivePlayersList(this.app, this.db, this.room_id);
+      const players_id_list = players_list.map((player) => {
+        return player.id;
+      });
+      const marks = Guess.getVoteList(this.app, this.db, players_id_list);
+      const table_cards = Table.getCardsList(this.app, this.db, players_id_list);
+      const max = marks.length;
+
+      const rewards = table_cards.map((card) => {
+        let score = 0;
+        marks.forEach((mark) => {
+          if (card.hasOwnProperty('id') && card.id === mark.card_id) {
+            score++;
+          }
+        });
+        if (card.hasOwnProperty('is_main') && card.is_main) {
+          score = score === 0 || score === max
+            ? score = -3
+            : score += 3;
+        }
+        return {
+          id: card.player_id,
+          score: score,
+        };
+      });
+
+      rewards.forEach((reward) => {
+        players_list.forEach((player) => {
+          if (player.id === reward.id) {
+            reward.score = +player.score + reward.score;
+          }
+        });
+      });
+
+      await Score.updateLocal(this.app, this.db, this.room_id, rewards);
+    } catch (error) {
+      console.log(error);
     }
   }
 }

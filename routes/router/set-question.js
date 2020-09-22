@@ -16,7 +16,7 @@ module.exports = function(app, db) {
       } catch (e) {
         await Guess.createQuestion(app, db, room_id, question, card_id);
       }
-      await Table.putCard(app, db, card_id);
+      await Table.putCard(app, db, card_id, true);
       await Party.setStatus(app, db, room_id, gameStatus.gmCardSet);
 
       return res.json({
