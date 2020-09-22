@@ -1,6 +1,6 @@
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
-const Cards = require('./helpers/Cards');
+const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
 const gameStatus = require('./mixins/gameStatus');
@@ -51,6 +51,10 @@ module.exports = class SocketController {
       }
       case 'MAKE_GUESS': {
         this.maybeCountResults();
+        break;
+      }
+      case 'START_NEW_ROUND': {
+        this.newRound();
         break;
       }
       default: {
@@ -193,5 +197,36 @@ module.exports = class SocketController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async newRound() {
+    await this.changeGM();
+
+    await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
+
+    this.sendToMyRoom('UPDATE_ALL');
+  }
+
+  async changeGM() {
+    const players_id_list  =  await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+    const gm_id            =  await User.findGM(this.app, this.db, players_id_list);
+    const new_gm_id        =  findNewGM(players_id_list, gm_id);
+
+    await User.demoteGM(this.app, this.db, gm_id);
+    await User.setGM(this.app, this.db, new_gm_id);
+  }
+}
+
+function findNewGM(users, gm_id) {
+  let current = 0;
+  users.forEach((item, index) => {
+    if (parseInt(item) === parseInt(gm_id)) {
+      current = index;
+    }
+  });
+  if (current < (users.length - 1)) {
+    return users[current + 1];
+  } else {
+    return users[0];
   }
 }
