@@ -24,6 +24,8 @@ function HandGrid() {
             },
         });
 
+        // after this action, will come a command
+        // to update game_action
         SocketAction.putTheFake();
         dispatch(CardsAction.putToTable(selected));
     }, [selected]);

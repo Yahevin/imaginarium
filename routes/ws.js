@@ -1,6 +1,7 @@
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
 const Cards = require('./helpers/Cards');
+const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
 const gameStatus = require('./mixins/gameStatus');
 
@@ -46,6 +47,10 @@ module.exports = class SocketController {
       }
       case 'PUT_THE_FAKE': {
         this.maybeStartToGuess();
+        break;
+      }
+      case 'MAKE_GUESS': {
+        this.maybeCountResults();
         break;
       }
       default: {
@@ -128,4 +133,18 @@ module.exports = class SocketController {
       console.log(error);
     }
   }
-};
+
+  async maybeCountResults() {
+    const users_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+    const users_voted   = await Guess.getVoteList(this.app, this.db, users_id_list);
+    const voted_count   = users_voted.length;
+    const user_count    = users_id_list.length;
+    const last_vote     = voted_count === (user_count - 1);
+
+    if (last_vote) {
+      await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allGuessDone);
+
+      this.sendToMyRoom('UPDATE_ACTION');
+    }
+  }
+}

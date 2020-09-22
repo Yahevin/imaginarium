@@ -1,7 +1,6 @@
 import React, {useCallback, useMemo} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
-import {CardsAction} from "@/store/cards/action";
 import {Menu, Menu__item} from "@/styled/Menu";
 import deal from "@/helpers/deal";
 import GAME_ACTION from "@/constants/GAME_ACTION";
@@ -11,11 +10,9 @@ import Submit from "@/components/Submit";
 
 
 function TableGrid() {
-    const dispatch = useDispatch();
     const selected = useSelector((store: TStore) => store.cardsReducer.selected);
     const table_cards = useSelector((store: TStore) => store.cardsReducer.hand);
     const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
-
 
     const confirm_guess = useCallback(async () => {
         await deal({
@@ -25,14 +22,14 @@ function TableGrid() {
             },
         });
 
-        SocketAction.putTheFake();
-        dispatch(CardsAction.putToTable(selected));
+        // after this action, will come a command
+        // to update game_action
+        SocketAction.makeGuess();
     }, [selected]);
 
     const submit_disabled = useMemo(() => {
         return selected !== null;
     }, [selected]);
-
 
 
     return (
