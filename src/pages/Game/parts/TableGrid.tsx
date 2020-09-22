@@ -3,12 +3,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
 import {CardsAction} from "@/store/cards/action";
 import {Menu, Menu__item} from "@/styled/Menu";
-import Button from "@/components/Button";
-import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
 import GAME_ACTION from "@/constants/GAME_ACTION";
 import SocketAction from "@/web-socket/action";
 import CardGrid from "@/pages/Game/parts/CardGrid";
+import Submit from "@/components/Submit";
 
 
 function TableGrid() {
@@ -34,11 +33,7 @@ function TableGrid() {
         return selected !== null;
     }, [selected]);
 
-    const submit_theme = useMemo(() => {
-        return submit_disabled
-            ? ButtonTheme.red
-            : ButtonTheme.green;
-    }, [submit_disabled]);
+
 
     return (
         <Menu>
@@ -48,12 +43,11 @@ function TableGrid() {
 
             <Menu__item>
                 { GAME_ACTION.gmCardSet === game_action && (
-                    <Button callback={confirm_guess}
-                            theme={submit_theme}
+                    <Submit callback={confirm_guess}
                             disabled={submit_disabled}
                             size={"100%"}>
                         Выбрать
-                    </Button>
+                    </Submit>
                 )}
             </Menu__item>
         </Menu>
