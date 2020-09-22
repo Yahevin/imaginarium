@@ -1,5 +1,6 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import {useHistory} from "react-router-dom";
 import SocketAction from "@/web-socket/action";
 import {PartyAction} from "@/store/party/action";
 import {PageAction} from "@/store/page/action";
@@ -14,9 +15,9 @@ import TableGrid from "@/pages/Game/parts/TableGrid";
 
 
 function Game() {
+    const history = useHistory();
     const dispatch = useDispatch();
-
-    const question  = useSelector((store: TStore) => store.partyReducer.question);
+    const question = useSelector((store: TStore) => store.partyReducer.question);
     const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
     const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
 
@@ -26,6 +27,12 @@ function Game() {
         dispatch(PartyAction.setPartyId(null));
         dispatch(PageAction.set(PAGES.MAIN));
     }, []);
+
+    useEffect(() => {
+        if (game_action === GAME_ACTION.allGuessDone) {
+            history.push('/scores')
+        }
+    }, [game_action]);
 
 
     return (
