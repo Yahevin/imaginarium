@@ -54,13 +54,6 @@ module.exports = {
       throw ('The getAllMy failed. There is no cards in his hand and table');
     }
   },
-  moveToTable: async function (app, db, card_id) {
-    const format = db.format(sql.usw, ['card', 'status', cardStatus.table, 'id', card_id]);
-
-    await dbQuery(format, db);
-
-    return {success: true};
-  },
   mixBasket: async function (app, db, basket_id) {
     const format = db.format(sql.usw, ['card', 'status', cardStatus.new, 'basket_id', basket_id]);
     await dbQuery(format, db);

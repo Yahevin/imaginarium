@@ -1,5 +1,7 @@
 const Guess = require('../helpers/Guess');
-const Card = require('../helpers/Cards');
+const Party = require('../helpers/Party');
+const Table = require('../helpers/Table');
+const gameStatus = require('../mixins/gameStatus');
 
 
 module.exports = function(app, db) {
@@ -14,7 +16,8 @@ module.exports = function(app, db) {
       } catch (e) {
         await Guess.createQuestion(app, db, room_id, question, card_id);
       }
-      await Card.moveToTable(app, db, card_id);
+      await Table.putCard(app, db, card_id);
+      await Party.setStatus(app, db, room_id, gameStatus.gmCardSet);
 
       return res.json({
         success: true,

@@ -23,6 +23,16 @@ const SocketAction = {
             type: 'START_GUESS',
             payload: question
         }))
+    },
+    putTheFake() : void {
+        socket.send(JSON.stringify({
+            type: 'PUT_THE_FAKE',
+        }))
+    },
+    makeGuess() : void {
+        socket.send(JSON.stringify({
+            type: 'MAKE_GUESS',
+        }))
     }
 };
 

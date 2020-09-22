@@ -74,7 +74,7 @@ function AuthPage() {
             password: pass.current,
         };
         try {
-            const resp = await deal({url, method: 'POST', body});
+            const resp = await deal({url, body});
             const user_id = parseInt(resp.user_id);
             const experience = parseInt(resp.experience);
 
