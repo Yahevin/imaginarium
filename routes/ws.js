@@ -3,6 +3,8 @@ const Party = require('./helpers/Party');
 const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
+const Cards = require('./helpers/Cards');
+const Basket = require('./helpers/Basket');
 const gameStatus = require('./mixins/gameStatus');
 
 module.exports = class SocketController {
@@ -202,6 +204,9 @@ module.exports = class SocketController {
   async newRound() {
     await this.changeGM();
 
+    const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
+
+    await Cards.moveToBasket(this.app, this.db, basket_id);
     await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
 
     this.sendToMyRoom('UPDATE_ALL');

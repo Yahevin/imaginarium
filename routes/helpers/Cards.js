@@ -48,8 +48,14 @@ module.exports = {
     const format = db.format(sql.sfwwi, ['card', 'player_id', player_id, 'status', [cardStatus.hand, cardStatus.table]]);
     return await dbQuery(format, db);
   },
+  moveToBasket: async function (app, db, basket_id) {
+    const format = db.format(sql.usww, ['card', 'status', cardStatus.basket, 'basket_id', basket_id, 'status', cardStatus.table]);
+    await dbQuery(format, db);
+
+    return {success: true};
+  },
   mixBasket: async function (app, db, basket_id) {
-    const format = db.format(sql.usw, ['card', 'status', cardStatus.new, 'basket_id', basket_id]);
+    const format = db.format(sql.usww, ['card', 'status', cardStatus.new, 'basket_id', basket_id, 'status', cardStatus.basket]);
     await dbQuery(format, db);
 
     return {success: true};

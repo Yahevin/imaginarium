@@ -4,16 +4,6 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 const cardStatus = require('../mixins/cardStatus');
 
 module.exports = {
-  getCards: async function (app, db, room_id) {
-    const format = db.format(sql.sfww, ['cards', 'room_id', room_id, 'status', cardStatus.basket]);
-    const results = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results;
-    } else {
-      throw ('There is no cards in basket');
-    }
-  },
   getSelf: async function (app, db, room_id) {
     const format = db.format(sql.sfw, ['basket', 'room_id', room_id]);
     const results = await dbQuery(format, db);
