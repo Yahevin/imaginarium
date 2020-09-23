@@ -13,6 +13,7 @@ import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
 import {TStore} from "@/store/reducer";
 import {PartyAction} from "@/store/party/action";
+import SocketAction from "@/web-socket/action";
 
 
 const Content = styled.div`
@@ -38,6 +39,7 @@ function PartyCreate() {
             dispatch(PartyAction.setPartyId(response.room_id));
             dispatch(PartyAction.setGAction(response.game_action));
             dispatch(PageAction.set(PAGES.LOBBY));
+            SocketAction.join(response.room_id);
         } catch (e) {
             console.log(e);
         }
