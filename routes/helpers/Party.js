@@ -5,7 +5,7 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
   create: async function (app, db) {
-    const format = db.format(sql.ii2, ['room', 'game_action', 'player_count', gameSt.prepare, 1]);
+    const format = db.format(sql.ii2, ['room', 'game_action', 'player_count', gameSt.start, 1]);
     const results = await dbQuery(format, db);
 
     if (results.hasOwnProperty('insertId')) {
