@@ -32,6 +32,14 @@ socket.onmessage = function(event) {
             console.log('[message] UPDATE_ACTION');
             return updateAction();
         }
+        case 'UPDATE_ALL': {
+            console.log('[message] UPDATE_ALL');
+            updateHand();
+            updateRole();
+            updateParty();
+            updateAction();
+            return;
+        }
         case 'SET_QUESTION': {
             console.log('[message] SET_QUESTION');
             store.dispatch(PartyAction.setQuestion(message.payload));

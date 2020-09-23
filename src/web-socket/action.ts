@@ -33,6 +33,11 @@ const SocketAction = {
         socket.send(JSON.stringify({
             type: 'MAKE_GUESS',
         }))
+    },
+    nextRound() : void {
+        socket.send(JSON.stringify({
+            type: 'START_NEW_ROUND',
+        }))
     }
 };
 

@@ -10,6 +10,7 @@ import HubPage from "@/pages/Hub";
 import PartyCreate from "@/pages/Party_create";
 import LobbyPage from "@/pages/Lobby";
 import Game from "@/pages/Game";
+import Scores from "@/pages/Scores";
 
 
 const reloadPrepare = (event: KeyboardEvent)=>{
@@ -51,6 +52,7 @@ function IndexPage() {
             <Route exact path={'/create'} component={PartyCreate}/>
             <Route exact path={'/lobby'} component={LobbyPage}/>
             <Route exact path={'/game'} component={Game}/>
+            <Route exact path={'/scores'} component={Scores}/>
         </Switch>
     )
 }

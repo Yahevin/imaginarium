@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import styled, {css} from "styled-components";
 import IPlayer from "@/interfaces/IPlayer";
 import COLOR from "@/constants/Color";
+import IPerson from "@/interfaces/IPerson";
 
 const Box = styled.div`
     flex: 1 1 80px;
@@ -41,7 +42,7 @@ const Level = styled.div`
     background: ${COLOR.active};
 `;
 
-interface IAvatar extends IPlayer {
+interface IAvatar extends IPerson {
     className?: string;
 }
 

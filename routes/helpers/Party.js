@@ -77,11 +77,15 @@ module.exports = {
     }
   },
   getActivePlayersIdList: async function (app, db, room_id) {
-    const active_players_list = await getActivePlayersList(app, db, room_id);
+    const results = await getActivePlayersList(app, db, room_id);
 
-    return active_players_list.map((item) => {
-      return item.id
-    })
+    if (isNotEmpty(results)) {
+      return results.map((item) => {
+        return item.id
+      })
+    } else {
+      throw ('The getActivePlayersIdList failed. There is no users in this room');
+    }
   },
   setStatus: async function (app, db, room_id, game_action) {
     const format = db.format(sql.usw, ['room', 'game_action', game_action, 'id', room_id]);

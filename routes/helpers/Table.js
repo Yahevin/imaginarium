@@ -4,8 +4,8 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 const dbQuery = require('../mixins/dbQuery');
 
 module.exports = {
-	putCard: async function (app, db, card_id) {
-    const format = db.format(sql.usw, ['card', 'status', cardStatus.table, 'card_id', card_id]);
+	putCard: async function (app, db, card_id, is_main = false) {
+    const format = db.format(sql.ussw, ['card', 'status', cardStatus.table, 'is_main', is_main, 'card_id', card_id]);
     await dbQuery(format,db);
 
     return {success: true};
