@@ -15,7 +15,6 @@ import TableGrid from "@/pages/Game/parts/TableGrid";
 
 
 function Game() {
-    const history = useHistory();
     const dispatch = useDispatch();
     const question = useSelector((store: TStore) => store.partyReducer.question);
     const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
@@ -30,7 +29,7 @@ function Game() {
 
     useEffect(() => {
         if (game_action === GAME_ACTION.allGuessDone) {
-            history.push('/scores')
+            dispatch(PageAction.set(PAGES.SCORES))
         }
     }, [game_action]);
 

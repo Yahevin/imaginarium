@@ -5,6 +5,7 @@ enum PAGES {
     CREATE = '/create',
     LOBBY = '/lobby',
     GAME = '/game',
+    SCORES = '/scores',
 }
 
 export default PAGES;

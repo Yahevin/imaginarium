@@ -36,6 +36,7 @@ socket.onmessage = function(event) {
             console.log('[message] UPDATE_ALL');
             updateHand();
             updateRole();
+            updateParty();
             updateAction();
             return;
         }
