@@ -15,11 +15,11 @@ module.exports = {
     }
   },
   getCardShelter: async function (app, db) {
-    const format = db.format(sql.sf, ['card']);
+    const format = db.format(sql.sf, ['shelter']);
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
-      return resolve(results);
+      return results;
     } else {
       throw ('Cards are lost');
     }
@@ -46,13 +46,7 @@ module.exports = {
   },
   getAllMy: async function (app, db, player_id) {
     const format = db.format(sql.sfwwi, ['card', 'player_id', player_id, 'status', [cardStatus.hand, cardStatus.table]]);
-    const results = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results;
-    } else {
-      throw ('The getAllMy failed. There is no cards in his hand and table');
-    }
+    return await dbQuery(format, db);
   },
   mixBasket: async function (app, db, basket_id) {
     const format = db.format(sql.usw, ['card', 'status', cardStatus.new, 'basket_id', basket_id]);
@@ -61,13 +55,13 @@ module.exports = {
     return {success: true};
   },
   noteTaken: async function (app, db, player_id, cards_id_list) {
-    const format = db.format(sql.uswwi, ['card', 'status', cardStatus.hand, 'player_id', 'id', cards_id_list]);
+    const format = db.format(sql.usswi, ['card', 'status', cardStatus.hand, 'player_id', player_id, 'id', cards_id_list]);
     await dbQuery(format, db);
 
     return {success: true};
   },
   createPool: async function (app, db, new_cards) {
-    const format = db.format(sql.im5, ['cards' ,'img_url', 'origin_id', 'player_id', 'basket_id', 'status', new_cards]);
+    const format = db.format(sql.im4, ['card', 'img_url', 'origin_id', 'basket_id', 'status', new_cards]);
 
     await dbQuery(format, db);
 

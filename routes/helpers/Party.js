@@ -21,7 +21,7 @@ module.exports = {
     return isNotEmpty(results);
   },
   addPlayer: async function (app, db, user_id, room_id, game_master) {
-    const format = db.format(sql.ii3, ['user__room',
+    const format = db.format(sql.ii4, ['user__room',
       'room_id', 'user_id', 'game_master', 'is_active',
       room_id, user_id, game_master, true]);
     await dbQuery(format, db);

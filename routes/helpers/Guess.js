@@ -22,13 +22,13 @@ module.exports = {
     const results = await dbQuery(format,db);
 
     if (isNotEmpty(results) && results[0].hasOwnProperty('question')) {
-      return results[0].question
+      return results[0].question;
     } else {
       throw ('Question in not exist');
     }
   },
   make: async function (app, db, player_id, card_id) {
-    const format = db.format(sql.ii2, ['guess', 'player_id', player_id, 'card_id', card_id]);
+    const format = db.format(sql.ii2, ['guess', 'player_id', 'card_id', player_id, card_id]);
 
     await dbQuery(format,db);
 

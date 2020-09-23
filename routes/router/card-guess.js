@@ -5,9 +5,9 @@ const User = require('../helpers/User');
 
 module.exports = function (app, db) {
   app.post('/card-guess', async (req, res) => {
-    const user_id = req.body.user_id,
-      room_id = req.body.room_id,
-      card_id = req.body.card_id;
+    const user_id = req.body.user_id;
+    const room_id = req.body.room_id;
+    const card_id = req.body.card_id;
 
     try {
       const player_id = await User.getPlayerId(app, db, user_id, room_id);

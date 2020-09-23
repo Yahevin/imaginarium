@@ -9,7 +9,7 @@ module.exports = {
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
-      return resolve(results);
+      return results;
     } else {
       throw ('There is no cards in basket');
     }
@@ -19,7 +19,7 @@ module.exports = {
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
-      return resolve(results[0].id);
+      return results[0].id;
     } else {
       throw ('Basket does`t exist');
     }

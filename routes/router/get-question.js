@@ -5,7 +5,7 @@ module.exports = function (app, db) {
     const room_id = req.body.room_id;
 
     try {
-      const question = Guess.getQuestion(app, db, room_id);
+      const question = await Guess.getQuestion(app, db, room_id);
 
       return res.json({
         success: true,
