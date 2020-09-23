@@ -6,20 +6,27 @@ async function updateHand() {
     const hand_cards = store.getState().cardsReducer.hand;
 
     try {
-        let resp = await deal({
+        const {cards} = await deal({
             url: '/get-my-cards',
         });
 
-        if((hand_cards.length + resp.cards.length) < 6) {
-            resp = await deal({
-                url: '/get-new-cards',
-            });
+        if((hand_cards.length + cards.length) < 6) {
+            await getNew();
+        } else {
+            store.dispatch(CardsAction.setHand(cards));
         }
-
-        store.dispatch(CardsAction.setHand(resp.cards));
     } catch (e) {
         console.log(e);
+        await getNew();
     }
+}
+
+async function getNew() {
+    const {cards} = await deal({
+        url: '/get-new-cards',
+    });
+
+    store.dispatch(CardsAction.setHand(cards));
 }
 
 export default updateHand;
