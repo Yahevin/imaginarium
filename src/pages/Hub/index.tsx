@@ -33,8 +33,6 @@ const Menu__button = styled(Menu__item)`
 `;
 
 function HubPage() {
-    const user_id = useSelector((store:TStore)=>store.userReducer.user_id);
-
     const dispatch = useDispatch();
     const openPartyCreating = () => {
         dispatch(PageAction.set(PAGES.CREATE));
