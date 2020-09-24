@@ -27,8 +27,21 @@ module.exports = {
       throw ('Question in not exist');
     }
   },
-  make: async function (app, db, player_id, card_id) {
-    const format = db.format(sql.ii2, ['guess', 'player_id', 'card_id', player_id, card_id]);
+  clearQuestion: async function (app, db, room_id) {
+    const format = db.format(sql.ussw, ['question', 'question', '', 'card_id', null, 'room_id', room_id]);
+
+    await dbQuery(format,db);
+
+    return {success: true};
+  },
+  clearGuess: async function (app, db, basket_id) {
+    const format = db.format(sql.dfw, ['guess', 'basket_id', basket_id]);
+    const results = await dbQuery(format,db);
+
+    return isNotEmpty(results);
+  },
+  make: async function (app, db, player_id, card_id, basket_id) {
+    const format = db.format(sql.ii3, ['guess', 'player_id', 'card_id', 'basket_id', player_id, card_id, basket_id]);
 
     await dbQuery(format,db);
 

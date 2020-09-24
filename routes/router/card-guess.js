@@ -1,3 +1,4 @@
+const Basket = require('../helpers/Basket');
 const Table = require('../helpers/Table');
 const Guess = require('../helpers/Guess');
 const User = require('../helpers/User');
@@ -12,6 +13,7 @@ module.exports = function (app, db) {
     try {
       const player_id = await User.getPlayerId(app, db, user_id, room_id);
       const table_card = await Table.getCard(app, db, player_id);
+      const basket_id = await Basket.getSelf(app, db, room_id);
 
       if (parseInt(table_card.id) === parseInt(card_id)) {
         return res.json({
@@ -29,7 +31,7 @@ module.exports = function (app, db) {
         })
       }
 
-      await Guess.make(app, db, player_id, card_id);
+      await Guess.make(app, db, player_id, card_id, basket_id);
 
       return res.json({
         success: true

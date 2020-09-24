@@ -106,13 +106,11 @@ module.exports = class SocketController {
       const gm_player = active_players.findIndex((item) => {
         return item.game_master;
       });
-      console.log('gm_player',gm_player);
       if (gm_player !== -1) return;
       // Game master is not active player
 
-      // TODO change choose of new gm
       const new_gm_player_id = active_players[0].id;
-      console.log('new_gm_player_id',new_gm_player_id);
+
       await Party.demoteGM(this.app, this.db, this.room_id);
       await User.setGM(this.app, this.db, new_gm_player_id);
 
@@ -137,7 +135,7 @@ module.exports = class SocketController {
       const table_cards = await Table.getCardsList(this.app, this.db, basket_id);
 
       if (parseInt(players_count) === parseInt(table_cards.length)) {
-        console.log('set status! ',gameStatus.allCardSet);
+        console.log('set status! ', gameStatus.allCardSet);
 
         await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allCardSet);
 
@@ -205,7 +203,7 @@ module.exports = class SocketController {
         });
       });
 
-      console.log('updated rewards',rewards);
+      console.log('updated rewards', rewards);
 
       await Score.updateLocal(this.app, this.db, this.room_id, rewards);
     } catch (error) {
@@ -220,6 +218,8 @@ module.exports = class SocketController {
 
       const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
 
+      await Guess.clearGuess(this.app, this.db, basket_id);
+      await Guess.clearQuestion(this.app, this.db, this.room_id);
       await Cards.moveToBasket(this.app, this.db, basket_id);
       await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
 
@@ -231,11 +231,9 @@ module.exports = class SocketController {
 
   async changeGM() {
     try {
-      const players_id_list  =  await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
-      const gm_id            =  await User.findGM(this.app, this.db, players_id_list);
-      console.log('gm_id',gm_id);
-      const new_gm_id        =  findNewGM(players_id_list, gm_id);
-      console.log('new_gm_id',new_gm_id);
+      const players_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+      const gm_id = await User.findGM(this.app, this.db, this.room_id);
+      const new_gm_id = findNewGM(players_id_list, gm_id);
 
       await User.demoteGM(this.app, this.db, gm_id);
       await User.setGM(this.app, this.db, new_gm_id);
