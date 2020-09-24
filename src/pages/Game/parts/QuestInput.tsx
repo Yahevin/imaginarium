@@ -12,17 +12,14 @@ function QuestInput() {
     const dispatch = useDispatch();
     const selected = useSelector((store: TStore) => store.cardsReducer.selected);
 
-    const selectDone = useMemo(() => selected !== null, [selected]);
-
-
     const [question, setQuestion] = useState('');
     const inputHandler: InputHandler = useCallback((event) => {
         setQuestion(event.target.value);
     }, []);
 
     const submit_disabled = useMemo(() => {
-        return question.length > 0 && selectDone !== null;
-    }, [question, selectDone]);
+        return question.length === 0 || selected === null;
+    }, [question, selected]);
 
     const quest_submit = useCallback(async () => {
         try {
@@ -36,11 +33,11 @@ function QuestInput() {
 
             // after this action, will come command
             // to update game_action and question
-            SocketAction.startGuess(question);
+            SocketAction.putTheOrigin(question);
         } catch (error) {
             console.log(error);
         }
-    }, []);
+    }, [question,selected]);
 
     return (
         <>

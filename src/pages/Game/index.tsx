@@ -50,12 +50,10 @@ function Game() {
             </Menu__item>
 
             <Menu__item>
-                {game_action === GAME_ACTION.gmCardSet && (
-                    <HandGrid/>
-                )}
-                {game_action === GAME_ACTION.allCardSet && (
-                    <TableGrid/>
-                )}
+                {game_action === GAME_ACTION.allCardSet
+                    ? (<TableGrid/>)
+                    : (<HandGrid/>)
+                }
             </Menu__item>
         </Menu>
     )

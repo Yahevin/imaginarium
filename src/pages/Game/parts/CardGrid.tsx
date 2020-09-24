@@ -41,7 +41,7 @@ function CardGrid({cards}: { cards: ICard[] }) {
                 return (
                     <img key={card.id}
                          src={card.img_url}
-                         className={selected === card.id && 'active'}
+                         className={selected === card.id ? 'active' : ''}
                          onClick={() => {
                              setSelected(card.id)
                          }}
