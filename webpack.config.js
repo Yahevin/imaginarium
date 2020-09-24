@@ -1,70 +1,38 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const WebpackProvideGlobalPlugin = require("webpack-provide-global-plugin");
+const dotenv = require('dotenv');
+dotenv.config();
 
-module.exports = {
-  mode: 'development',
+const isDevelopment = process.env.NODE_ENV ==='development';
+console.log(process.env.NODE_ENV);
+
+const plugins =  [
+  new CleanWebpackPlugin(),
+  new HtmlWebpackPlugin({template: './src/index.html'}),
+];
+
+
+const config = {
+  mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   entry: {
-    polyfill: '@babel/polyfill',
-    app: './src/main.js',
+    app: path.resolve(__dirname, 'src/index.tsx'),
   },
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        include: path.resolve(__dirname, 'src/assets'),
-        options: {
-          scss: ['vue-style-loader','css-loader','sass-loader'],
-        }
-      },
-      {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
+        exclude: /(node_modules)/,
         loader: 'babel-loader',
-        include: path.resolve(__dirname, 'src/assets'),
+        include: path.resolve(__dirname, 'src'),
       },
       {
-        test: /\.scss$/,
-        include: path.resolve(__dirname, 'src/assets'),
-        use: ExtractTextPlugin.extract({
-          fallback: 'vue-style-loader',
-          use: [
-            {loader: 'css-loader', options: {  importLoaders: 1 }},
-            'postcss-loader',
-            {
-              loader: 'sass-loader',
-              options: {
-                // data: '@import "_variables"; @import "_mixins";',
-                // includePaths: [
-                //   path.join(__dirname, 'resources/assets/sass/utalents'),
-                //   path.join(__dirname, 'node_modules'),
-                // ],
-                // outputStyle: 'uncompressed',
-                sourceMap: true,
-                // minimize: !isDev,
-              },
-            },
-          ],
-        }),
-      },
-      {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'fonts'
-          },
-        }],
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
       {
         test: /\.(jpg|png)$/,
-        include: path.resolve(__dirname, 'src/assets/img'),
+        include: path.resolve(__dirname, 'src/img'),
         use: [{
           loader: 'file-loader',
           options: {
@@ -76,42 +44,12 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: [ '.js', '.vue','.scss','.png','jpg' ],
+    extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
     alias: {
-      'vue$': 'vue/dist/vue.runtime.js',
       '@': path.resolve(__dirname, 'src'),
-      jquery: "jquery/src/jquery",
     }
   },
-
-  devServer: {
-    contentBase: './dist',
-    compress: true,
-    historyApiFallback: true,
-    hot: true,
-    open: true,
-    overlay: true,
-    port: 8000,
-    stats: {
-      normal: true
-    }
-  },
-
-  plugins: [
-    new CleanWebpackPlugin(),
-    new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({template: './src/assets/index.html'}),
-    new ExtractTextPlugin('style.css'),
-    new BrowserSyncPlugin({
-      host: 'localhost',
-      port: 8000,
-    }),
-    new WebpackProvideGlobalPlugin({
-      $: 'jquery',
-      jQuery: 'jquery'
-    }),
-  ],
-  
+  plugins: plugins,
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -119,3 +57,20 @@ module.exports = {
     chunkFilename: 'js/[id].chunk.js'
   },
 };
+
+if(isDevelopment) {
+  config.devServer = {
+    contentBase: './dist',
+    compress: true,
+    historyApiFallback: true,
+    hot: true,
+    open: true,
+    overlay: true,
+    port: process.env.PORT,
+    stats: {
+      normal: true
+    },
+  }
+}
+
+module.exports = config;

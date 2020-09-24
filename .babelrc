@@ -1,16 +1,19 @@
 {
-  "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "modules": false,
-        "targets": {
-          "browsers": ["> 1%", "last 2 versions", "not ie <= 8", "ie >= 11"]
-        }
-      }
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "useBuiltIns": "usage",
+                "corejs": 3,
+            }
+        ],
+        "@babel/preset-react",
+        "@babel/preset-typescript"
+    ],
+    "plugins": [
+        "babel-plugin-styled-components",
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread",
+        "@babel/plugin-syntax-dynamic-import"
     ]
-  ],
-  "plugins": [
-    "@babel/plugin-syntax-dynamic-import",
-  ]
 }

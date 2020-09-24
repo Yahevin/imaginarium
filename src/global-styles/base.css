@@ -1,0 +1,18 @@
+body {
+    background: #54545d;
+    font-family: sans-serif;
+    font-size: 16px;
+    line-height: 100%;
+    color: #ffc100;
+    min-height: 100vh;
+}
+main {
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+}
+
+a:link,
+a:visited {
+    color: currentColor;
+}
