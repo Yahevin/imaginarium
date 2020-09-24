@@ -38,9 +38,6 @@ wss.on('connection', (ws) => {
     await ws.controller.terminate();
     console.log('close', ws.controller.room_id);
   });
-
-  //send immediatly a feedback to the incoming connection
-  ws.send('Hi there, I am a WebSocket server');
 });
 
 server.listen(port, () => {
