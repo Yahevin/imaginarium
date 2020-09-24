@@ -13,7 +13,7 @@ socket.onopen = function(event) {
     console.log("[open] Соединение установлено");
 };
 
-socket.onmessage = function(event) {
+socket.onmessage = async function(event) {
     const message = JSON.parse(event.data);
 
     switch (message.type) {
@@ -35,10 +35,10 @@ socket.onmessage = function(event) {
         }
         case 'UPDATE_ALL': {
             console.log('[message] UPDATE_ALL');
+            await updateAction();
+            updateParty();
             updateHand();
             updateRole();
-            updateParty();
-            updateAction();
             break;
         }
         case 'SET_QUESTION': {

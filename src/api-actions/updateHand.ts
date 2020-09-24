@@ -4,7 +4,6 @@ import {CardsAction} from "@/store/cards/action";
 import GAME_ACTION from "@/constants/GAME_ACTION";
 
 async function updateHand() {
-    const hand_cards = store.getState().cardsReducer.hand;
     const game_action = store.getState().partyReducer.game_action;
 
     try {
@@ -12,26 +11,31 @@ async function updateHand() {
             url: '/get-my-cards',
         });
 
-        if((hand_cards.length + cards.length) < 6
-            && game_action === GAME_ACTION.start) {
+        store.dispatch(CardsAction.setHand(cards));
+
+        if (cards.length < 6 && game_action === GAME_ACTION.start) {
             await getNew();
-        } else {
-            store.dispatch(CardsAction.setHand(cards));
         }
     } catch (e) {
-        console.log(e);
-
-        // TODO something with it
         await getNew();
     }
 }
 
 async function getNew() {
-    const {cards} = await deal({
-        url: '/get-new-cards',
-    });
+    const hand_cards = store.getState().cardsReducer.hand;
 
-    store.dispatch(CardsAction.setHand(cards));
+    try {
+        const {cards} = await deal({
+            url: '/get-new-cards',
+        });
+
+        store.dispatch(CardsAction.setHand([
+            ...cards,
+            ...hand_cards
+        ]));
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export default updateHand;
