@@ -13,6 +13,7 @@ import SocketAction from "@/web-socket/action";
 import {TStore} from "@/store/reducer";
 import updateHand from "@/api-actions/updateHand";
 import updateQuestion from "@/api-actions/updateQuestion";
+import updateTable from "@/api-actions/updateTable";
 
 
 function LobbyPage() {
@@ -27,8 +28,9 @@ function LobbyPage() {
 
     useEffect(() => {
         updateHand();
+        updateTable();
         updateQuestion();
-    });
+    },[]);
 
     const leaveParty = useCallback(() => {
         SocketAction.leave();
