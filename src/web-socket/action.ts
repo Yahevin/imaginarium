@@ -18,9 +18,9 @@ const SocketAction = {
             type: 'LEAVE',
         }))
     },
-    startGuess(question: string) : void {
+    putTheOrigin(question: string) : void {
         socket.send(JSON.stringify({
-            type: 'START_GUESS',
+            type: 'PUT_THE_ORIGIN',
             payload: question
         }))
     },

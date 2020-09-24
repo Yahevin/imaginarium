@@ -5,6 +5,7 @@ import store from "@/store";
 import {PartyAction} from "@/store/party/action";
 import GAME_ACTION from "@/constants/GAME_ACTION";
 import updateAction from "@/api-actions/updateAction";
+import updateTable from "@/api-actions/updateTable";
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -38,13 +39,19 @@ socket.onmessage = function(event) {
             updateRole();
             updateParty();
             updateAction();
-            return;
+            break;
         }
         case 'SET_QUESTION': {
             console.log('[message] SET_QUESTION');
             store.dispatch(PartyAction.setQuestion(message.payload));
             store.dispatch(PartyAction.setGAction(GAME_ACTION.gmCardSet));
-            return
+            break;
+        }
+        case 'START_GUESS': {
+            console.log('[message] START_GUESS');
+            updateTable();
+            store.dispatch(PartyAction.setGAction(GAME_ACTION.allCardSet));
+            break;
         }
         default: {
             console.log(`[message] Данные получены с сервера: ${event.data}`);

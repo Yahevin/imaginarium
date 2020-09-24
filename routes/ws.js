@@ -43,7 +43,7 @@ module.exports = class SocketController {
         this.makeUpdateParty();
         break;
       }
-      case 'START_GUESS': {
+      case 'PUT_THE_ORIGIN': {
         this.sendToMyRoom('SET_QUESTION', message.payload);
         break;
       }
@@ -97,6 +97,7 @@ module.exports = class SocketController {
   }
 
   async checkGameMaster() {
+    console.log('checkGameMaster()');
     try {
       const active_players = await Party.getActivePlayersList(this.app, this.db, this.room_id);
       if (active_players.length < 3) return;
@@ -105,10 +106,13 @@ module.exports = class SocketController {
       const gm_player = active_players.findIndex((item) => {
         return item.game_master;
       });
+      console.log('gm_player',gm_player);
       if (gm_player !== -1) return;
       // Game master is not active player
-      const new_gm_player_id = active_players[0].id;
 
+      // TODO change choose of new gm
+      const new_gm_player_id = active_players[0].id;
+      console.log('new_gm_player_id',new_gm_player_id);
       await Party.demoteGM(this.app, this.db, this.room_id);
       await User.setGM(this.app, this.db, new_gm_player_id);
 
@@ -123,17 +127,22 @@ module.exports = class SocketController {
   }
 
   async maybeStartToGuess() {
+    console.log('maybeStartToGuess()');
     try {
       const game_action = await Party.getStatus(this.app, this.db, this.room_id);
+      console.log('game_action',game_action);
       if (game_action !== gameStatus.gmCardSet) return;
 
       const players_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
+      console.log('players_count',players_count);
       const table_cards = await Table.getCardsList(this.app, this.db, this.room_id);
+      console.log('table_cards',table_cards.length);
 
       if (parseInt(players_count) === parseInt(table_cards.length)) {
+        console.log('set status! ',gameStatus.allCardSet);
         await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allCardSet);
 
-        this.sendToMyRoom('UPDATE_ACTION');
+        this.sendToMyRoom('START_GUESS');
       }
     } catch (error) {
       console.log(error);
@@ -141,16 +150,19 @@ module.exports = class SocketController {
   }
 
   async maybeCountResults() {
+    console.log('maybeCountResults()');
     try {
       const users_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+      console.log('users_id_list',users_id_list.length);
       const users_voted = await Guess.getVoteList(this.app, this.db, users_id_list);
+      console.log('users_voted',users_voted.length);
       const voted_count = users_voted.length;
       const user_count = users_id_list.length;
       const last_vote = voted_count === (user_count - 1);
-
+      console.log('last_vote',last_vote);
       if (last_vote) {
         await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allGuessDone);
-
+        console.log('set status! ', gameStatus.allGuessDone);
         await this.countResults();
         this.sendToMyRoom('UPDATE_ACTION');
       }
@@ -160,13 +172,17 @@ module.exports = class SocketController {
   }
 
   async countResults() {
+    console.log('countResults');
     try {
       const players_list = Party.getActivePlayersList(this.app, this.db, this.room_id);
       const players_id_list = players_list.map((player) => {
         return player.id;
       });
+      console.log('players_id_list',players_id_list);
       const marks = Guess.getVoteList(this.app, this.db, players_id_list);
+      console.log('marks',marks);
       const table_cards = Table.getCardsList(this.app, this.db, players_id_list);
+      console.log('table_cards',table_cards);
       const max = marks.length;
 
       const rewards = table_cards.map((card) => {
@@ -187,6 +203,8 @@ module.exports = class SocketController {
         };
       });
 
+      console.log('rewards',rewards);
+
       rewards.forEach((reward) => {
         players_list.forEach((player) => {
           if (player.id === reward.id) {
@@ -195,6 +213,8 @@ module.exports = class SocketController {
         });
       });
 
+      console.log('updated rewards',rewards);
+
       await Score.updateLocal(this.app, this.db, this.room_id, rewards);
     } catch (error) {
       console.log(error);
@@ -202,25 +222,36 @@ module.exports = class SocketController {
   }
 
   async newRound() {
-    await this.changeGM();
+    console.log('newRound()');
+    try {
+      await this.changeGM();
 
-    const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
+      const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
 
-    await Cards.moveToBasket(this.app, this.db, basket_id);
-    await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
+      await Cards.moveToBasket(this.app, this.db, basket_id);
+      await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
 
-    this.sendToMyRoom('UPDATE_ALL');
+      this.sendToMyRoom('UPDATE_ALL');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async changeGM() {
-    const players_id_list  =  await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
-    const gm_id            =  await User.findGM(this.app, this.db, players_id_list);
-    const new_gm_id        =  findNewGM(players_id_list, gm_id);
+    try {
+      const players_id_list  =  await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+      const gm_id            =  await User.findGM(this.app, this.db, players_id_list);
+      console.log('gm_id',gm_id);
+      const new_gm_id        =  findNewGM(players_id_list, gm_id);
+      console.log('new_gm_id',new_gm_id);
 
-    await User.demoteGM(this.app, this.db, gm_id);
-    await User.setGM(this.app, this.db, new_gm_id);
+      await User.demoteGM(this.app, this.db, gm_id);
+      await User.setGM(this.app, this.db, new_gm_id);
+    } catch (error) {
+      console.log(error);
+    }
   }
-}
+};
 
 function findNewGM(users, gm_id) {
   let current = 0;
