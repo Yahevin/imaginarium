@@ -1,7 +1,7 @@
 import CardsState from "@/store/cards/state";
 import ICardsState from "@/store/cards/ICardsState";
 import {CardsActionTypes} from "@/store/cards/action";
-import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED} from "@/store/actions";
+import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED, SET_TABLE_CARDS} from "@/store/actions";
 
 
 function cardsReducer(state = CardsState, action: CardsActionTypes) : ICardsState {
@@ -24,6 +24,12 @@ function cardsReducer(state = CardsState, action: CardsActionTypes) : ICardsStat
                 hand: state.hand.filter((card)=>{
                     return card.id !== action.payload
                 })
+            }
+        }
+        case SET_TABLE_CARDS: {
+            return {
+                ...state,
+                table: action.payload
             }
         }
         default: {

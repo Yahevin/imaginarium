@@ -10,7 +10,7 @@ const setAction  = require('./router/set-action');
 const setDistribution  = require('./router/set-distribution');
 const setQuestion  = require('./router/set-question');
 const setStyle  = require('./router/set-style');
-const tableCards  = require('./router/table-cards');
+const getTableCards  = require('./router/get-table-cards');
 const tableClear  = require('./router/table-clear');
 const userJoin  = require('./router/user-join');
 const putCard = require('./router/put-card');
@@ -38,7 +38,7 @@ module.exports = function(app, db) {
 	setDistribution(app,db);
 	setQuestion(app,db);
 	setStyle(app,db);
-	tableCards(app,db);
+	getTableCards(app,db);
 	tableClear(app,db);
 	userJoin(app,db);
 	putCard(app, db);
