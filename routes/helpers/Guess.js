@@ -44,5 +44,11 @@ module.exports = {
       throw ('Nobody had voted');
     }
   },
+  alReady: async function (app, db, player_id) {
+    const format = db.format(sql.sfw, ['guess', 'player_id', player_id]);
+    const results = await dbQuery(format,db);
+
+    return isNotEmpty(results);
+  },
 };
 

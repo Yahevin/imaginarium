@@ -1,4 +1,5 @@
 const Table = require('../helpers/Table');
+const User = require('../helpers/User');
 
 
 module.exports = function (app, db) {
@@ -9,9 +10,9 @@ module.exports = function (app, db) {
       const room_id = req.body.room_id;
 
       const player_id = await User.getPlayerId(app, db, user_id, room_id);
-      const table_card = await Table.getCard(app, db, player_id);
+      const already_put = await Table.alreadyPut(app, db, player_id);
 
-      if (parseInt(table_card.id) === parseInt(card_id)) {
+      if (already_put) {
         return res.json({
           success: false,
           error: 'You have a card on the table',

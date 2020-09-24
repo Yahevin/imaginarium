@@ -20,6 +20,15 @@ module.exports = function (app, db) {
         });
       }
 
+      const already_guess = await Guess.alReady(app, db, player_id);
+
+      if (already_guess) {
+        return res.json({
+          error: 'You`ve been voted',
+          success: false
+        })
+      }
+
       await Guess.make(app, db, player_id, card_id);
 
       return res.json({

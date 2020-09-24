@@ -20,8 +20,14 @@ module.exports = {
       throw ('There is no user`s card on the table');
     }
   },
-  getCardsList: async function (app, db, room_id) {
-    const format = db.format(sql.sfww,  ['card', 'room_id', room_id, 'status', cardStatus.table]);
+  alreadyPut: async function (app, db, player_id) {
+    const format = db.format(sql.sfww, ['card', 'player_id', player_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
+
+    return isNotEmpty(results);
+  },
+  getCardsList: async function (app, db, basket_id) {
+    const format = db.format(sql.sfww,  ['card', 'basket_id', basket_id, 'status', cardStatus.table]);
     const results = await dbQuery(format,db);
 
     if (isNotEmpty(results)) {
