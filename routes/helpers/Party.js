@@ -77,7 +77,8 @@ module.exports = {
     }
   },
   getActivePlayersIdList: async function (app, db, room_id) {
-    const results = await getActivePlayersList(app, db, room_id);
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
+    const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.map((item) => {

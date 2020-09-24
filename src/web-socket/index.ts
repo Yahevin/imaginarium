@@ -53,6 +53,12 @@ socket.onmessage = function(event) {
             store.dispatch(PartyAction.setGAction(GAME_ACTION.allCardSet));
             break;
         }
+        case 'SHOW_SCORE': {
+            console.log('[message] SHOW_SCORE');
+            updateParty();
+            store.dispatch(PartyAction.setGAction(GAME_ACTION.allGuessDone));
+            break;
+        }
         default: {
             console.log(`[message] Данные получены с сервера: ${event.data}`);
         }
