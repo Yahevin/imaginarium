@@ -3,7 +3,7 @@ const Cards = require('../helpers/Cards');
 const User = require('../helpers/User');
 
 module.exports = function (app, db) {
-  app.get('/get-new-cards', async (req, res) => {
+  app.post('/get-new-cards', async (req, res) => {
     try {
       const room_id = req.body.room_id,
             user_id = req.body.user_id;
@@ -23,7 +23,7 @@ module.exports = function (app, db) {
 
       await Cards.noteTaken(app, db, player_id, selected_id_list);
 
-      res.json({
+      return res.json({
         success: true,
         cards: selected_cards.map((card)=>{
           return {
@@ -47,7 +47,7 @@ function getSelected(new_cards, deficit) {
   const selected_cards = [];
 
   for (let i=0; i < deficit; i++) {
-    const index = new_cards.length * Math.floor(Math.random());
+    const index = Math.floor(new_cards.length * Math.random());
     const randomItem = new_cards[index];
 
     if (selected_id_list.includes(randomItem.id)) {

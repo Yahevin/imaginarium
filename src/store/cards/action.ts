@@ -1,5 +1,5 @@
 import ICard from "@/interfaces/ICard";
-import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED} from "@/store/actions";
+import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED, SET_TABLE_CARDS} from "@/store/actions";
 import InferValueTypes from "@/types/InferValueTypes";
 
 const CardsAction = {
@@ -19,6 +19,12 @@ const CardsAction = {
         return {
             type: PUT_TO_TABLE,
             payload: card_id
+        }
+    },
+    setTable: function (cards: ICard[]) {
+        return {
+            type: SET_TABLE_CARDS,
+            payload: cards
         }
     }
 };

@@ -1,24 +1,40 @@
 import store from "@/store";
 import deal from "@/helpers/deal";
 import {CardsAction} from "@/store/cards/action";
+import GAME_ACTION from "@/constants/GAME_ACTION";
 
 async function updateHand() {
-    const hand_cards = store.getState().cardsReducer.hand;
+    const game_action = store.getState().partyReducer.game_action;
 
     try {
-        let resp = await deal({
+        const {cards} = await deal({
             url: '/get-my-cards',
         });
 
-        if((hand_cards.length + resp.cards.length) < 6) {
-            resp = await deal({
-                url: '/get-new-cards',
-            });
-        }
+        store.dispatch(CardsAction.setHand(cards));
 
-        store.dispatch(CardsAction.setHand(resp.cards));
+        if (cards.length < 6 && game_action === GAME_ACTION.start) {
+            await getNew();
+        }
     } catch (e) {
-        console.log(e);
+        await getNew();
+    }
+}
+
+async function getNew() {
+    const hand_cards = store.getState().cardsReducer.hand;
+
+    try {
+        const {cards} = await deal({
+            url: '/get-new-cards',
+        });
+
+        store.dispatch(CardsAction.setHand([
+            ...cards,
+            ...hand_cards
+        ]));
+    } catch (error) {
+        console.log(error);
     }
 }
 

@@ -105,9 +105,12 @@ conn.connect(function(err,result) {
 		" (id INT not null AUTO_INCREMENT, " +
 		" card_id INT, " +
     " player_id INT, " +
+    " basket_id INT, " +
     " FOREIGN KEY (card_id) REFERENCES card(id)" +
     " ON DELETE CASCADE, " +
     " FOREIGN KEY (player_id) REFERENCES user__room(id)" +
+    " ON DELETE CASCADE, " +
+    " FOREIGN KEY (basket_id) REFERENCES basket(id)" +
     " ON DELETE CASCADE, " +
 		" PRIMARY KEY (id) )";
 

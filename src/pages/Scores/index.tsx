@@ -37,7 +37,7 @@ function Scores() {
     }, []);
 
     const PlayersGrid = useMemo(() => {
-        return players.map((player) => <PlayerAbout {...player}/>)
+        return players.map((player) => <PlayerAbout {...player} key={player.nick_name}/>)
     }, [players]);
 
     return (

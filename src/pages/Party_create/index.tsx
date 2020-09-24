@@ -13,6 +13,8 @@ import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
 import {TStore} from "@/store/reducer";
 import {PartyAction} from "@/store/party/action";
+import SocketAction from "@/web-socket/action";
+import GAME_ACTION from "@/constants/GAME_ACTION";
 
 
 const Content = styled.div`
@@ -35,9 +37,11 @@ function PartyCreate() {
                 body: {user_id}
             });
 
+            dispatch(PartyAction.setGAction(GAME_ACTION.start));
             dispatch(PartyAction.setPartyId(response.room_id));
-            dispatch(PartyAction.setGAction(response.game_action));
+            dispatch(PartyAction.setGameRole(response.game_master));
             dispatch(PageAction.set(PAGES.LOBBY));
+            SocketAction.join(response.room_id);
         } catch (e) {
             console.log(e);
         }

@@ -53,27 +53,18 @@ module.exports = {
       throw ('Did not found such user');
     }
 	},
-  findGM: async function (app, db, players_id_list) {
-    const format = db.format(sql.sfwi, ['user__room', 'id', players_id_list]);
+  findGM: async function (app, db, room_id) {
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'game_master', true]);
     const results = await dbQuery(format,db);
-    const err = 'The findGM failed. Did not found such user';
 
     if (isNotEmpty(results)) {
-      const gm = results.filter((item) => {
-        return item.game_master;
-      });
-
-      if(gm.length === 0) {
-        throw (err);
-      } else {
-        return gm.id;
-      }
+      return results[0].id;
     } else {
-      throw (err);
+      throw ('The findGM failed. Did not found such user');
     }
   },
   demoteGM: async function (app, db, player_id) {
-    const format = db.format(sql.usw, ['user__room', 'game_master', false, 'player_id', player_id]);
+    const format = db.format(sql.usw, ['user__room', 'game_master', false, 'id', player_id]);
     await dbQuery(format,db);
 
     return {success: true};

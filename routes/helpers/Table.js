@@ -5,7 +5,7 @@ const dbQuery = require('../mixins/dbQuery');
 
 module.exports = {
 	putCard: async function (app, db, card_id, is_main = false) {
-    const format = db.format(sql.ussw, ['card', 'status', cardStatus.table, 'is_main', is_main, 'card_id', card_id]);
+    const format = db.format(sql.ussw, ['card', 'status', cardStatus.table, 'is_main', is_main, 'id', card_id]);
     await dbQuery(format,db);
 
     return {success: true};
@@ -20,8 +20,24 @@ module.exports = {
       throw ('There is no user`s card on the table');
     }
   },
-  getCardsList: async function (app, db, room_id) {
-    const format = db.format(sql.sfww,  ['card', 'room_id', room_id, 'status', cardStatus.table]);
+  alreadyPut: async function (app, db, player_id) {
+    const format = db.format(sql.sfww, ['card', 'player_id', player_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
+
+    return isNotEmpty(results);
+  },
+  getCardsList: async function (app, db, basket_id) {
+    const format = db.format(sql.sfww,  ['card', 'basket_id', basket_id, 'status', cardStatus.table]);
+    const results = await dbQuery(format,db);
+
+    if (isNotEmpty(results)) {
+      return results;
+    } else {
+      throw ('There is no such cards on the table');
+    }
+  },
+  getPlayersCards: async function (app, db, players_id_list) {
+    const format = db.format(sql.sfwwi,  ['card', 'status', cardStatus.table, 'player_id', players_id_list]);
     const results = await dbQuery(format,db);
 
     if (isNotEmpty(results)) {

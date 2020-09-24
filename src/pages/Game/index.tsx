@@ -16,6 +16,7 @@ import TableGrid from "@/pages/Game/parts/TableGrid";
 
 function Game() {
     const dispatch = useDispatch();
+    const players = useSelector((store: TStore) => store.partyReducer.players);
     const question = useSelector((store: TStore) => store.partyReducer.question);
     const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
     const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
@@ -32,6 +33,12 @@ function Game() {
             dispatch(PageAction.set(PAGES.SCORES))
         }
     }, [game_action]);
+
+    useEffect(()=>{
+        if (players.length < 3) {
+            dispatch(PageAction.set(PAGES.LOBBY));
+        }
+    },[players]);
 
 
     return (
@@ -50,12 +57,10 @@ function Game() {
             </Menu__item>
 
             <Menu__item>
-                {game_action === GAME_ACTION.gmCardSet && (
-                    <HandGrid/>
-                )}
-                {game_action === GAME_ACTION.allCardSet && (
-                    <TableGrid/>
-                )}
+                {game_action === GAME_ACTION.allCardSet
+                    ? (<TableGrid/>)
+                    : (<HandGrid/>)
+                }
             </Menu__item>
         </Menu>
     )

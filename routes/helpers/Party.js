@@ -5,7 +5,7 @@ const isNotEmpty = require('../mixins/isNotEmpty');
 
 module.exports = {
   create: async function (app, db) {
-    const format = db.format(sql.ii2, ['room', 'game_action', 'player_count', gameSt.prepare, 1]);
+    const format = db.format(sql.ii2, ['room', 'game_action', 'player_count', gameSt.start, 1]);
     const results = await dbQuery(format, db);
 
     if (results.hasOwnProperty('insertId')) {
@@ -21,7 +21,7 @@ module.exports = {
     return isNotEmpty(results);
   },
   addPlayer: async function (app, db, user_id, room_id, game_master) {
-    const format = db.format(sql.ii3, ['user__room',
+    const format = db.format(sql.ii4, ['user__room',
       'room_id', 'user_id', 'game_master', 'is_active',
       room_id, user_id, game_master, true]);
     await dbQuery(format, db);
@@ -77,7 +77,8 @@ module.exports = {
     }
   },
   getActivePlayersIdList: async function (app, db, room_id) {
-    const results = await getActivePlayersList(app, db, room_id);
+    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
+    const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.map((item) => {
