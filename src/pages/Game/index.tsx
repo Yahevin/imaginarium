@@ -1,15 +1,13 @@
 import React, {useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useHistory} from "react-router-dom";
 import SocketAction from "@/web-socket/action";
 import {PartyAction} from "@/store/party/action";
 import {PageAction} from "@/store/page/action";
 import {TStore} from "@/store/reducer";
-import PAGES from "@/constants/Pages";
+import {GAME_ACTION, PAGES} from "@my-app/constants";
 import ThinButton from "@/components/ThinButton";
 import {Menu, Menu__item} from "@/styled/Menu";
 import QuestInput from "@/pages/Game/parts/QuestInput";
-import GAME_ACTION from "@/constants/GAME_ACTION";
 import HandGrid from "@/pages/Game/parts/HandGrid";
 import TableGrid from "@/pages/Game/parts/TableGrid";
 

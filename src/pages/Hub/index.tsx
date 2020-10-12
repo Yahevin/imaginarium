@@ -9,13 +9,11 @@ import Input from "@/components/Input";
 import {Menu, Menu__item} from "@/styled/Menu";
 import Centered from "@/styled/Centered";
 
-import ButtonTheme from "@/constants/ButtonTheme";
-import COLOR from "@/constants/Color";
-import PAGES from "@/constants/Pages";
+import {BUTTON_THEME, COLOR, PAGES} from "@my-app/constants";
 
-import InputHandler from "@/interfaces/InputHandler";
+
+import {InputHandler} from "@my-app/interfaces";
 import {PartyAction} from "@/store/party/action";
-import {TStore} from "@/store/reducer";
 import {PageAction} from "@/store/page/action";
 
 import deal from "@/helpers/deal";
@@ -81,7 +79,7 @@ function HubPage() {
                                onChange={inputHandler}/>
 
                         <Button callback={joinToParty}
-                                theme={ButtonTheme.light}
+                                theme={BUTTON_THEME.light}
                                 size={"auto"}>
                             Присоединиться
                         </Button>
@@ -89,7 +87,7 @@ function HubPage() {
 
                     <Menu__button>
                         <Button callback={openPartyCreating}
-                                theme={ButtonTheme.dark}
+                                theme={BUTTON_THEME.dark}
                                 size={"auto"}>
                             Создать игру
                         </Button>

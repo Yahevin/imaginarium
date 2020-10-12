@@ -1,4 +1,4 @@
-import COLOR from "@/constants/Color";
+import {COLOR} from "@my-app/constants";
 import key from "@/helpers/key";
 
 const getRandomColor = () => {

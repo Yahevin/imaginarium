@@ -1,14 +1,12 @@
 import React, {useCallback, useEffect, useMemo} from "react";
 import {Menu, Menu__item} from "@/styled/Menu";
 import Button from "@/components/Button";
-import ButtonTheme from "@/constants/ButtonTheme";
+import {BUTTON_THEME, GAME_ACTION, PAGES} from "@my-app/constants";
 import SocketAction from "@/web-socket/action";
-import GAME_ACTION from "@/constants/GAME_ACTION";
 import {useDispatch, useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
 import styled from "styled-components";
 import {PageAction} from "@/store/page/action";
-import PAGES from "@/constants/Pages";
 import PlayerAbout from "@/components/PlayerAbout";
 
 const Grid = styled.div`
@@ -49,7 +47,7 @@ function Scores() {
             </Menu__item>
             <Menu__item>
                 <Button callback={nextRound}
-                        theme={ButtonTheme.light}
+                        theme={BUTTON_THEME.light}
                         size={"auto"}>
                     Next round
                 </Button>

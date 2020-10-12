@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import COLOR from "@/constants/Color";
-import InputHandler from "@/interfaces/InputHandler";
+import {COLOR} from "@my-app/constants";
+import {InputHandler} from "@my-app/interfaces";
 
 const StyledInput = styled.input`
     width: 100%;

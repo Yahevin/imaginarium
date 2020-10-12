@@ -21,6 +21,12 @@
         "paths": {
             "@/*": [
                 "src/*"
+            ],
+            "@my-app/*": [
+                "packages/my-app/*"
+            ],
+            "@web-socket/*": [
+                "packages/web-socket/*"
             ]
         }
     },

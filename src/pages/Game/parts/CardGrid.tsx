@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {useDispatch, useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
 import {CardsAction} from "@/store/cards/action";
-import ICard from "@/interfaces/ICard";
+import {ICard} from "@my-app/interfaces";
 
 const Grid = styled.div`
   margin: 0 auto;

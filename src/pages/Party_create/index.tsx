@@ -6,15 +6,12 @@ import ThinButton from "@/components/ThinButton";
 import {Menu, Menu__item} from "@/styled/Menu";
 
 import {PageAction} from "@/store/page/action";
-import PAGES from "@/constants/Pages";
-import COLOR from "@/constants/Color";
+import {BUTTON_THEME, COLOR, GAME_ACTION, PAGES} from "@my-app/constants";
 import Button from "@/components/Button";
-import ButtonTheme from "@/constants/ButtonTheme";
 import deal from "@/helpers/deal";
 import {TStore} from "@/store/reducer";
 import {PartyAction} from "@/store/party/action";
 import SocketAction from "@/web-socket/action";
-import GAME_ACTION from "@/constants/GAME_ACTION";
 
 
 const Content = styled.div`
@@ -62,7 +59,7 @@ function PartyCreate() {
 
                 <Menu__item>
                     <Button callback={createNewGame}
-                            theme={ButtonTheme.green}
+                            theme={BUTTON_THEME.green}
                             size={"auto"}>
                         Создать игру
                     </Button>

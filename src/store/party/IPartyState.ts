@@ -1,5 +1,5 @@
-import GAME_ACTION from "@/constants/GAME_ACTION";
-import IPlayer from "@/interfaces/IPlayer";
+import {GAME_ACTION} from "@my-app/constants";
+import {IPlayer} from "@my-app/interfaces";
 
 interface IPartyState {
     room_id: number,

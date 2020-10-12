@@ -1,12 +1,10 @@
-import ButtonTheme from "@/constants/ButtonTheme";
+import {BUTTON_THEME} from "@my-app/constants";
 
-interface IButton {
+export interface IButton {
     children: any,
     disabled?: boolean,
     className?: string,
     callback: Function,
-    theme: ButtonTheme,
+    theme: BUTTON_THEME,
     size: 'auto' | '100%',
 }
-
-export default IButton;

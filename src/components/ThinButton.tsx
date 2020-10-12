@@ -1,8 +1,8 @@
 import React, {useCallback} from "react";
 import styled from "styled-components";
-import IThinButton from "@/interfaces/IThinButton";
+import {IThinButton} from "@my-app/interfaces";
 
-import COLOR from "@/constants/Color";
+import {COLOR} from "@my-app/constants";
 import Font_small from "@/styled/Font_small";
 
 const StyledButton = styled.button`

@@ -1,6 +1,6 @@
 import React from "react";
 import Avatar from "@/components/Avatar";
-import IPlayer from "@/interfaces/IPlayer";
+import {IPlayer} from "@my-app/interfaces";
 
 function PlayerAbout({nick_name, experience, game_master, score} : IPlayer) {
     return (
