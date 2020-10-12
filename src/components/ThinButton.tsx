@@ -1,6 +1,6 @@
 import React, {useCallback} from "react";
 import styled from "styled-components";
-import IThinButton from "@/interfaces/IThinButton";
+import {IThinButton} from "interfaces";
 
 import COLOR from "@/constants/Color";
 import Font_small from "@/styled/Font_small";

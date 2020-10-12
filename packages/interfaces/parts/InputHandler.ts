@@ -1,5 +1,3 @@
 import React from "react";
 
-interface InputHandler{(event: React.ChangeEvent<HTMLInputElement>) : void}
-
-export default InputHandler;
+export interface InputHandler{(event: React.ChangeEvent<HTMLInputElement>) : void}

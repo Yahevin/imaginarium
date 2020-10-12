@@ -1,8 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import styled, {css} from "styled-components";
-import IPlayer from "@/interfaces/IPlayer";
 import COLOR from "@/constants/Color";
-import IPerson from "@/interfaces/IPerson";
+import {IPerson} from "interfaces";
 
 const Box = styled.div`
     flex: 1 1 80px;

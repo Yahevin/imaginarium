@@ -1,5 +1,5 @@
 import GAME_ACTION from "@/constants/GAME_ACTION";
-import IPlayer from "@/interfaces/IPlayer";
+import {IPlayer} from "interfaces";
 
 interface IPartyState {
     room_id: number,

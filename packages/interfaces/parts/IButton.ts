@@ -1,6 +1,6 @@
 import ButtonTheme from "@/constants/ButtonTheme";
 
-interface IButton {
+export interface IButton {
     children: any,
     disabled?: boolean,
     className?: string,
@@ -8,5 +8,3 @@ interface IButton {
     theme: ButtonTheme,
     size: 'auto' | '100%',
 }
-
-export default IButton;

@@ -1,8 +1,6 @@
-import IPerson from "@/interfaces/IPerson";
+import {IPerson} from "./IPerson";
 
-interface IPlayer extends IPerson{
+export interface IPlayer extends IPerson{
     score: number
     game_master: boolean
 }
-
-export default IPlayer;
