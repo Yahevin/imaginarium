@@ -1,4 +1,4 @@
-enum PAGES {
+export enum PAGES {
     START = '/',
     AUTH = '/auth',
     MAIN = '/main',
@@ -7,5 +7,3 @@ enum PAGES {
     GAME = '/game',
     SCORES = '/scores',
 }
-
-export default PAGES;
