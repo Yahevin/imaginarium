@@ -5,7 +5,7 @@ import Font_small from "@/styled/Font_small";
 import {COLOR} from "@my-app/constants";
 
 import Avatar from "@/components/Avatar";
-import {IPlayer} from "interfaces";
+import {IPlayer} from "@my-app/interfaces";
 
 
 const Player = styled(Avatar)``;

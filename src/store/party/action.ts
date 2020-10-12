@@ -1,7 +1,7 @@
 import InferValueTypes from "@/types/InferValueTypes";
 import {SET_GAME_ROLE, SET_PARTY_ID, SET_PARTY_STATUS, SET_PLAYERS, SET_QUESTION} from "@/store/actions";
 import {GAME_ACTION} from "@my-app/constants";
-import {IPlayer} from "interfaces";
+import {IPlayer} from "@my-app/interfaces";
 
 const PartyAction = {
     setPartyId: function(room_id: number) {

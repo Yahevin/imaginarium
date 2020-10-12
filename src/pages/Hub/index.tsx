@@ -12,7 +12,7 @@ import Centered from "@/styled/Centered";
 import {BUTTON_THEME, COLOR, PAGES} from "@my-app/constants";
 
 
-import InputHandler from "@/interfaces/InputHandler";
+import {InputHandler} from "@my-app/interfaces";
 import {PartyAction} from "@/store/party/action";
 import {PageAction} from "@/store/page/action";
 

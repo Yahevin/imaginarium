@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import styled, {css} from "styled-components";
-import {IPerson} from "interfaces";
+import {IPerson} from "@my-app/interfaces";
 import {COLOR} from "@my-app/constants";
 
 const Box = styled.div`

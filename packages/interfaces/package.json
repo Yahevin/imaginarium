@@ -1,5 +1,5 @@
 {
-  "name": "interfaces",
+  "name": "@my-app/interfaces",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",

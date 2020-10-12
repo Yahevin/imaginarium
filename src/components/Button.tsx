@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import styled from "styled-components";
-import {IButton} from "interfaces";
+import {IButton} from "@my-app/interfaces";
 import getButtonTheme from "@/helpers/getButtonTheme";
 import {COLOR} from "@my-app/constants";
 

@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import Button from "@/components/Button";
 import {BUTTON_THEME} from "@my-app/constants";
-import {IButton} from "interfaces";
+import {IButton} from "@my-app/interfaces";
 
 
 interface ISubmit extends Omit<IButton, 'theme'>{

@@ -1,4 +1,4 @@
-import * as ICard from "interfaces";
+import {ICard} from "@my-app/interfaces";
 
 interface ICardsState {
     hand: ICard[],
