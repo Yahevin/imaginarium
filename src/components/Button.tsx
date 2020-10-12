@@ -2,7 +2,7 @@ import React, {useMemo} from "react";
 import styled from "styled-components";
 import {IButton} from "interfaces";
 import getButtonTheme from "@/helpers/getButtonTheme";
-import COLOR from "@/constants/Color";
+import {COLOR} from "@my-app/constants";
 
 const StyledButton = styled.button<{ size: 'auto' | '100%', bg: string, color: string }>`
     background-color: ${props => props.bg};

@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import Button from "@/components/Button";
-import ButtonTheme from "@/constants/ButtonTheme";
+import {BUTTON_THEME} from "@my-app/constants";
 import {IButton} from "interfaces";
 
 
@@ -11,8 +11,8 @@ interface ISubmit extends Omit<IButton, 'theme'>{
 function Submit(props: ISubmit) {
     const theme = useMemo(() => {
         return props.disabled
-            ? ButtonTheme.red
-            : ButtonTheme.green;
+            ? BUTTON_THEME.red
+            : BUTTON_THEME.green;
     }, [props.disabled]);
 
     return (

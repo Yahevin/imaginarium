@@ -9,8 +9,7 @@ import ProgressBar from "@/components/ProgressBar";
 
 import {UserAction} from "@/store/user/action";
 import {PageAction} from "@/store/page/action";
-import PAGES from "@/constants/Pages";
-import COLOR from "@/constants/Color";
+import {COLOR, PAGES} from "@my-app/constants";
 import {TStore} from "@/store/reducer";
 import Font_large from "@/styled/Font_large";
 

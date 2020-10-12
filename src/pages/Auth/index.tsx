@@ -4,8 +4,7 @@ import {useDispatch} from "react-redux";
 import {PageAction} from "@/store/page/action";
 import {UserAction} from "@/store/user/action";
 
-import ButtonTheme from "@/constants/ButtonTheme";
-import PAGES from "@/constants/Pages";
+import {BUTTON_THEME, PAGES} from "@my-app/constants";
 
 import PageSize from "@/styled/PageSize";
 import Spacer from "@/styled/Spacer";
@@ -95,7 +94,7 @@ function AuthPage() {
 
     const goToAuth = (
         <ListedBtn key={'authBtn'}
-                   theme={ButtonTheme.light}
+                   theme={BUTTON_THEME.light}
                    size={'100%'}
                    callback={() => {
                        setControl(view.authenticate)
@@ -105,7 +104,7 @@ function AuthPage() {
     );
     const goToRegistry = (
         <ListedBtn key={'registryBtn'}
-                   theme={ButtonTheme.dark}
+                   theme={BUTTON_THEME.dark}
                    size={'100%'}
                    callback={() => {
                        setControl(view.registration)
@@ -119,7 +118,7 @@ function AuthPage() {
                          name="nick_name"
                          placeholder="Login"
                          default={name.current}
-                         onChange={(event) => {
+                         onChange={(event:React.ChangeEvent<HTMLInputElement>) => {
                              name.current = event.target.value;
                              validate();
                          }}/>
@@ -127,7 +126,7 @@ function AuthPage() {
                          name="password"
                          placeholder="Password"
                          default={pass.current}
-                         onChange={(event) => {
+                         onChange={(event:React.ChangeEvent<HTMLInputElement>) => {
                              pass.current = event.target.value;
                              validate();
                          }}/>
@@ -136,7 +135,7 @@ function AuthPage() {
     const submitBtn = (
         <ListedBtn key={'submitBtn'}
                    callback={submit}
-                   theme={isValid ? ButtonTheme.green : ButtonTheme.red}
+                   theme={isValid ? BUTTON_THEME.green : BUTTON_THEME.red}
                    disabled={!isValid}
                    size={'100%'}>
             Готово

@@ -1,4 +1,4 @@
-import PAGES from "@/constants/Pages";
+import {PAGES} from "@my-app/constants";
 
 interface IPageState {
     page: PAGES

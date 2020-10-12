@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {PageAction} from "@/store/page/action";
 import {PartyAction} from "@/store/party/action";
 
-import PAGES from "@/constants/Pages";
+import {PAGES} from "@my-app/constants";
 
 import {Menu, Menu__item} from "@/styled/Menu";
 import PlayersGrid from "@/components/PlayersGrid";

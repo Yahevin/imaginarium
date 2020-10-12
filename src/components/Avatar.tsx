@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import styled, {css} from "styled-components";
-import COLOR from "@/constants/Color";
 import {IPerson} from "interfaces";
+import {COLOR} from "@my-app/constants";
 
 const Box = styled.div`
     flex: 1 1 80px;

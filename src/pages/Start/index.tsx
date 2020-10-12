@@ -1,9 +1,9 @@
 import React, {useCallback} from "react";
-import ButtonTheme from "@/constants/ButtonTheme";
+import {BUTTON_THEME, PAGES} from "@my-app/constants";
 import Button from "@/components/Button";
 import {PageAction} from "@/store/page/action";
-import PAGES from "@/constants/Pages";
 import {useDispatch} from "react-redux";
+
 
 function StartPage() {
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ function StartPage() {
 
     return (
         <Button callback={startHandler}
-                theme={ButtonTheme.green}
+                theme={BUTTON_THEME.green}
                 size={'auto'}>
             Start
         </Button>

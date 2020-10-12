@@ -1,4 +1,4 @@
-import GAME_ACTION from "@/constants/GAME_ACTION";
+import {GAME_ACTION} from "@my-app/constants";
 import {IPlayer} from "interfaces";
 
 interface IPartyState {
