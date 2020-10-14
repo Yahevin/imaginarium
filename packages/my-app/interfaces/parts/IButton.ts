@@ -1,4 +1,4 @@
-import {BUTTON_THEME} from "@my-app/constants";
+import {BUTTON_THEME} from "my-app/constants";
 
 export interface IButton {
     children: any,
