@@ -1,4 +1,4 @@
-export enum BUTTON_THEME {
+export const enum BUTTON_THEME {
     light,
     dark,
     green,

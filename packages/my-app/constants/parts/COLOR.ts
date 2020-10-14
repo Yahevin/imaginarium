@@ -1,4 +1,4 @@
-export enum COLOR {
+export const enum COLOR {
     red = '#f7786b',
     white = '#f0efef',
     slate = '#3e4444',

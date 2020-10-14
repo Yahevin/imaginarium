@@ -1,4 +1,4 @@
-export enum PAGES {
+export const enum PAGES {
     START = '/',
     AUTH = '/auth',
     MAIN = '/main',
