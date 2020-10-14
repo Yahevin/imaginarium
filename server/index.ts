@@ -1,10 +1,10 @@
 const express = require('express');
 const webpack = require('webpack');
 const http = require('http');
-const WebSocket = require('ws');
-const SocketController = require('./routes/ws');
+const webSocket = require('ws');
+const SocketController = require('./ws');
 const bodyParser = require('body-parser');
-const config = require('./webpack.config.js');
+const config = require('../webpack.config.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const compiler = webpack(config);
 const dotenv = require('dotenv');
@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
-const db = require('./routes/db/mydb');
+const db = require('./db/mydb');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(webpackDevMiddleware(compiler, {
@@ -20,16 +20,16 @@ app.use(webpackDevMiddleware(compiler, {
 }));
 app.use(express.json());
 
-require('./routes/db/mydb');
-require('./routes')(app, db);
+require('./db/mydb');
+require('./routes.js')(app, db);
 
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server});
+const wss = new webSocket.Server({server});
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws: any) => {
   ws.controller = new SocketController(app, db, wss);
 
-  ws.on('message', async (message) => {
+  ws.on('message', async (message: string) => {
     console.log('message', message);
     await ws.controller.reduce(JSON.parse(message));
   });
