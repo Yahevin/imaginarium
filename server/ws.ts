@@ -1,6 +1,6 @@
 import {DB_card, DB_guess, DB_user_room, IMessage} from "@my-app/interfaces";
-import {COMMANDS} from "web-socket/commands";
-import {EVENTS} from "web-socket/client-events";
+import {COMMANDS} from "@my-app/commands";
+import {EVENTS} from "@my-app/client-events";
 
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
