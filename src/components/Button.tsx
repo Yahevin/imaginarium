@@ -1,8 +1,8 @@
 import React, {useMemo} from "react";
 import styled from "styled-components";
 import {IButton} from "@my-app/interfaces";
-import getButtonTheme from "@/helpers/getButtonTheme";
 import {COLOR} from "@my-app/constants";
+import getButtonTheme from "@/helpers/getButtonTheme";
 
 const StyledButton = styled.button<{ size: 'auto' | '100%', bg: string, color: string }>`
     background-color: ${props => props.bg};

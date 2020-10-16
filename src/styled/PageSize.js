@@ -1,5 +1,5 @@
 import {css} from "styled-components"
-import mediaQuery from "@/constants/mediaQuery";
+import {mediaQuery} from "@my-app/constants";
 
 const PageSize = css`
   max-width: 1300px;

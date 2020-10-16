@@ -10,9 +10,8 @@ import {Menu, Menu__item} from "@/styled/Menu";
 import Centered from "@/styled/Centered";
 
 import {BUTTON_THEME, COLOR, PAGES} from "@my-app/constants";
-
-
 import {InputHandler} from "@my-app/interfaces";
+
 import {PartyAction} from "@/store/party/action";
 import {PageAction} from "@/store/page/action";
 
