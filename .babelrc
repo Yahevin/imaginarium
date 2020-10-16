@@ -4,7 +4,7 @@
             "@babel/preset-env",
             {
                 "useBuiltIns": "usage",
-                "corejs": 3,
+                "corejs": 3
             }
         ],
         "@babel/preset-react",
@@ -14,6 +14,7 @@
         "babel-plugin-styled-components",
         "@babel/proposal-class-properties",
         "@babel/proposal-object-rest-spread",
-        "@babel/plugin-syntax-dynamic-import"
+        "@babel/plugin-syntax-dynamic-import",
+        "@babel/plugin-transform-typescript"
     ]
 }

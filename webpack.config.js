@@ -5,8 +5,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const isDevelopment = process.env.NODE_ENV ==='development';
-console.log(process.env.NODE_ENV);
-
 const plugins =  [
   new CleanWebpackPlugin(),
   new HtmlWebpackPlugin({template: './src/index.html'}),
@@ -22,9 +20,8 @@ const config = {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        exclude: /(node_modules)/,
         loader: 'babel-loader',
-        include: path.resolve(__dirname, 'src'),
+        include: path.resolve(__dirname, 'src')
       },
       {
         test: /\.css$/,
@@ -47,6 +44,7 @@ const config = {
     extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@my-app': path.resolve(__dirname, 'packages'),
     }
   },
   plugins: plugins,
@@ -60,7 +58,7 @@ const config = {
 
 if(isDevelopment) {
   config.devServer = {
-    contentBase: './dist',
+    contentBase: path.resolve(__dirname, 'dist'),
     compress: true,
     historyApiFallback: true,
     hot: true,

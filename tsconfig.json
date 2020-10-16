@@ -7,8 +7,8 @@
         "noImplicitAny": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "module": "es6",
-        "target": "es5",
+        "module": "CommonJS",
+        "target": "es6",
         "jsx": "react",
         "allowJs": true,
         "typeRoots": [
@@ -16,18 +16,12 @@
         ],
         "types": [
             "react",
+            "node",
             "styled-components"
         ],
         "paths": {
-            "@/*": [
-                "src/*"
-            ],
-            "@my-app/*": [
-                "packages/my-app/*"
-            ],
-            "@web-socket/*": [
-                "packages/web-socket/*"
-            ]
+            "@/*": ["src/*"],
+            "@my-app/*": ["packages/*"]
         }
     },
     "exclude": [
