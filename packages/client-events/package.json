@@ -1,5 +1,5 @@
 {
-  "name": "@web-socket/client-events",
+  "name": "@my-app/client-events",
   "version": "1.0.0",
   "description": "",
   "main": "index.ts",

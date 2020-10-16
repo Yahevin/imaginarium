@@ -1,4 +1,4 @@
-import {EVENTS} from "@web-socket/client-events";
+import {EVENTS} from "@my-app/client-events";
 
 export interface IMessage {
     type: EVENTS,

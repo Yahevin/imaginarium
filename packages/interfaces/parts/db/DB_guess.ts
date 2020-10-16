@@ -1,4 +1,4 @@
-import {DB_basket, DB_card, DB_shelter, DB_user_room} from "@my-app/interfaces";
+import {DB_basket, DB_card, DB_user_room} from "@my-app/interfaces";
 
 export interface DB_guess {
     id: number,
