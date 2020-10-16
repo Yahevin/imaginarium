@@ -21,6 +21,9 @@ const config = {
       {
         test: /\.(js|jsx|ts|tsx)$/,
         loader: 'babel-loader',
+        options: {
+          configFile: path.resolve(__dirname, './.babelrc')
+        },
         include: path.resolve(__dirname, 'src')
       },
       {
