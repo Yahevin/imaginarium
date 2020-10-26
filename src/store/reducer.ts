@@ -1,4 +1,4 @@
-import InferReducerType from "@/types/InferReducerType";
+import {InferReducerType} from "@my-app/types";
 import {combineReducers} from "redux";
 import pageReducer from "@/store/page/reducer";
 import userReducer from "@/store/user/reducer";

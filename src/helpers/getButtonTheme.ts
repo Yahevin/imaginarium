@@ -1,7 +1,6 @@
-import {COLOR} from "@my-app/constants";
-import {BUTTON_THEME} from "@my-app/constants";
+import {COLOR, BUTTON_THEME} from "@my-app/constants";
 
-function getBUTTON_THEME(theme:BUTTON_THEME) {
+function getBUTTON_THEME(theme: BUTTON_THEME) {
     switch (theme) {
         case BUTTON_THEME.light:
             return {

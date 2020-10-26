@@ -1,7 +1,7 @@
 import React from "react";
 import styled, {css} from "styled-components";
-import {COLOR} from "@my-app/constants";
 import Font_small from "@/styled/Font_small";
+import {COLOR} from "@my-app/constants";
 
 const Absolute = css`
     position: absolute;

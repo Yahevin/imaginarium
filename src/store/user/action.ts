@@ -1,4 +1,4 @@
-import InferValueTypes from "@/types/InferValueTypes";
+import {InferValueTypes} from "@my-app/types";
 import {SET_USER} from "@/store/actions";
 import {SET_USER_ID} from "@/store/actions";
 import {SET_USER_EXP} from "@/store/actions";

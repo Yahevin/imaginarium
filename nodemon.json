@@ -1,0 +1,9 @@
+{
+    "watch": ["server"],
+    "ignore": ["dist"],
+    "execMap": {
+        "js": "node --harmony"
+    },
+    "exec": "NODE_ENV=development ts-node-dev server",
+    "ext": "ts"
+}

@@ -3,9 +3,8 @@ import styled from "styled-components";
 
 import Font_small from "@/styled/Font_small";
 import {COLOR} from "@my-app/constants";
-
-import Avatar from "@/components/Avatar";
 import {IPlayer} from "@my-app/interfaces";
+import Avatar from "@/components/Avatar";
 
 
 const Player = styled(Avatar)``;

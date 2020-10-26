@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import mediaQuery from "@/constants/mediaQuery";
+import {mediaQuery} from "@my-app/constants";
 
 export const Menu = styled.article`
   max-width: 1300px;

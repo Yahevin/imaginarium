@@ -1,15 +1,15 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "outDir": "./dist/",
-        "sourceMap": true,
+        "baseUrl": "./",
+        "outDir": "./",
+        "sourceMap": false,
         "declaration": true,
         "noImplicitAny": true,
-        "inlineSources": true,
+        "importHelpers": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
         "module": "CommonJS",
-        "target": "es6",
+        "target": "es5",
         "jsx": "react",
         "allowJs": true,
         "typeRoots": [
@@ -17,13 +17,8 @@
         ],
         "types": [
             "react",
-            "node",
             "styled-components"
-        ],
-        "paths": {
-            "@/*": ["src/*"],
-            "@my-app/*": ["packages/*"]
-        }
+        ]
     },
     "exclude": [
         "node_modules",
