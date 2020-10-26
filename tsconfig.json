@@ -5,6 +5,7 @@
         "sourceMap": true,
         "declaration": true,
         "noImplicitAny": true,
+        "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
         "module": "CommonJS",

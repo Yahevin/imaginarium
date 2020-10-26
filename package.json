@@ -6,7 +6,7 @@
         "dev": "cross-env NODE_ENV=development nodemon",
         "build": "cross-env NODE_ENV=production webpack",
         "local": "cross-env NODE_ENV=development webpack-dev-server",
-        "compile": "rm -rf ./dist/ && tsc"
+        "ts": "rm -rf ./dist/ && tsc"
     },
     "repository": {
         "type": "git",
