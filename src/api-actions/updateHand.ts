@@ -1,7 +1,7 @@
 import store from "@/store";
 import deal from "@/helpers/deal";
 import {CardsAction} from "@/store/cards/action";
-import GAME_ACTION from "@/constants/GAME_ACTION";
+import {GAME_ACTION} from "@my-app/constants";
 
 async function updateHand() {
     const game_action = store.getState().partyReducer.game_action;

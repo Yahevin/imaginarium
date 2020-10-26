@@ -1,6 +1,6 @@
-import ICard from "@/interfaces/ICard";
+import {ICard} from "@my-app/interfaces";
 import {PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED, SET_TABLE_CARDS} from "@/store/actions";
-import InferValueTypes from "@/types/InferValueTypes";
+import {InferValueTypes} from "@my-app/types";
 
 const CardsAction = {
     setHand: function(hand_cards: ICard[]) {

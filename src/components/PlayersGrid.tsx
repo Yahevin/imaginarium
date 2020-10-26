@@ -2,10 +2,9 @@ import React, {useMemo} from "react";
 import styled from "styled-components";
 
 import Font_small from "@/styled/Font_small";
-import COLOR from "@/constants/Color";
-
+import {COLOR} from "@my-app/constants";
+import {IPlayer} from "@my-app/interfaces";
 import Avatar from "@/components/Avatar";
-import IPlayer from "@/interfaces/IPlayer";
 
 
 const Player = styled(Avatar)``;

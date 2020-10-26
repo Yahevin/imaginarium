@@ -1,24 +1,23 @@
-import COLOR from "@/constants/Color";
-import ButtonTheme from "@/constants/ButtonTheme";
+import {COLOR, BUTTON_THEME} from "@my-app/constants";
 
-function getButtonTheme(theme:ButtonTheme) {
+function getBUTTON_THEME(theme: BUTTON_THEME) {
     switch (theme) {
-        case ButtonTheme.light:
+        case BUTTON_THEME.light:
             return {
                 bg: COLOR.transparent,
                 color: COLOR.slate,
             };
-        case ButtonTheme.dark:
+        case BUTTON_THEME.dark:
             return {
                 bg: COLOR.slate,
                 color: COLOR.white
             };
-        case ButtonTheme.green:
+        case BUTTON_THEME.green:
             return {
                 bg: COLOR.green,
                 color: COLOR.white
             };
-        case ButtonTheme.red:
+        case BUTTON_THEME.red:
             return {
                 bg: COLOR.red,
                 color: COLOR.white,
@@ -26,4 +25,4 @@ function getButtonTheme(theme:ButtonTheme) {
     }
 }
 
-export default getButtonTheme;
+export default getBUTTON_THEME;

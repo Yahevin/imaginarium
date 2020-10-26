@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";
 import {Menu, Menu__item} from "@/styled/Menu";
 import deal from "@/helpers/deal";
-import GAME_ACTION from "@/constants/GAME_ACTION";
+import {GAME_ACTION} from "@my-app/constants";
 import SocketAction from "@/web-socket/action";
 import CardGrid from "@/pages/Game/parts/CardGrid";
 import Submit from "@/components/Submit";

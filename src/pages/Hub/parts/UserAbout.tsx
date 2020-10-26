@@ -7,10 +7,9 @@ import Avatar from "@/components/Avatar";
 import ThinButton from "@/components/ThinButton";
 import ProgressBar from "@/components/ProgressBar";
 
+import {COLOR, PAGES} from "@my-app/constants";
 import {UserAction} from "@/store/user/action";
 import {PageAction} from "@/store/page/action";
-import PAGES from "@/constants/Pages";
-import COLOR from "@/constants/Color";
 import {TStore} from "@/store/reducer";
 import Font_large from "@/styled/Font_large";
 

@@ -5,10 +5,11 @@
         "sourceMap": true,
         "declaration": true,
         "noImplicitAny": true,
+        "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "module": "es6",
-        "target": "es5",
+        "module": "CommonJS",
+        "target": "es6",
         "jsx": "react",
         "allowJs": true,
         "typeRoots": [
@@ -16,12 +17,12 @@
         ],
         "types": [
             "react",
+            "node",
             "styled-components"
         ],
         "paths": {
-            "@/*": [
-                "src/*"
-            ]
+            "@/*": ["src/*"],
+            "@my-app/*": ["packages/*"]
         }
     },
     "exclude": [

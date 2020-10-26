@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from "react";
 import Input from "@/components/Input";
-import InputHandler from "@/interfaces/InputHandler";
+import {InputHandler} from "@my-app/interfaces";
 import deal from "@/helpers/deal";
 import {useDispatch, useSelector} from "react-redux";
 import {TStore} from "@/store/reducer";

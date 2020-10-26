@@ -1,6 +1,6 @@
-import InferValueTypes from "@/types/InferValueTypes";
+import {InferValueTypes} from "@my-app/types";
 import {SET_PAGE} from "@/store/actions";
-import PAGES from "@/constants/Pages";
+import {PAGES} from "@my-app/constants";
 
 
 const PageAction = {
