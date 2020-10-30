@@ -2,7 +2,9 @@ import {useEffect, useState} from "react";
 import deal from "@/helpers/deal";
 import {InferArgumentsType} from "@my-app/types";
 
-const useFetch = (props: InferArgumentsType<typeof deal>) => {
+type TDealProps = InferArgumentsType<typeof deal>;
+
+const useFetch = (props: TDealProps) => {
     const [result, setResult] = useState(null);
 
     useEffect(() => {
