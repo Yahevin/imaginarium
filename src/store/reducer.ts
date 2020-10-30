@@ -14,6 +14,7 @@ const reducers = {
 
 const reducer = combineReducers(reducers);
 
-type TStore = InferReducerType<typeof reducers>
+type TReducers = typeof reducers
+type TStore = InferReducerType<TReducers>
 
 export {reducer, TStore};
