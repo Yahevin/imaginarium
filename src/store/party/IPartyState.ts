@@ -2,7 +2,7 @@ import {GAME_ACTION} from "@my-app/constants";
 import {IPlayer} from "@my-app/interfaces";
 import {InferValueTypes} from "@my-app/types";
 
-interface IPartyState {
+type IPartyState = {
     room_id: number,
     players: IPlayer[],
     question: string,

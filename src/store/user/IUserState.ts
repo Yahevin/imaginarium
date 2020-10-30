@@ -1,4 +1,4 @@
-interface IUserState {
+type IUserState = {
     nick_name: string,
     user_id: number,
     experience: number,
