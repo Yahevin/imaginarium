@@ -46,8 +46,7 @@
         "core-js": "^3.6.5",
         "typescript": "^3.9.7",
         "@my-app/constants": "1.0.0",
-        "@my-app/client-events": "1.0.0",
-        "@my-app/commands": "1.0.0"
+        "@my-app/interfaces": "1.0.0"
     },
     "private": true,
     "workspaces": [

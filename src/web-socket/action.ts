@@ -1,43 +1,43 @@
 import socket from "@/web-socket/index";
-import {EVENTS} from "@my-app/client-events/index";
+import {CLIENT_EVENTS} from "@my-app/constants";
 
 const SocketAction = {
     auth(user_id: number) : void {
         socket.send(JSON.stringify({
-            type: EVENTS.AUTH,
+            type: CLIENT_EVENTS.AUTH,
             payload: user_id
         }))
     },
     join(room_id: number) : void {
         socket.send(JSON.stringify({
-            type: EVENTS.JOIN,
+            type: CLIENT_EVENTS.JOIN,
             payload: room_id
         }))
     },
     leave() : void {
         socket.send(JSON.stringify({
-            type: EVENTS.LEAVE,
+            type: CLIENT_EVENTS.LEAVE,
         }))
     },
     putTheOrigin(question: string) : void {
         socket.send(JSON.stringify({
-            type: EVENTS.PUT_THE_ORIGIN,
+            type: CLIENT_EVENTS.PUT_THE_ORIGIN,
             payload: question
         }))
     },
     putTheFake() : void {
         socket.send(JSON.stringify({
-            type: EVENTS.PUT_THE_FAKE,
+            type: CLIENT_EVENTS.PUT_THE_FAKE,
         }))
     },
     makeGuess() : void {
         socket.send(JSON.stringify({
-            type: EVENTS.MAKE_GUESS,
+            type: CLIENT_EVENTS.MAKE_GUESS,
         }))
     },
     nextRound() : void {
         socket.send(JSON.stringify({
-            type: EVENTS.START_NEW_ROUND,
+            type: CLIENT_EVENTS.START_NEW_ROUND,
         }))
     }
 };

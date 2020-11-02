@@ -4,7 +4,7 @@ import updateHand from "@/api-actions/updateHand";
 import store from "@/store";
 import {PartyAction} from "@/store/party/action";
 import {GAME_ACTION} from "@my-app/constants";
-import {COMMANDS} from "@my-app/commands/index";
+import {COMMANDS} from "@my-app/constants";
 import updateAction from "@/api-actions/updateAction";
 import updateTable from "@/api-actions/updateTable";
 
