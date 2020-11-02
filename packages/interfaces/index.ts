@@ -5,6 +5,7 @@ export * from "./parts/IPerson";
 export * from "./parts/IMessage";
 export * from "./parts/IThinButton";
 export * from "./parts/InputHandler";
+export * from "./parts/IGameAbout";
 
 export * from "./parts/db/DB_user";
 export * from "./parts/db/DB_room";
