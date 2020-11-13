@@ -33,7 +33,7 @@ conn.connect(function (err, result) {
     " game_action VARCHAR(255), " +
     " game_name VARCHAR(255), " +
     " player_count INT, " +
-    " created_at INT, " +
+    " created_at BIGINT, " +
     " PRIMARY KEY (id) )";
 
   conn.query(room, function (err, results) {
