@@ -1,6 +1,5 @@
 import {DB_card, DB_guess, DB_user_room, IMessage} from "@my-app/interfaces";
-import {COMMANDS} from "@my-app/constants";
-import {CLIENT_EVENTS} from "@my-app/constants";
+import {CLIENT_EVENTS, COMMANDS} from "@my-app/constants";
 
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
