@@ -20,21 +20,21 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
-# Дамп таблицы cards
+# Дамп таблицы shelter
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `cards`;
+DROP TABLE IF EXISTS `shelter`;
 
-CREATE TABLE `cards` (
+CREATE TABLE `shelter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `img_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `cards` WRITE;
-/*!40000 ALTER TABLE `cards` DISABLE KEYS */;
+LOCK TABLES `shelter` WRITE;
+/*!40000 ALTER TABLE `shelter` DISABLE KEYS */;
 
-INSERT INTO `cards` (`id`, `img_url`)
+INSERT INTO `shelter` (`id`, `img_url`)
 VALUES
 	(1,'https://i.ibb.co/0n4yNZv/4925dc6e3ed6c8c90b97ba9c9011fc1c.jpg'),
 	(2,'https://i.ibb.co/0MWXvGL/819fa54791052c5e7156b03f7d00eb4d.jpg'),
@@ -75,7 +75,7 @@ VALUES
 	(39,'https://i.ibb.co/Hg9TS6K/cea90a8584b7f1eedd1317c8e6b4008c.jpg'),
 	(40,'https://i.ibb.co/rMdTTdj/d2c64eed98f1b26c7fcaf97564f16e71.jpg');
 
-/*!40000 ALTER TABLE `cards` ENABLE KEYS */;
+/*!40000 ALTER TABLE `shelter` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

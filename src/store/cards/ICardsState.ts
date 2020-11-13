@@ -1,6 +1,6 @@
 import {ICard} from "@my-app/interfaces";
 
-interface ICardsState {
+type ICardsState = {
     hand: ICard[],
     table: ICard[],
     selected: ICard['id'] ;

@@ -1,6 +1,6 @@
-import {EVENTS} from "@my-app/client-events";
+import { CLIENT_EVENTS } from "@my-app/constants";
 
 export interface IMessage {
-    type: EVENTS,
+    type: CLIENT_EVENTS,
     payload?: any
 }

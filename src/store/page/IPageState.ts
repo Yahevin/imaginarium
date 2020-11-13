@@ -1,6 +1,6 @@
 import {PAGES} from "@my-app/constants";
 
-interface IPageState {
+type IPageState = {
     page: PAGES
 }
 

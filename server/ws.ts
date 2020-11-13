@@ -1,6 +1,5 @@
 import {DB_card, DB_guess, DB_user_room, IMessage} from "@my-app/interfaces";
-import {COMMANDS} from "@my-app/commands";
-import {EVENTS} from "@my-app/client-events";
+import {CLIENT_EVENTS, COMMANDS} from "@my-app/constants";
 
 const User = require('./helpers/User');
 const Party = require('./helpers/Party');
@@ -35,11 +34,11 @@ module.exports = class SocketController extends SocketClient{
 
     async reduce(message: IMessage) {
         switch (message.type) {
-            case EVENTS.AUTH: {
+            case CLIENT_EVENTS.AUTH: {
                 this.user_id = parseInt(message.payload);
                 break;
             }
-            case EVENTS.JOIN: {
+            case CLIENT_EVENTS.JOIN: {
                 try {
                     const room_id = parseInt(message.payload);
                     this.room_id = room_id;
@@ -52,26 +51,26 @@ module.exports = class SocketController extends SocketClient{
                 this.makeUpdateParty();
                 break;
             }
-            case EVENTS.LEAVE: {
+            case CLIENT_EVENTS.LEAVE: {
                 this.room_id = null;
                 this.player_id = null;
 
                 this.makeUpdateParty();
                 break;
             }
-            case EVENTS.PUT_THE_ORIGIN: {
+            case CLIENT_EVENTS.PUT_THE_ORIGIN: {
                 this.sendToMyRoom(COMMANDS.UPDATE_QUESTION, message.payload);
                 break;
             }
-            case EVENTS.PUT_THE_FAKE: {
+            case CLIENT_EVENTS.PUT_THE_FAKE: {
                 this.maybeStartToGuess();
                 break;
             }
-            case EVENTS.MAKE_GUESS: {
+            case CLIENT_EVENTS.MAKE_GUESS: {
                 this.maybeCountResults();
                 break;
             }
-            case EVENTS.START_NEW_ROUND: {
+            case CLIENT_EVENTS.START_NEW_ROUND: {
                 this.newRound();
                 break;
             }

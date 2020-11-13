@@ -2,10 +2,15 @@ const sql = require('../mixins/sqlCommands');
 const gameSt = require('../mixins/gameStatus');
 const dbQuery = require('../mixins/dbQuery');
 const isNotEmpty = require('../mixins/isNotEmpty');
+const getRandomPartyName = require('../mixins/getRandomPartyName');
 
 module.exports = {
   create: async function (app, db) {
-    const format = db.format(sql.ii2, ['room', 'game_action', 'player_count', gameSt.start, 1]);
+    const created_at = (new Date()).getTime();
+    const game_name = getRandomPartyName();
+    const format = db.format(sql.ii4,
+      ['room', 'game_action', 'game_name', 'created_at', 'player_count',
+      gameSt.start, game_name, created_at, 1]);
     const results = await dbQuery(format, db);
 
     if (results.hasOwnProperty('insertId')) {
@@ -57,7 +62,7 @@ module.exports = {
     }
   },
   getPlayersList: async function (app, db, room_id) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id']);
+    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
@@ -153,5 +158,35 @@ module.exports = {
     await dbQuery(format, db);
 
     return {success: true};
+  },
+  getMyReincarnations: async function (app, db, user_id) {
+    const format = db.format(sql.sfw, ['user__room', 'user_id', user_id]);
+    const results = await dbQuery(format, db);
+
+    if (isNotEmpty(results)) {
+      return results
+    } else {
+      throw "User has`t recent games"
+    }
+  },
+  getRoom:  async function (app, db, room_id) {
+    const format = db.format(sql.sfw, ['room', 'id', room_id]);
+    const results = await dbQuery(format, db);
+
+    if (isNotEmpty(results)) {
+      return results
+    } else {
+      throw "This room not exist"
+    }
+  },
+  getRoomsList:  async function (app, db, room_id_list) {
+    const format = db.format(sql.sfwi, ['room', 'id', room_id_list]);
+    const results = await dbQuery(format, db);
+
+    if (isNotEmpty(results)) {
+      return results
+    } else {
+      throw "This room not exist"
+    }
   },
 };

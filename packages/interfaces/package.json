@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@my-app/constants": "*"
+        "@my-app/constants": "*",
+        "@my-app/interfaces": "*"
     }
 }

@@ -1,4 +1,4 @@
-export enum EVENTS {
+export enum CLIENT_EVENTS {
     AUTH,
     JOIN,
     LEAVE,
