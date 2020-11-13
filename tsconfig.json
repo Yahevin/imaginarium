@@ -11,7 +11,7 @@
         "module": "CommonJS",
         "target": "es6",
         "jsx": "react",
-        "allowJs": true,
+        "allowJs": false,
         "typeRoots": [
             "node_modules/@types"
         ],
