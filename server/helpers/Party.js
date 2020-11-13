@@ -62,7 +62,7 @@ module.exports = {
     }
   },
   getPlayersList: async function (app, db, room_id) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id']);
+    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
@@ -160,7 +160,7 @@ module.exports = {
     return {success: true};
   },
   getMyReincarnations: async function (app, db, user_id) {
-    const format = db.format(sql.sfw, ['user_room', 'user_id', user_id]);
+    const format = db.format(sql.sfw, ['user__room', 'user_id', user_id]);
     const results = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {

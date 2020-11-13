@@ -20,7 +20,11 @@ const getPlayers = require('./router/get-players');
 const getRole  = require('./router/get-role');
 const getAction  = require('./router/get-action');
 
+const getRecentGames = require('./router/get-recent-games');
+
 module.exports = function(app, db) {
+  getRecentGames(app,db);
+
   getAction(app,db);
   getRole(app,db);
   getPlayers(app,db);
