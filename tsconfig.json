@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "noFallthroughCasesInSwitch": true,
         "baseUrl": ".",
         "outDir": "./dist/",
         "sourceMap": true,
@@ -8,7 +9,7 @@
         "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "module": "CommonJS",
+        "module": "esnext",
         "target": "es6",
         "jsx": "react",
         "allowJs": false,
@@ -20,6 +21,18 @@
             "node",
             "styled-components"
         ],
+        "lib": [
+            "dom",
+            "dom.iterable",
+            "esnext"
+        ],
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
         "paths": {
             "@/*": ["src/*"],
             "@my-app/*": ["packages/*"]
