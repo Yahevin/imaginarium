@@ -1,18 +1,20 @@
 {
     "compilerOptions": {
-        "noFallthroughCasesInSwitch": true,
-        "baseUrl": ".",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
+        "baseUrl": "./",
         "outDir": "./dist/",
         "sourceMap": true,
-        "declaration": true,
+        "declaration": false,
         "noImplicitAny": true,
         "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
         "module": "esnext",
-        "target": "es6",
+        "noEmit": false,
         "jsx": "react",
-        "allowJs": false,
         "typeRoots": [
             "node_modules/@types"
         ],
@@ -21,23 +23,18 @@
             "node",
             "styled-components"
         ],
-        "lib": [
-            "dom",
-            "dom.iterable",
-            "esnext"
-        ],
-        "skipLibCheck": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
         "paths": {
-            "@/*": ["src/*"],
-            "@my-app/*": ["packages/*"]
-        }
+            "@/*": [
+                "./src/*"
+            ],
+            "@my-app/*": [
+                "./packages/*"
+            ]
+        },
+        "pretty": true
     },
+    "target": "esnext",
+
     "exclude": [
         "node_modules",
         "dist"
