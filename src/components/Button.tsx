@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import React from "react";
 import styled from "styled-components";
 import {IButton} from "@my-app/interfaces";
 import {COLOR} from "@my-app/constants";
@@ -17,8 +17,7 @@ const StyledButton = styled.button<{ size: 'auto' | '100%', bg: string, color: s
 `;
 
 function Button(props: IButton): JSX.Element {
-    const {bg, color} = useMemo(() => getButtonTheme(props.theme), [props.theme]);
-
+    const {bg, color} =  getButtonTheme(props.theme)
     const clickHandler = (event: React.SyntheticEvent) => {
         props.callback();
     };

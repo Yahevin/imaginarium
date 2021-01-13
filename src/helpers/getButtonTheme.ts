@@ -21,6 +21,11 @@ function getBUTTON_THEME(theme: BUTTON_THEME) {
             return {
                 bg: COLOR.red,
                 color: COLOR.white,
+            };
+        default:
+            return {
+                bg: COLOR.transparent,
+                color: COLOR.slate,
             }
     }
 }
