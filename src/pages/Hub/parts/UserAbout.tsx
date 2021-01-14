@@ -38,6 +38,7 @@ const LogOut = styled(ThinButton)`
 function UserAbout() {
     const dispatch = useDispatch();
 
+    const id = useSelector((state:TStore) => state.userReducer.user_id);
     const nick_name = useSelector((state:TStore) => state.userReducer.nick_name);
     const experience = useSelector((state:TStore) => state.userReducer.experience);
 
@@ -48,7 +49,7 @@ function UserAbout() {
 
     return (
         <Wrap>
-            <Avatar nick_name={nick_name} experience={experience}/>
+            <Avatar id={id} nick_name={nick_name} experience={experience}/>
             <UserInfo>
                 <p>
                     {nick_name}

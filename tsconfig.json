@@ -1,17 +1,20 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
+        "baseUrl": "./",
         "outDir": "./dist/",
         "sourceMap": true,
-        "declaration": true,
+        "declaration": false,
         "noImplicitAny": true,
         "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "module": "CommonJS",
-        "target": "es6",
+        "module": "esnext",
+        "noEmit": false,
         "jsx": "react",
-        "allowJs": false,
         "typeRoots": [
             "node_modules/@types"
         ],
@@ -21,10 +24,17 @@
             "styled-components"
         ],
         "paths": {
-            "@/*": ["src/*"],
-            "@my-app/*": ["packages/*"]
-        }
+            "@/*": [
+                "./src/*"
+            ],
+            "@my-app/*": [
+                "./packages/*"
+            ]
+        },
+        "pretty": true
     },
+    "target": "esnext",
+
     "exclude": [
         "node_modules",
         "dist"
