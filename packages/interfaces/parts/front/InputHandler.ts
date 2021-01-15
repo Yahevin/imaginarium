@@ -1,3 +1,3 @@
-import React from "react";
+import React from 'react';
 
-export interface InputHandler{(event: React.ChangeEvent<HTMLInputElement>) : void}
+export type TInputHandler = (event: React.SyntheticEvent) => void;

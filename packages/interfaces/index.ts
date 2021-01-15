@@ -1,6 +1,6 @@
 export * from "./parts/front/ICard";
 export * from "./parts/front/IPlayer";
-export * from "./parts/front/IButton";
+export * from "./parts/front/TButton";
 export * from "./parts/front/IPerson";
 export * from "./parts/front/IMessage";
 export * from "./parts/front/IThinButton";

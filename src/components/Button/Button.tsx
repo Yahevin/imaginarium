@@ -1,7 +1,7 @@
 import React from 'react';
 import { TButton } from '@my-app/interfaces';
-import getButtonTheme from '@/helpers/getButtonTheme';
 import { StyledButton } from '@/components/Button/Button.styles';
+import getButtonTheme from './util/getButtonTheme';
 
 export const Button = ({
   disabled = false,
