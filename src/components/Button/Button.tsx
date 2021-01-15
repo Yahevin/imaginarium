@@ -5,7 +5,7 @@ import { StyledButton } from '@/components/Button/Button.styles';
 
 export const Button = ({
   disabled = false,
-  size = 'auto',
+  width = 'auto',
   className,
   children,
   callback,
@@ -23,7 +23,7 @@ export const Button = ({
       className={className}
       disabled={disabled}
       colorScheme={colorScheme}
-      size={size}
+      width={width}
     >
       {children}
     </StyledButton>

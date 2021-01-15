@@ -17,5 +17,5 @@ Primary.args = {
   className: '',
   callback: () => {},
   theme: BUTTON_THEME.RED,
-  size: '100%',
+  width: '100%',
 };

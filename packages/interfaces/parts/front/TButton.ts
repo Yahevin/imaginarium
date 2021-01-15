@@ -7,5 +7,5 @@ export type TButton = {
   className?: string;
   callback: () => void;
   theme: T_BUTTON_THEME;
-  size?: 'auto' | '100%';
+  width?: 'auto' | '100%';
 };

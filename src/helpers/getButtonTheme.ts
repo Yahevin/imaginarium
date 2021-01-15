@@ -5,7 +5,7 @@ function getBUTTON_THEME(theme: T_BUTTON_THEME, disabled: boolean): TColorScheme
   if (disabled) {
     return {
       bg: COLOR.passive,
-      color: COLOR.white,
+      font: COLOR.white,
       border: COLOR.passive,
     };
   }
@@ -14,31 +14,31 @@ function getBUTTON_THEME(theme: T_BUTTON_THEME, disabled: boolean): TColorScheme
     case BUTTON_THEME.LIGHT:
       return {
         bg: COLOR.transparent,
-        color: COLOR.slate,
+        font: COLOR.slate,
         border: COLOR.slate,
       };
     case BUTTON_THEME.DARK:
       return {
         bg: COLOR.slate,
-        color: COLOR.white,
+        font: COLOR.white,
         border: COLOR.slate,
       };
     case BUTTON_THEME.GREEN:
       return {
         bg: COLOR.green,
-        color: COLOR.white,
+        font: COLOR.white,
         border: COLOR.green,
       };
     case BUTTON_THEME.RED:
       return {
         bg: COLOR.red,
-        color: COLOR.white,
+        font: COLOR.white,
         border: COLOR.red,
       };
     default:
       return {
         bg: COLOR.transparent,
-        color: COLOR.slate,
+        font: COLOR.slate,
         border: COLOR.slate,
       };
   }
