@@ -93,6 +93,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-use-before-define': ['error'],
+    '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-unused-vars': 2,
     '@typescript-eslint/ban-ts-comment': 1,
     '@typescript-eslint/no-explicit-any': 1,
