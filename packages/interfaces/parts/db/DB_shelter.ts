@@ -1,4 +1,4 @@
 export interface DB_shelter {
-    id: number,
-    img_url: string
+  id: number;
+  img_url: string;
 }

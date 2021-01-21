@@ -1,5 +1,5 @@
 function getRandom(array) {
-  return array[Math.round(array.length * Math.random())]
+  return array[Math.round(array.length * Math.random())];
 }
 
 module.exports = function getRandomPartyName() {

@@ -1,0 +1,20 @@
+/* eslint-disable no-magic-numbers */
+import React from 'react';
+import { PlayerAbout } from '@/components/PlayerAbout/PlayerAbout';
+import { IPlayer } from '@my-app/interfaces';
+
+export default {
+  title: 'Component/PlayerAbout',
+  component: PlayerAbout,
+};
+
+const Template = (args: IPlayer) => <PlayerAbout {...args} />;
+
+export const Primary: { args: IPlayer } = Template.bind({});
+Primary.args = {
+  id: 1,
+  nick_name: 'Test',
+  experience: 100,
+  game_master: false,
+  score: 50,
+};

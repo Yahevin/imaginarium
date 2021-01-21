@@ -1,6 +1,10 @@
-import {IPerson} from "./IPerson";
+import { MergeTypes } from '@my-app/types/parts/MergeTypes';
+import { IPerson } from './IPerson';
 
-export interface IPlayer extends IPerson{
-    score: number
-    game_master: boolean
-}
+export type IPlayer = MergeTypes<
+  IPerson,
+  {
+    score: number;
+    game_master: boolean;
+  }
+>;

@@ -1,4 +1,4 @@
-import {css} from "styled-components";
+import { css } from 'styled-components';
 
 const Font_small = css`
   font-size: 12px;

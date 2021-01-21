@@ -1,5 +1,5 @@
-export interface IPerson {
-    id: number,
-    nick_name: string,
-    experience: number,
-}
+export type IPerson = {
+  id: number;
+  nick_name: string;
+  experience: number;
+};

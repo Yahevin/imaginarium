@@ -1,22 +1,21 @@
 const User = require('../helpers/User');
 
-module.exports = function(app, db) {
-  app.post('/registration', async function(req, res) {
-    const nick_name = req.body.nick_name;
-    const password  = req.body.password;
+module.exports = (app, db) => {
+  app.post('/registration', async (req, res) => {
+    const { nick_name } = req.body;
+    const { password } = req.body;
 
     try {
       const user_id = await User.create(app, db, nick_name, password);
 
       return res.json({
         success: true,
-        user_id: user_id,
-      })
-    }
-    catch(error) {
+        user_id,
+      });
+    } catch (error) {
       return res.json({
         success: false,
-        error: error,
+        error,
       });
     }
   });

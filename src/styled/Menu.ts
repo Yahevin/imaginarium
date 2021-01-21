@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import {mediaQuery} from "@my-app/constants";
+import styled from 'styled-components';
+import { MEDIA_QUERY } from '@my-app/constants';
 
 export const Menu = styled.article`
   max-width: 1300px;
   padding: 40px 60px;
 
-  ${mediaQuery.phone} {
+  ${MEDIA_QUERY.PHONE} {
     padding: 24px 16px;
   }
 `;

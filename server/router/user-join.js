@@ -3,15 +3,15 @@ const User = require('../helpers/User');
 
 module.exports = function (app, db) {
   app.post('/user-join', async function (req, res) {
-    const room_id = req.body.room_id,
-          user_id = req.body.user_id;
+    const { room_id } = req.body;
+    const { user_id } = req.body;
 
     try {
       const roomExist = await Party.exist(app, db, room_id);
       let game_master = false;
 
       if (roomExist) {
-        const {user_exist, player_id} = await Party.includesUser(app, db, user_id, room_id);
+        const { user_exist, player_id } = await Party.includesUser(app, db, user_id, room_id);
 
         if (user_exist) {
           await Party.playerJoin(app, db, player_id);
@@ -28,17 +28,16 @@ module.exports = function (app, db) {
           game_action,
           game_master,
           success: true,
-        })
-      } else {
-        return res.json({
-          success: false,
-          error: 'Room do not exist',
-        })
+        });
       }
+      return res.json({
+        success: false,
+        error: 'Room do not exist',
+      });
     } catch (error) {
       return res.json({
         success: false,
-        error: error,
+        error,
       });
     }
   });
