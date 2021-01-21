@@ -3,8 +3,9 @@ import { T_INPUT_THEME } from '@my-app/constants';
 
 export type TInput = {
   type?: 'text' | 'password';
+  width?: 'auto' | '100%';
+  theme?: T_INPUT_THEME;
   name: string;
-  theme: T_INPUT_THEME;
   defaultValue?: string;
   placeholder?: string;
   className?: string;
@@ -12,5 +13,4 @@ export type TInput = {
   onFocusEvent?: TInputHandler;
   onBlurEvent?: TInputHandler;
   disabled?: boolean;
-  width: 'auto' | '100%';
 };

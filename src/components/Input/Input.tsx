@@ -3,14 +3,15 @@ import { TInput } from '@/components/Input/Input.model';
 import { StyledInput } from '@/components/Input/Input.styles';
 import { TColorScheme } from '@my-app/interfaces/parts/front/TColorScheme';
 import { getInputTheme } from '@/components/Input/utils/getInputTheme';
+import { INPUT_THEME } from '@my-app/constants';
 
 export const Input = ({
+  theme = INPUT_THEME.LIGHT,
   disabled = false,
   defaultValue = '',
   type = 'text',
   width = 'auto',
   name,
-  theme,
   className,
   placeholder,
   onChangeEvent,

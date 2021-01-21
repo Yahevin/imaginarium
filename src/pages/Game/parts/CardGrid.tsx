@@ -1,9 +1,9 @@
-import React, {useCallback, useMemo} from "react";
-import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
-import {TStore} from "@/store/reducer";
-import {CardsAction} from "@/store/cards/action";
-import {ICard} from "@my-app/interfaces";
+import React, { useCallback } from 'react';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { TStore } from '@/store/reducer';
+import { CardsAction } from '@/store/cards/action';
+import { ICard } from '@my-app/interfaces';
 
 const Grid = styled.div`
   margin: 0 auto;
@@ -26,31 +26,34 @@ const Grid = styled.div`
   }
 `;
 
+function CardGrid({ cards }: { cards: ICard[] }) {
+  const dispatch = useDispatch();
+  const selected = useSelector((store: TStore) => store.cardsReducer.selected);
 
-function CardGrid({cards}: { cards: ICard[] }) {
-    const dispatch = useDispatch();
-    const selected = useSelector((store: TStore) => store.cardsReducer.selected);
+  const setSelected = useCallback(
+    (card_id) => {
+      dispatch(CardsAction.setSelected(card_id));
+    },
+    [dispatch],
+  );
 
-    const setSelected = useCallback((card_id) => {
-        dispatch(CardsAction.setSelected(card_id));
-    }, []);
-
-    return (
-        <Grid>
-            {cards.map((card) => {
-                return (
-                    <img key={card.id}
-                         src={card.img_url}
-                         className={selected === card.id ? 'active' : ''}
-                         onClick={() => {
-                             setSelected(card.id)
-                         }}
-                         alt="card"
-                    />
-                )
-            })}
-        </Grid>
-    )
+  return (
+    <Grid>
+      {cards.map((card) => {
+        return (
+          <img
+            key={card.id}
+            src={card.img_url}
+            className={selected === card.id ? 'active' : ''}
+            onClick={() => {
+              setSelected(card.id);
+            }}
+            alt="card"
+          />
+        );
+      })}
+    </Grid>
+  );
 }
 
 export default CardGrid;

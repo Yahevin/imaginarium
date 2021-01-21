@@ -1,7 +1,7 @@
-import {PAGES} from "@my-app/constants";
+import { T_PAGES } from '@my-app/constants';
 
 type IPageState = {
-    page: PAGES
-}
+  page: T_PAGES;
+};
 
-export default  IPageState;
+export default IPageState;

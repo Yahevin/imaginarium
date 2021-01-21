@@ -1,3 +1,5 @@
+import { InferValueTypes } from '@my-app/types';
+
 export const PAGES = {
   START: '/' as const,
   AUTH: '/auth' as const,
@@ -8,4 +10,4 @@ export const PAGES = {
   SCORES: '/scores' as const,
 };
 
-export type T_PAGES = keyof typeof PAGES;
+export type T_PAGES = InferValueTypes<typeof PAGES>;
