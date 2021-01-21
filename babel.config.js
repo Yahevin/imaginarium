@@ -1,11 +1,11 @@
 const projectBabelConfig = {
   presets: [['@babel/preset-env', { corejs: 3, useBuiltIns: 'usage' }], '@babel/preset-react'],
   plugins: [
-    "babel-plugin-styled-components",
-    "@babel/proposal-class-properties",
-    "@babel/proposal-object-rest-spread",
-    "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-transform-typescript"
+    'babel-plugin-styled-components',
+    '@babel/proposal-class-properties',
+    '@babel/proposal-object-rest-spread',
+    '@babel/plugin-syntax-dynamic-import',
+    '@babel/plugin-transform-typescript',
   ],
   overrides: [
     {

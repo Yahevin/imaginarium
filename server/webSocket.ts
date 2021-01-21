@@ -11,23 +11,26 @@ const Cards = require('./helpers/Cards');
 const Basket = require('./helpers/Basket');
 const gameStatus = require('./mixins/gameStatus');
 
-class SocketClient {
+type TSocketClient = {
   room_id: number | null;
-
   user_id: number | null;
-
   player_id: number | null;
-}
+};
 
-module.exports = class SocketController extends SocketClient {
-  private readonly app: any;
+export class SocketController {
+  private room_id: number | null;
+
+  private user_id: number | null;
+
+  private player_id: number | null;
 
   private readonly wss: any;
+
+  private readonly app: any;
 
   private readonly db: any;
 
   constructor(app: any, db: any, wss: any) {
-    super();
     this.app = app;
     this.db = db;
     this.wss = wss;
@@ -37,6 +40,7 @@ module.exports = class SocketController extends SocketClient {
   }
 
   async reduce(message: IMessage) {
+    // eslint-disable-next-line default-case
     switch (message.type) {
       case CLIENT_EVENTS.AUTH: {
         this.user_id = parseInt(message.payload);
@@ -77,8 +81,6 @@ module.exports = class SocketController extends SocketClient {
       case CLIENT_EVENTS.START_NEW_ROUND: {
         this.newRound();
         break;
-      }
-      default: {
       }
     }
   }
@@ -132,7 +134,7 @@ module.exports = class SocketController extends SocketClient {
       await Party.demoteGM(this.app, this.db, this.room_id);
       await User.setGM(this.app, this.db, new_gm_player_id);
 
-      this.wss.clients.forEach(({ controller, send }: { controller: SocketClient; send: (arg: string) => void }) => {
+      this.wss.clients.forEach(({ controller, send }: { controller: TSocketClient; send: (arg: string) => void }) => {
         if (controller.player_id === active_players[0].id) {
           send('UPDATE_ROLE');
         }
@@ -203,6 +205,7 @@ module.exports = class SocketController extends SocketClient {
           }
         });
         if (card?.is_main) {
+          // eslint-disable-next-line no-magic-numbers
           score = score === 0 || score === max ? (score = -3) : (score += 3);
         }
         return {
@@ -259,7 +262,7 @@ module.exports = class SocketController extends SocketClient {
       console.log(error);
     }
   }
-};
+}
 
 function findNewGM(id_list: number[], gm_id: number) {
   let current = 0;
