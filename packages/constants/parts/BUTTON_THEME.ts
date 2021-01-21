@@ -1,19 +1,7 @@
-// import {InferValueTypes} from "@my-app/types";
-//
-// const BUTTON_THEME =  {
-//     light: 'light' as 'light',
-//     dark: 'dark' as 'dark',
-//     green: 'green' as 'green',
-//     red: 'red' as 'red',
-// };
-//
-// type TYPE_BUTTON_THEME = InferValueTypes<typeof BUTTON_THEME>
-//
-// export {BUTTON_THEME, TYPE_BUTTON_THEME};
+import { BASE_THEME } from '@my-app/constants/parts/BASE_THEME';
 
-export enum BUTTON_THEME {
-    light,
-    dark,
-    green,
-    red,
-}
+export const BUTTON_THEME = {
+  ...BASE_THEME,
+};
+
+export type T_BUTTON_THEME = keyof typeof BUTTON_THEME;

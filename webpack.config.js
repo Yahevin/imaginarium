@@ -22,9 +22,9 @@ const config = {
         test: /\.(js|jsx|ts|tsx)$/,
         loader: 'babel-loader',
         options: {
-          configFile: path.resolve(__dirname, './.babelrc')
+          configFile: path.resolve(__dirname, 'babel.config.js')
         },
-        include: path.resolve(__dirname, 'src')
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'packages')]
       },
       {
         test: /\.css$/,

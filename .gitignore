@@ -9,3 +9,4 @@ dist
 packages/**/*.d.ts
 packages/**/*.js
 lerna-debug.log
+/src/__snapshots__/

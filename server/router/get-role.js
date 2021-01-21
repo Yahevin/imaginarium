@@ -1,9 +1,9 @@
 const User = require('../helpers/User');
 
-module.exports = function(app, db) {
-  app.post ('/get-role', async (req, res) => {
-    const room_id = req.body.room_id;
-    const user_id = req.body.user_id;
+module.exports = function (app, db) {
+  app.post('/get-role', async (req, res) => {
+    const { room_id } = req.body;
+    const { user_id } = req.body;
 
     try {
       const player_id = await User.getPlayerId(app, db, user_id, room_id);
@@ -11,12 +11,12 @@ module.exports = function(app, db) {
 
       return res.json({
         success: true,
-        game_master
-      })
+        game_master,
+      });
     } catch (error) {
-      return res.json ({
+      return res.json({
         success: false,
-        error: error,
+        error,
       });
     }
   });

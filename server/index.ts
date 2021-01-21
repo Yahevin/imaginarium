@@ -1,30 +1,36 @@
+// eslint-disable-next-line import/named
+import { SocketController } from './webSocket';
+import config from '../webpack.config.js';
+
 const express = require('express');
 const webpack = require('webpack');
 const http = require('http');
 const webSocket = require('ws');
-const SocketController = require('./ws');
 const bodyParser = require('body-parser');
-const config = require('../webpack.config.js');
 const webpackDevMiddleware = require('webpack-dev-middleware');
+
 const compiler = webpack(config);
 const dotenv = require('dotenv');
+
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT;
 const db = require('./db/mydb');
 
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+  }),
+);
 app.use(express.json());
 
 require('./db/mydb');
 require('./routes.js')(app, db);
 
 const server = http.createServer(app);
-const wss = new webSocket.Server({server});
+const wss = new webSocket.Server({ server });
 
 wss.on('connection', (ws: any) => {
   ws.controller = new SocketController(app, db, wss);

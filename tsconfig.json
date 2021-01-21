@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": true,
+        "allowUnusedLabels": true,
         "baseUrl": ".",
         "outDir": "./dist/",
         "sourceMap": true,
@@ -8,10 +12,16 @@
         "inlineSources": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "module": "CommonJS",
-        "target": "es6",
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": false,
+        "pretty": true,
+        "module": "commonjs",
+        "target": "esnext",
+        "noEmit": false,
         "jsx": "react",
-        "allowJs": true,
         "typeRoots": [
             "node_modules/@types"
         ],
@@ -21,8 +31,12 @@
             "styled-components"
         ],
         "paths": {
-            "@/*": ["src/*"],
-            "@my-app/*": ["packages/*"]
+          "@/*": [
+            "src/*"
+          ],
+          "@my-app/*": [
+            "packages/*"
+          ]
         }
     },
     "exclude": [

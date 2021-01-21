@@ -3,12 +3,11 @@ const Party = require('../helpers/Party');
 const Table = require('../helpers/Table');
 const gameStatus = require('../mixins/gameStatus');
 
-
-module.exports = function(app, db) {
-	app.post('/set-question', async (req, res) => {
-		const room_id = req.body.room_id;
-    const card_id = req.body.card_id;
-    const question = req.body.question;
+module.exports = function (app, db) {
+  app.post('/set-question', async (req, res) => {
+    const { room_id } = req.body;
+    const { card_id } = req.body;
+    const { question } = req.body;
 
     try {
       try {
@@ -21,13 +20,12 @@ module.exports = function(app, db) {
 
       return res.json({
         success: true,
-      })
+      });
     } catch (error) {
-
       return res.json({
         success: false,
-        error: error
-      })
+        error,
+      });
     }
-	});
+  });
 };

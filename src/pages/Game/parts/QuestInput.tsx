@@ -1,58 +1,60 @@
-import React, {useCallback, useMemo, useState} from "react";
-import Input from "@/components/Input";
-import {InputHandler} from "@my-app/interfaces";
-import deal from "@/helpers/deal";
-import {useDispatch, useSelector} from "react-redux";
-import {TStore} from "@/store/reducer";
-import SocketAction from "@/web-socket/action";
-import {CardsAction} from "@/store/cards/action";
-import Submit from "@/components/Submit";
+import React, { useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import deal from '@/helpers/deal';
+import SocketAction from '@/web-socket/action';
+import { TStore } from '@/store/reducer';
+import { CardsAction } from '@/store/cards/action';
+import { TInputHandler } from '@my-app/interfaces';
+
+import { Input } from '@/components/Input/Input';
+import { Button } from '@/components/Button/Button';
+import { BUTTON_THEME } from '@my-app/constants';
 
 function QuestInput() {
-    const dispatch = useDispatch();
-    const selected = useSelector((store: TStore) => store.cardsReducer.selected);
+  const dispatch = useDispatch();
+  const selected = useSelector((store: TStore) => store.cardsReducer.selected);
 
-    const [question, setQuestion] = useState('');
-    const inputHandler: InputHandler = useCallback((event) => {
-        setQuestion(event.target.value);
-    }, []);
+  const [question, setQuestion] = useState('');
+  const inputHandler: TInputHandler = useCallback((event) => {
+    setQuestion(event.target.value);
+  }, []);
 
-    const submit_disabled = useMemo(() => {
-        return question.length === 0 || selected === null;
-    }, [question, selected]);
+  const submit_disabled = useMemo(() => {
+    return question.length === 0 || selected === null;
+  }, [question, selected]);
 
-    const quest_submit = useCallback(async () => {
-        try {
-            await deal({
-                url: '/set-question',
-                body: {question, card_id: selected}
-            });
+  const quest_submit = useCallback(async () => {
+    try {
+      await deal({
+        url: '/set-question',
+        body: { question, card_id: selected },
+      });
 
-            // remove selected card from hand
-            dispatch(CardsAction.putToTable(selected));
+      // remove selected card from hand
+      dispatch(CardsAction.putToTable(selected));
 
-            // after this action, will come command
-            // to update game_action and question
-            SocketAction.putTheOrigin(question);
-        } catch (error) {
-            console.log(error);
-        }
-    }, [question,selected]);
+      // after this action, will come command
+      // to update game_action and question
+      SocketAction.putTheOrigin(question);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [question, selected]);
 
-    return (
-        <>
-            <Input type={"text"}
-                   name={"question"}
-                   default={question}
-                   placeholder={'Ассоциация'}
-                   onChange={inputHandler}/>
-            <Submit callback={quest_submit}
-                    disabled={submit_disabled}
-                    size={"auto"}>
-                Submit
-            </Submit>
-        </>
-    )
+  return (
+    <>
+      <Input
+        type="text"
+        name="question"
+        placeholder="Ассоциация"
+        defaultValue={question}
+        onChangeEvent={inputHandler}
+      />
+      <Button callback={quest_submit} disabled={submit_disabled} theme={BUTTON_THEME.LIGHT} width="auto">
+        Submit
+      </Button>
+    </>
+  );
 }
 
 export default QuestInput;
