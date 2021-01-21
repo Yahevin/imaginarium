@@ -10,7 +10,6 @@ export const Absolute = css`
 export const Bar = styled.div`
   height: 16px;
   width: 100%;
-  max-width: 200px;
   background: ${COLOR.passive};
   border-radius: 8px;
   position: relative;
