@@ -9,3 +9,4 @@ export * from './parts/BASE_THEME';
 export * from './parts/INPUT_THEME';
 export * from './parts/BUTTON_THEME';
 export * from './parts/CLIENT_EVENTS';
+export * from './parts/MIN_PLAYERS_COUNT';
