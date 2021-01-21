@@ -20,13 +20,15 @@ export const Round = css`
   text-align: center;
   border-radius: 50%;
 `;
-export const Face = styled.div<{ fontRate: number }>`
+export const Face = styled.div<{ fontRate: number; game_master: boolean }>`
   ${Round};
   width: 100%;
   height: 100%;
   left: 0;
   line-height: ${(props) => 1 / props.fontRate};
   background: ${COLOR.white};
+  box-shadow: ${(props) => (props.game_master ? `0px 0px 8px 2px ${COLOR.rust}` : null)};
+  transition: box-shadow 0.5s ease-in-out;
 `;
 export const Level = styled.div`
   ${Round};
