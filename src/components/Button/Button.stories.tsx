@@ -8,7 +8,6 @@ export default {
   component: Button,
 };
 
-
 const Template = (args: TButton) => <Button {...args}>123</Button>;
 
 export const Primary = Template.bind({});

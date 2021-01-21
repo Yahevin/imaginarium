@@ -1,17 +1,17 @@
-import store from "@/store";
-import deal from "@/helpers/deal";
-import {PartyAction} from "@/store/party/action";
+import store from '@/store';
+import deal from '@/helpers/deal';
+import { PartyAction } from '@/store/party/action';
 
 async function updateAction() {
-    try {
-        const {game_action} = await deal({
-            url: '/get-action',
-        });
+  try {
+    const { game_action } = await deal({
+      url: '/get-action',
+    });
 
-        store.dispatch(PartyAction.setGAction(game_action));
-    } catch (error) {
-        console.log(error)
-    }
+    store.dispatch(PartyAction.setGAction(game_action));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default updateAction;

@@ -49,6 +49,7 @@ module.exports = {
     'import/no-unresolved': 0,
     'import/no-cycle': 1,
     'no-unused-expressions': 0,
+    'no-throw-literal': 0,
     'no-console': 'off',
     'no-underscore-dangle': ['error', { allow: ['__typename', '__STORE__'] }],
     'no-plusplus': 0,

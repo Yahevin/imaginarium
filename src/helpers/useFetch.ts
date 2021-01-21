@@ -1,25 +1,25 @@
-import {useEffect, useState} from "react";
-import deal from "@/helpers/deal";
-import {InferArgumentsType} from "@my-app/types";
+import { useEffect, useState } from 'react';
+import deal from '@/helpers/deal';
+import { InferArgumentsType } from '@my-app/types';
 
 type TDealProps = InferArgumentsType<typeof deal>;
 
 const useFetch = (props: TDealProps) => {
-    const [result, setResult] = useState(null);
+  const [result, setResult] = useState(null);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const fetched = await deal(props);
+  useEffect(() => {
+    (async () => {
+      try {
+        const fetched = await deal(props);
 
-                setResult(fetched);
-            } catch (error) {
-                console.log(error)
-            }
-        })()
-    }, []);
+        setResult(fetched);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
-    return result;
+  return result;
 };
 
 export default useFetch;
