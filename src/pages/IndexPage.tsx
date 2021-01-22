@@ -1,8 +1,5 @@
 import React, { useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
-import { TStore } from '@/store/reducer';
 
 import AuthPage from '@/pages/Auth';
 import StartPage from '@/pages/Start';
@@ -12,35 +9,13 @@ import LobbyPage from '@/pages/Lobby';
 import Game from '@/pages/Game';
 import Scores from '@/pages/Scores';
 
-const reloadPrepare = (event: KeyboardEvent) => {
-  if (event.code !== 'MetaLeft') return;
-
-  const path = window.location.pathname.slice(1);
-
-  window.location.pathname = '';
-  window.location.hash = path;
-};
-
 function IndexPage() {
   const history = useHistory();
-  const page = useSelector((state: TStore) => state.pageReducer.page);
 
   useEffect(() => {
     const { hash } = window.location;
     if (hash.length === 0) return;
     history.push(hash.replace(/#/, ''));
-  });
-
-  useEffect(() => {
-    history.push(page);
-  }, [page]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', reloadPrepare);
-
-    return () => {
-      window.removeEventListener('keydown', reloadPrepare);
-    };
   });
 
   return (
