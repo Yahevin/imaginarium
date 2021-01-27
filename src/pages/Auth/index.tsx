@@ -1,10 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
-import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import deal from '@/helpers/deal';
 
 import SocketAction from '@/web-socket/action';
-import { PageAction } from '@/store/page/action';
 import { UserAction } from '@/store/user/action';
 
 import { BUTTON_THEME, PAGES } from '@my-app/constants';
@@ -47,6 +47,7 @@ let submitBlocked = false;
 
 function AuthPage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [control, setControl] = useState(view.initial);
   const [isValid, setValid] = useState(false);
 
@@ -82,7 +83,7 @@ function AuthPage() {
             nick_name: name.current,
           }),
         );
-        dispatch(PageAction.set(PAGES.MAIN));
+        history.push(PAGES.MAIN);
       } catch (error) {
         submitBlocked = false;
         console.log(error);

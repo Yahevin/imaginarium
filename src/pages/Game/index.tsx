@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
 import SocketAction from '@/web-socket/action';
 import { PartyAction } from '@/store/party/action';
-import { PageAction } from '@/store/page/action';
 import { TStore } from '@/store/reducer';
 
 import { BUTTON_THEME, GAME_ACTION, MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
@@ -15,6 +16,7 @@ import { Button } from '@/components/Button/Button';
 
 function Game() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
   const question = useSelector((store: TStore) => store.partyReducer.question);
   const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
@@ -24,20 +26,20 @@ function Game() {
     SocketAction.leave();
 
     dispatch(PartyAction.setPartyId(null));
-    dispatch(PageAction.set(PAGES.MAIN));
-  }, [dispatch]);
+    history.push(PAGES.MAIN);
+  }, [dispatch, history]);
 
   useEffect(() => {
     if (game_action === GAME_ACTION.ALL_GUESS_DONE) {
-      dispatch(PageAction.set(PAGES.SCORES));
+      history.replace(PAGES.SCORES);
     }
-  }, [game_action, dispatch]);
+  }, [game_action, history]);
 
   useEffect(() => {
     if (players.length < MIN_PLAYERS_COUNT) {
-      dispatch(PageAction.set(PAGES.LOBBY));
+      history.replace(PAGES.LOBBY);
     }
-  }, [players, dispatch]);
+  }, [players, history]);
 
   return (
     <Menu>

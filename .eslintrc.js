@@ -94,7 +94,7 @@ module.exports = {
     'react/no-did-update-set-state': 1,
     'react/no-array-index-key': 'warn',
     'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    'react-hooks/exhaustive-deps': 'error',
     'react/jsx-pascal-case': 0,
     '@typescript-eslint/no-shadow': ['error'],
     '@typescript-eslint/no-use-before-define': ['error'],

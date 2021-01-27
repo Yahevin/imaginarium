@@ -9,17 +9,21 @@ export const Button = ({
   className,
   children,
   callback,
+  capture,
   theme,
 }: TButton): JSX.Element => {
   const colorScheme = getButtonTheme(theme, disabled);
   const clickHandler = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-    if (!disabled) callback();
+    if (!disabled && callback) callback(event);
+  };
+  const captureHandler = (event: React.SyntheticEvent) => {
+    if (!disabled && capture) capture(event);
   };
 
   return (
     <StyledButton
       onClick={clickHandler}
+      onClickCapture={captureHandler}
       className={className}
       disabled={disabled}
       colorScheme={colorScheme}

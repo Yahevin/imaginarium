@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import SocketAction from '@/web-socket/action';
-import { PageAction } from '@/store/page/action';
 import { TStore } from '@/store/reducer';
 
 import { BUTTON_THEME, GAME_ACTION, PAGES } from '@my-app/constants';
@@ -12,15 +12,15 @@ import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';
 import { Button } from '@/components/Button/Button';
 
 function Scores() {
-  const dispatch = useDispatch();
+  const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
 
   useEffect(() => {
     if (game_action === GAME_ACTION.START) {
-      dispatch(PageAction.set(PAGES.GAME));
+      history.replace(PAGES.GAME);
     }
-  }, [game_action, dispatch]);
+  }, [game_action, history]);
 
   const nextRound = useCallback(() => {
     SocketAction.nextRound();

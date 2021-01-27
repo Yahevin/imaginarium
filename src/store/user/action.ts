@@ -10,13 +10,13 @@ const UserAction = {
       payload: props,
     };
   },
-  setUserId(id: number) {
+  setUserId(id: number | null) {
     return {
       type: SET_USER_ID,
       payload: id,
     };
   },
-  setUserExperience(experience: number) {
+  setUserExperience(experience: number | null) {
     return {
       type: SET_USER_EXP,
       payload: experience,

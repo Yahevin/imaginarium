@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: TPlayersGrid) => <PlayersGrid {...args} />;
-
+// @ts-ignore
 export const Primary: { args: TPlayersGrid } = Template.bind({});
 Primary.args = {
   players: [

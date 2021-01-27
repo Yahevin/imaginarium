@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/named
+/* eslint-disable import/named */
+/* eslint-disable no-param-reassign */
 import { SocketController } from './webSocket';
 import config from '../webpack.config.js';
 
@@ -48,4 +49,11 @@ wss.on('connection', (ws: any) => {
 
 server.listen(port, () => {
   console.log(`My app listening on port ${server.address().port}`);
+});
+
+app.use((req: any, res: any) => {
+  // TODO if auth
+  res.redirect(`/#${req.url}`);
+  // TODO else
+  // res.redirect('/#auth');
 });

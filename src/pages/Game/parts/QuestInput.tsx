@@ -24,6 +24,8 @@ function QuestInput() {
   }, [question, selected]);
 
   const quest_submit = useCallback(async () => {
+    if (!selected) return;
+
     try {
       await deal({
         url: '/set-question',
@@ -39,7 +41,7 @@ function QuestInput() {
     } catch (error) {
       console.log(error);
     }
-  }, [question, selected]);
+  }, [question, selected, dispatch]);
 
   return (
     <>

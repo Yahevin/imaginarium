@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { PartyAction } from '@/store/party/action';
-import { PageAction } from '@/store/page/action';
 import { TStore } from '@/store/reducer';
 import SocketAction from '@/web-socket/action';
 
@@ -18,13 +18,14 @@ import { Button } from '@/components/Button/Button';
 
 function LobbyPage() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
 
   useEffect(() => {
     if (players.length >= MIN_PLAYERS_COUNT) {
-      dispatch(PageAction.set(PAGES.GAME));
+      history.replace(PAGES.GAME);
     }
-  }, [players, dispatch]);
+  }, [players, history]);
 
   useEffect(() => {
     updateHand();
@@ -36,8 +37,8 @@ function LobbyPage() {
     SocketAction.leave();
 
     dispatch(PartyAction.setPartyId(null));
-    dispatch(PageAction.set(PAGES.MAIN));
-  }, [dispatch]);
+    history.replace(PAGES.MAIN);
+  }, [dispatch, history]);
 
   return (
     <Menu>

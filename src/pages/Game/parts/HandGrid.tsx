@@ -17,6 +17,8 @@ function HandGrid() {
   const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
 
   const confirm_select = useCallback(async () => {
+    if (!selected) return;
+
     try {
       await deal({
         url: '/put-card',
