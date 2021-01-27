@@ -1,20 +1,15 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { PageAction } from '@/store/page/action';
+import React from 'react';
 import { BUTTON_THEME, PAGES } from '@my-app/constants';
 import { Button } from '@/components/Button/Button';
+import { Link } from 'react-router-dom';
 
 function StartPage() {
-  const dispatch = useDispatch();
-
-  const startHandler = useCallback(() => {
-    dispatch(PageAction.set(PAGES.AUTH));
-  }, [dispatch]);
-
   return (
-    <Button callback={startHandler} theme={BUTTON_THEME.GREEN} width="auto">
-      Start
-    </Button>
+    <Link to={PAGES.AUTH}>
+      <Button theme={BUTTON_THEME.GREEN} width="auto">
+        Start
+      </Button>
+    </Link>
   );
 }
 

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import deal from '@/helpers/deal';
 
 import { PartyAction } from '@/store/party/action';
-import { PageAction } from '@/store/page/action';
 import { TStore } from '@/store/reducer';
 import SocketAction from '@/web-socket/action';
 
@@ -18,11 +18,12 @@ const Content = styled.div`
 
 function PartyCreate() {
   const dispatch = useDispatch();
+  const history = useHistory();
   const user_id = useSelector((store: TStore) => store.userReducer.user_id);
 
   const backToHub = useCallback(() => {
-    dispatch(PageAction.set(PAGES.MAIN));
-  }, [dispatch]);
+    history.push(PAGES.MAIN);
+  }, [history]);
 
   const createNewGame = useCallback(async () => {
     try {
@@ -34,13 +35,13 @@ function PartyCreate() {
       dispatch(PartyAction.setGAction(GAME_ACTION.START));
       dispatch(PartyAction.setPartyId(response.room_id));
       dispatch(PartyAction.setGameRole(response.game_master));
-      dispatch(PageAction.set(PAGES.LOBBY));
 
       SocketAction.join(response.room_id);
+      history.replace(PAGES.LOBBY);
     } catch (e) {
       console.log(e);
     }
-  }, [user_id, dispatch]);
+  }, [user_id, dispatch, history]);
 
   return (
     <Content>

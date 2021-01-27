@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Button } from '@/components/Button/Button';
@@ -8,7 +9,6 @@ import { ProgressBar } from '@/components/ProgressBar/ProgressBar';
 
 import { COLOR, PAGES } from '@my-app/constants';
 import { UserAction } from '@/store/user/action';
-import { PageAction } from '@/store/page/action';
 import { TStore } from '@/store/reducer';
 import Font_large from '@/styled/Font_large';
 import { LEVEL_COST } from '@my-app/constants/parts/LEVEL_COST';
@@ -36,7 +36,7 @@ const LogOut = styled(Button)`
 
 function UserAbout() {
   const dispatch = useDispatch();
-
+  const history = useHistory();
   const id = useSelector((state: TStore) => state.userReducer.user_id);
   const nick_name = useSelector((state: TStore) => state.userReducer.nick_name);
   const experience = useSelector((state: TStore) => state.userReducer.experience);
@@ -45,8 +45,8 @@ function UserAbout() {
 
   const logOut = useCallback(() => {
     dispatch(UserAction.setUserId(null));
-    dispatch(PageAction.set(PAGES.START));
-  }, [dispatch]);
+    history.push(PAGES.START);
+  }, [dispatch, history]);
 
   return (
     <Wrap>

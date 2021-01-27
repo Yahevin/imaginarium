@@ -1,11 +1,11 @@
 import React, { useCallback, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import deal from '@/helpers/deal';
 
 import SocketAction from '@/web-socket/action';
 import { PartyAction } from '@/store/party/action';
-import { PageAction } from '@/store/page/action';
 
 import { Menu, Menu__item } from '@/styled/Menu';
 import Centered from '@/styled/Centered';
@@ -30,8 +30,10 @@ const Menu__button = styled(Menu__item)`
 
 function HubPage() {
   const dispatch = useDispatch();
+  const history = useHistory();
+
   const openPartyCreating = () => {
-    dispatch(PageAction.set(PAGES.CREATE));
+    history.push(PAGES.CREATE);
   };
   const wanted_party_id = useRef(null);
 
@@ -45,14 +47,14 @@ function HubPage() {
       dispatch(PartyAction.setPartyId(wanted_party_id.current));
       dispatch(PartyAction.setGAction(game_action));
       dispatch(PartyAction.setGameRole(game_master));
-      dispatch(PageAction.set(PAGES.LOBBY));
 
       // after this, will get command to update party list;
       SocketAction.join(wanted_party_id.current);
+      history.replace(PAGES.LOBBY);
     } catch (e) {
       console.log(e);
     }
-  }, [dispatch]);
+  }, [dispatch, history]);
 
   const inputHandler: TInputHandler = (event) => {
     wanted_party_id.current = parseInt(event.target.value);
