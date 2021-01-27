@@ -41,24 +41,28 @@ function UserAbout() {
   const nick_name = useSelector((state: TStore) => state.userReducer.nick_name);
   const experience = useSelector((state: TStore) => state.userReducer.experience);
 
-  const score = experience % LEVEL_COST;
+  const score = (experience ?? 0) % LEVEL_COST;
 
   const logOut = useCallback(() => {
     dispatch(UserAction.setUserId(null));
     history.push(PAGES.START);
   }, [dispatch, history]);
 
-  return (
-    <Wrap>
-      <Avatar id={id} nick_name={nick_name} experience={experience} />
-      <UserInfo>
-        <p>{nick_name}</p>
-        <ProgressBar score={score} />
+  if (id && nick_name && experience) {
+    return (
+      <Wrap>
+        <Avatar id={id} nick_name={nick_name} experience={experience} />
+        <UserInfo>
+          <p>{nick_name}</p>
+          <ProgressBar score={score} />
 
-        <LogOut callback={logOut}>Выйти</LogOut>
-      </UserInfo>
-    </Wrap>
-  );
+          <LogOut callback={logOut}>Выйти</LogOut>
+        </UserInfo>
+      </Wrap>
+    );
+  }
+
+  return <div>Undefined user</div>;
 }
 
 export default UserAbout;

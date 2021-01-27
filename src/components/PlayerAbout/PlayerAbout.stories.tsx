@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: IPlayer) => <PlayerAbout {...args} />;
-
+// @ts-ignore
 export const Primary: { args: IPlayer } = Template.bind({});
 Primary.args = {
   id: 1,

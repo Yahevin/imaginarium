@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
@@ -12,6 +12,7 @@ import Centered from '@/styled/Centered';
 
 import { BUTTON_THEME, COLOR, PAGES } from '@my-app/constants';
 import { TInputHandler } from '@my-app/interfaces';
+import { strOrNull } from '@/helpers/nullable';
 
 import UserAbout from '@/pages/Hub/parts/UserAbout';
 import RecentGames from '@/pages/Hub/parts/RecentGames';
@@ -31,33 +32,35 @@ const Menu__button = styled(Menu__item)`
 function HubPage() {
   const dispatch = useDispatch();
   const history = useHistory();
-
+  const [partyId, setPartyId] = useState(strOrNull);
   const openPartyCreating = () => {
     history.push(PAGES.CREATE);
   };
-  const wanted_party_id = useRef(null);
 
-  const joinToParty = useCallback(async () => {
+  const joinToParty = async () => {
+    if (!partyId) return;
+
     try {
       const { game_action, game_master } = await deal({
         url: '/user-join',
-        body: { room_id: wanted_party_id.current },
+        body: { room_id: partyId },
       });
 
-      dispatch(PartyAction.setPartyId(wanted_party_id.current));
+      dispatch(PartyAction.setPartyId(parseInt(partyId)));
       dispatch(PartyAction.setGAction(game_action));
       dispatch(PartyAction.setGameRole(game_master));
 
       // after this, will get command to update party list;
-      SocketAction.join(wanted_party_id.current);
+      SocketAction.join(parseInt(partyId));
+
       history.replace(PAGES.LOBBY);
     } catch (e) {
       console.log(e);
     }
-  }, [dispatch, history]);
+  };
 
   const inputHandler: TInputHandler = (event) => {
-    wanted_party_id.current = parseInt(event.target.value);
+    setPartyId(event.target.value);
   };
 
   return (
@@ -78,10 +81,10 @@ function HubPage() {
               name="connect"
               placeholder="Room_id"
               onChangeEvent={inputHandler}
-              defaultValue={wanted_party_id.current}
+              defaultValue={partyId}
             />
 
-            <Button callback={joinToParty} theme={BUTTON_THEME.LIGHT}>
+            <Button callback={joinToParty} theme={BUTTON_THEME.LIGHT} disabled={!partyId?.length}>
               Присоединиться
             </Button>
           </Menu__item>

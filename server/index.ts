@@ -1,4 +1,5 @@
-// eslint-disable-next-line import/named
+/* eslint-disable import/named */
+/* eslint-disable no-param-reassign */
 import { SocketController } from './webSocket';
 import config from '../webpack.config.js';
 

@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: TProgressBar) => <ProgressBar {...args} />;
-
+// @ts-ignore
 export const Primary: { args: TProgressBar } = Template.bind({});
 Primary.args = {
   score: 50,

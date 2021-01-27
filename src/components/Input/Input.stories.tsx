@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: TInput) => <Input {...args} />;
-
+// @ts-ignore
 export const Primary: { args: TInput } = Template.bind({});
 Primary.args = {
   disabled: false,

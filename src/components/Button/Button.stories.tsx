@@ -9,12 +9,13 @@ export default {
 };
 
 const Template = (args: TButton) => <Button {...args}>123</Button>;
-
-export const Primary = Template.bind({});
+// @ts-ignore
+export const Primary: { args: TButton } = Template.bind({});
 Primary.args = {
   disabled: false,
   className: '',
   callback: () => {},
   theme: BUTTON_THEME.RED,
   width: '100%',
+  children: 'test',
 };
