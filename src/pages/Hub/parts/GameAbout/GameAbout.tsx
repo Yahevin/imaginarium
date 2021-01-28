@@ -1,7 +1,7 @@
 import React from 'react';
 import { IGameAbout } from '@my-app/interfaces';
 
-function GameAbout(props: IGameAbout) {
+export const GameAbout = (props: IGameAbout) => {
   return (
     <div>
       <div>Создана: {props.created_at}</div>
@@ -12,6 +12,4 @@ function GameAbout(props: IGameAbout) {
       })}
     </div>
   );
-}
-
-export default GameAbout;
+};

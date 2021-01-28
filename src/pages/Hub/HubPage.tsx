@@ -14,8 +14,8 @@ import { BUTTON_THEME, COLOR, PAGES } from '@my-app/constants';
 import { TInputHandler } from '@my-app/interfaces';
 import { strOrNull } from '@/helpers/nullable';
 
-import UserAbout from '@/pages/Hub/parts/UserAbout';
-import RecentGames from '@/pages/Hub/parts/RecentGames';
+import { UserAbout } from '@/pages/Hub/parts/UserAbout/UserAbout';
+import { RecentGames } from '@/pages/Hub/parts/RecentGames/RecentGames';
 import { Button } from '@/components/Button/Button';
 import { Input } from '@/components/Input/Input';
 
@@ -29,7 +29,7 @@ const Menu__button = styled(Menu__item)`
   ${Centered};
 `;
 
-function HubPage() {
+export const HubPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [partyId, setPartyId] = useState(strOrNull);
@@ -98,6 +98,4 @@ function HubPage() {
       </Content>
     </>
   );
-}
-
-export default HubPage;
+};
