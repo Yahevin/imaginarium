@@ -4,8 +4,8 @@ import { InferArgumentsType } from '@my-app/types';
 
 type TDealProps = InferArgumentsType<typeof deal>;
 
-const useFetch = (props: TDealProps) => {
-  const [result, setResult] = useState(null);
+const useFetch = <S>(props: TDealProps, initial: S) => {
+  const [result, setResult] = useState(initial);
 
   useEffect(() => {
     (async () => {
@@ -17,7 +17,7 @@ const useFetch = (props: TDealProps) => {
         console.log(error);
       }
     })();
-  }, []);
+  }, [props]);
 
   return result;
 };
