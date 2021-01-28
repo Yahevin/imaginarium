@@ -1,5 +1,5 @@
 import { ICard } from '@my-app/interfaces';
-import { PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED, SET_TABLE_CARDS } from '@/store/actions';
+import { PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED_HAND, SET_TABLE_CARDS } from '@/store/actions';
 import { InferValueTypes } from '@my-app/types';
 
 const CardsAction = {
@@ -9,9 +9,9 @@ const CardsAction = {
       payload: hand_cards,
     };
   },
-  setSelected(card_id: ICard['id']) {
+  setSelectedHand(card_id: ICard['id']) {
     return {
-      type: SET_SELECTED,
+      type: SET_SELECTED_HAND,
       payload: card_id,
     };
   },

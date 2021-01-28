@@ -9,12 +9,12 @@ import { TStore } from '@/store/reducer';
 import { BUTTON_THEME, GAME_ACTION, MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
 import { Menu, Menu__item } from '@/styled/Menu';
 
-import QuestInput from '@/pages/Game/parts/QuestInput';
-import HandGrid from '@/pages/Game/parts/HandGrid';
-import TableGrid from '@/pages/Game/parts/TableGrid';
 import { Button } from '@/components/Button/Button';
+import { QuestInput } from '@/pages/Game/parts/QuestInput';
+import { TableGrid } from '@/pages/Game/parts/TableGrid';
+import { HandGrid } from '@/pages/Game/parts/HandGrid/HandGrid';
 
-function Game() {
+export const GamePage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
@@ -54,6 +54,4 @@ function Game() {
       <Menu__item>{game_action === GAME_ACTION.ALL_CARD_SET ? <TableGrid /> : <HandGrid />}</Menu__item>
     </Menu>
   );
-}
-
-export default Game;
+};

@@ -3,7 +3,7 @@ import ICardsState from '@/store/cards/ICardsState';
 const CardsState: ICardsState = {
   hand: [],
   table: [],
-  selected: null,
+  selectedHand: null,
 };
 
 export default CardsState;

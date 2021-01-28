@@ -6,24 +6,25 @@ import { TStore } from '@/store/reducer';
 import { CardsAction } from '@/store/cards/action';
 import { Menu, Menu__item } from '@/styled/Menu';
 import { BUTTON_THEME, GAME_ACTION } from '@my-app/constants';
-import CardGrid from '@/pages/Game/parts/CardGrid';
+import { CardGrid } from '@/components/CardGrid/CardGrid';
 import { Button } from '@/components/Button/Button';
+import { ICard } from '@my-app/interfaces';
 
-function HandGrid() {
+export const HandGrid = () => {
   const dispatch = useDispatch();
-  const selected = useSelector((store: TStore) => store.cardsReducer.selected);
+  const selectedHand = useSelector((store: TStore) => store.cardsReducer.selectedHand);
   const hand_cards = useSelector((store: TStore) => store.cardsReducer.hand);
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
   const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
 
   const confirm_select = useCallback(async () => {
-    if (!selected) return;
+    if (!selectedHand) return;
 
     try {
       await deal({
         url: '/put-card',
         body: {
-          card_id: selected,
+          card_id: selectedHand,
         },
       });
 
@@ -31,20 +32,24 @@ function HandGrid() {
       // to update game_action
       SocketAction.putTheFake();
       // remove card from hand
-      dispatch(CardsAction.putToTable(selected));
+      dispatch(CardsAction.putToTable(selectedHand));
     } catch (error) {
       console.log(error);
     }
-  }, [selected, dispatch]);
+  }, [selectedHand, dispatch]);
 
   const submit_disabled = useMemo(() => {
-    return selected === null;
-  }, [selected]);
+    return selectedHand === null;
+  }, [selectedHand]);
+
+  const setSelected = (card_id: ICard['id']) => {
+    dispatch(CardsAction.setSelectedHand(card_id));
+  };
 
   return (
     <Menu>
       <Menu__item>
-        <CardGrid cards={hand_cards} />
+        <CardGrid cards={hand_cards} select={setSelected} />
       </Menu__item>
 
       <Menu__item>
@@ -56,6 +61,4 @@ function HandGrid() {
       </Menu__item>
     </Menu>
   );
-}
-
-export default HandGrid;
+};

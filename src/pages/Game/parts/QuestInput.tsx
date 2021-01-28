@@ -10,9 +10,9 @@ import { Input } from '@/components/Input/Input';
 import { Button } from '@/components/Button/Button';
 import { BUTTON_THEME } from '@my-app/constants';
 
-function QuestInput() {
+export const QuestInput = () => {
   const dispatch = useDispatch();
-  const selected = useSelector((store: TStore) => store.cardsReducer.selected);
+  const selectedHand = useSelector((store: TStore) => store.cardsReducer.selectedHand);
 
   const [question, setQuestion] = useState('');
   const inputHandler: TInputHandler = useCallback((event) => {
@@ -20,20 +20,20 @@ function QuestInput() {
   }, []);
 
   const submit_disabled = useMemo(() => {
-    return question.length === 0 || selected === null;
-  }, [question, selected]);
+    return question.length === 0 || selectedHand === null;
+  }, [question, selectedHand]);
 
   const quest_submit = useCallback(async () => {
-    if (!selected) return;
+    if (!selectedHand) return;
 
     try {
       await deal({
         url: '/set-question',
-        body: { question, card_id: selected },
+        body: { question, card_id: selectedHand },
       });
 
-      // remove selected card from hand
-      dispatch(CardsAction.putToTable(selected));
+      // remove selectedHand card from hand
+      dispatch(CardsAction.putToTable(selectedHand));
 
       // after this action, will come command
       // to update game_action and question
@@ -41,7 +41,7 @@ function QuestInput() {
     } catch (error) {
       console.log(error);
     }
-  }, [question, selected, dispatch]);
+  }, [question, selectedHand, dispatch]);
 
   return (
     <>
@@ -57,6 +57,4 @@ function QuestInput() {
       </Button>
     </>
   );
-}
-
-export default QuestInput;
+};
