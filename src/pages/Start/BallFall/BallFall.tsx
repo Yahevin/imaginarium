@@ -33,6 +33,7 @@ export const BallFall = () => {
   useEffect(() => {
     if (!$canvas.current) return;
 
+    let appIsActive = true;
     const canvas = $canvas.current;
     const mousePos = {
       y: 0,
@@ -75,18 +76,20 @@ export const BallFall = () => {
 
     // Our Frame function
     (function frame() {
-      drawBg();
+      if (appIsActive) {
+        drawBg();
 
-      // draw
-      balls.forEach((el) => {
-        draw(el);
-      });
+        // draw
+        balls.forEach((el) => {
+          draw(el);
+        });
 
-      // update
-      update();
+        // update
+        update();
 
-      // clear
-      clear();
+        // clear
+        clear();
+      }
 
       setTimeout(() => {
         // @ts-ignore
@@ -98,6 +101,17 @@ export const BallFall = () => {
       return Array.from(Array(count), () => createBall(canvas.width));
     };
 
+    // check if browser tab is active
+    const setAppOff = () => {
+      appIsActive = false;
+    };
+    const setAppOn = () => {
+      appIsActive = true;
+    };
+
+    window.addEventListener('focus', setAppOn);
+    window.addEventListener('blur', setAppOff);
+
     const moveHandler = (event: MouseEvent) => {
       mousePos.x = event.clientX;
       mousePos.y = event.clientY;
@@ -108,13 +122,17 @@ export const BallFall = () => {
     document.body.addEventListener('mousemove', moveHandler);
 
     const updateFunc = setInterval(() => {
-      balls.push(...BallGenerator(15));
-      mousePos.disabled = true;
+      if (appIsActive) {
+        balls.push(...BallGenerator(15));
+        mousePos.disabled = true;
+      }
     }, 200);
 
     return () => {
       clearInterval(updateFunc);
       document.body.removeEventListener('mousemove', moveHandler);
+      window.removeEventListener('focus', setAppOn);
+      window.removeEventListener('blur', setAppOff);
     };
   }, [$canvas]);
 
