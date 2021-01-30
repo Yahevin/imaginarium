@@ -25,7 +25,7 @@ export const ModalWrap = styled.div`
 
 export const ModalContent = styled.section`
   width: 600px;
-  padding: 20px 20px 40px 20px;
+  padding: 30px 20px 40px 20px;
   border-radius: 10px;
   background: ${COLOR.light_bg};
   box-shadow: 0 0 2px 4px ${COLOR.dark_bg};

@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 import { COLOR } from '@my-app/constants';
 
-export const StyledThinButton = styled.div`
-  display: inline-block;
+export const StyledThinButton = styled.span`
   width: auto;
   margin: 0;
   padding: 0;
