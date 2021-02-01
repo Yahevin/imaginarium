@@ -2,5 +2,6 @@ import { ICard } from '@my-app/interfaces';
 
 export type TCardGrid = {
   cards: ICard[];
-  select: (card_id: ICard['id']) => void;
+  selected_id: ICard['id'] | null;
+  setSelect: (card_id: ICard['id']) => void;
 };

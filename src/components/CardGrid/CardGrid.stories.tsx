@@ -22,8 +22,17 @@ Primary.args = {
       id: 2,
       img_url: '',
     },
+    {
+      id: 3,
+      img_url: '',
+    },
+    {
+      id: 4,
+      img_url: '',
+    },
   ],
-  select(card_id: ICard['id']) {
+  setSelect(card_id: ICard['id']) {
     console.log(card_id);
   },
+  selected_id: 3,
 };

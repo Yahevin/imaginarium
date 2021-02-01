@@ -41,7 +41,7 @@ export const TableGrid = () => {
   return (
     <Menu>
       <Menu__item>
-        <CardGrid cards={table_cards} select={setSelected} />
+        <CardGrid cards={table_cards} setSelect={setSelected} selected_id={selected} />
       </Menu__item>
 
       <Menu__item>

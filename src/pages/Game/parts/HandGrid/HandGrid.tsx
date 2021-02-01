@@ -49,7 +49,7 @@ export const HandGrid = () => {
   return (
     <Menu>
       <Menu__item>
-        <CardGrid cards={hand_cards} select={setSelected} />
+        <CardGrid cards={hand_cards} setSelect={setSelected} selected_id={selectedHand} />
       </Menu__item>
 
       <Menu__item>
