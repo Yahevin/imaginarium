@@ -6,8 +6,6 @@ import { Button } from '@/components/Button/Button';
 export const Wrap = styled.div`
   margin: 0 auto;
   display: flex;
-  max-width: 1300px;
-  padding: 30px 60px;
   color: ${COLOR.slate};
 `;
 export const UserInfo = styled.div`

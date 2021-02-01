@@ -25,7 +25,7 @@ export const UserAbout = () => {
     history.push(PAGES.START);
   }, [dispatch, history]);
 
-  if (id && nick_name && experience) {
+  if (id !== null && nick_name !== null && experience !== null) {
     return (
       <Wrap>
         <Avatar id={id} nick_name={nick_name} experience={experience} />

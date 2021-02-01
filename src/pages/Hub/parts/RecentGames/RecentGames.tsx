@@ -19,5 +19,9 @@ export const RecentGames = () => {
     { games: [] },
   );
 
-  return <div>{games.length > 0 ? games.map((item) => <GameAbout key={item.id} {...item} />) : <h3>empty</h3>}</div>;
+  return (
+    <div>
+      {games.length > 0 ? games.map((item) => <GameAbout key={item.id} {...item} />) : <h3>No recent games</h3>}
+    </div>
+  );
 };

@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import styled from 'styled-components';
 import deal from '@/helpers/deal';
 
 import SocketAction from '@/web-socket/action';
 import { PartyAction } from '@/store/party/action';
 
 import { Menu, Menu__item } from '@/styled/Menu';
-import Centered from '@/styled/Centered';
 
-import { BUTTON_THEME, COLOR, PAGES } from '@my-app/constants';
+import { BUTTON_THEME, PAGES } from '@my-app/constants';
 import { TInputHandler } from '@my-app/interfaces';
 import { strOrNull } from '@/helpers/nullable';
 
@@ -18,16 +16,8 @@ import { UserAbout } from '@/pages/Hub/parts/UserAbout/UserAbout';
 import { RecentGames } from '@/pages/Hub/parts/RecentGames/RecentGames';
 import { Button } from '@/components/Button/Button';
 import { Input } from '@/components/Input/Input';
-
-const Header = styled.header`
-  background-color: ${COLOR.dark_bg};
-`;
-const Content = styled.div`
-  background: ${COLOR.white};
-`;
-const Menu__button = styled(Menu__item)`
-  ${Centered};
-`;
+import { HubContent, HubHeader, JoinPanel } from '@/pages/Hub/HubPage.styles';
+import { ContentSizeBox } from '@/styled/Content';
 
 export const HubPage = () => {
   const dispatch = useDispatch();
@@ -65,17 +55,15 @@ export const HubPage = () => {
 
   return (
     <>
-      <Header>
-        <UserAbout />
-      </Header>
-
-      <Content>
+      <HubHeader>
         <Menu>
-          <Menu__item>
-            <RecentGames />
-          </Menu__item>
+          <UserAbout />
+        </Menu>
+      </HubHeader>
 
-          <Menu__item>
+      <HubContent>
+        <Menu>
+          <JoinPanel>
             <Input
               type="text"
               name="connect"
@@ -87,15 +75,19 @@ export const HubPage = () => {
             <Button callback={joinToParty} theme={BUTTON_THEME.LIGHT} disabled={!partyId?.length}>
               Присоединиться
             </Button>
-          </Menu__item>
+          </JoinPanel>
 
-          <Menu__button>
+          <Menu__item>
             <Button callback={openPartyCreating} theme={BUTTON_THEME.DARK}>
               Создать игру
             </Button>
-          </Menu__button>
+          </Menu__item>
         </Menu>
-      </Content>
+      </HubContent>
+
+      <Menu>
+        <RecentGames />
+      </Menu>
     </>
   );
 };
