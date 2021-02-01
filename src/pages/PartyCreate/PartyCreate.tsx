@@ -8,15 +8,14 @@ import { PartyAction } from '@/store/party/action';
 import { TStore } from '@/store/reducer';
 import SocketAction from '@/web-socket/action';
 
-import { BUTTON_THEME, COLOR, GAME_ACTION, PAGES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, PAGES } from '@my-app/constants';
 import { Button } from '@/components/Button/Button';
 import { Menu, Menu__item } from '@/styled/Menu';
+import Spacer from '@/styled/Spacer';
+import { PartyCreateContent } from '@/pages/PartyCreate/PartyCreate.styles';
+import { FlexRowBox } from '@/styled/Flex';
 
-const Content = styled.div`
-  background: ${COLOR.white};
-`;
-
-function PartyCreate() {
+export const PartyCreate = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const user_id = useSelector((store: TStore) => store.userReducer.user_id);
@@ -44,16 +43,16 @@ function PartyCreate() {
   }, [user_id, dispatch, history]);
 
   return (
-    <Content>
+    <PartyCreateContent>
       <Menu>
         <Menu__item>
-          <Button callback={backToHub} theme={BUTTON_THEME.DARK}>
-            Отменить
-          </Button>
-        </Menu__item>
-
-        <Menu__item>
-          <h1>Создание игры</h1>
+          <FlexRowBox>
+            <h4>Создание игры</h4>
+            <Spacer />
+            <Button callback={backToHub} theme={BUTTON_THEME.DARK}>
+              Отменить
+            </Button>
+          </FlexRowBox>
         </Menu__item>
 
         <Menu__item>
@@ -62,7 +61,7 @@ function PartyCreate() {
           </Button>
         </Menu__item>
       </Menu>
-    </Content>
+    </PartyCreateContent>
   );
 }
 

@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const FlexRow = css`
   display: flex;
@@ -8,4 +8,8 @@ export const FlexRow = css`
 export const FlexColumn = css`
   display: flex;
   flex-direction: column;
+`;
+
+export const FlexRowBox = styled.div`
+  ${FlexRow};
 `;
