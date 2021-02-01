@@ -11,13 +11,14 @@ import { Menu, Menu__item } from '@/styled/Menu';
 import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';
 import { Button } from '@/components/Button/Button';
 
-function Scores() {
+export const ScoresPage = () => {
   const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
+  const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
 
   useEffect(() => {
-    if (game_action === GAME_ACTION.START) {
+    if (game_action !== GAME_ACTION.ALL_GUESS_DONE) {
       history.replace(PAGES.GAME);
     }
   }, [game_action, history]);
@@ -31,13 +32,13 @@ function Scores() {
       <Menu__item>
         <PlayersGrid players={players} />
       </Menu__item>
-      <Menu__item>
-        <Button callback={nextRound} theme={BUTTON_THEME.LIGHT} width="auto">
-          Next round
-        </Button>
-      </Menu__item>
+      {game_master && (
+        <Menu__item>
+          <Button callback={nextRound} theme={BUTTON_THEME.LIGHT} width="auto">
+            Next round
+          </Button>
+        </Menu__item>
+      )}
     </Menu>
   );
-}
-
-export default Scores;
+};
