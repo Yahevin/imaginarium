@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import useFetch from '@/hook/useFetch';
+import { useFetch } from '@/hook/useFetch';
 import { TStore } from '@/store/reducer';
 import { ROUTES } from '@my-app/constants';
 import { IGameAbout } from '@my-app/interfaces';
