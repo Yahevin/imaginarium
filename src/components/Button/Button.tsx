@@ -33,3 +33,5 @@ export const Button = ({
     </StyledButton>
   );
 };
+
+export { StyledButton as ButtonRef } from '@/components/Button/Button.styles';

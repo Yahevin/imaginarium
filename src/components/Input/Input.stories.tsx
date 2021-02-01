@@ -18,6 +18,7 @@ Primary.args = {
   onChangeEvent: (e) => {
     console.log(e);
   },
+  placeholder: 'placeholder',
   theme: INPUT_THEME.LIGHT,
   width: '100%',
 };

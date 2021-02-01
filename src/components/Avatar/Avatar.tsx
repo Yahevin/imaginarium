@@ -1,5 +1,5 @@
 /* eslint-disable no-magic-numbers */
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { Box, Face, Level, SubBox } from '@/components/Avatar/Avatar.styles';
 import { IAvatar } from '@/components/Avatar/Avatar.model';
@@ -9,15 +9,10 @@ export const Avatar = ({ nick_name, experience, className, game_master = false, 
   const userName = useMemo(() => nick_name[0] + nick_name[nick_name.length - 1], [nick_name]);
   const userLevel = useMemo(() => Math.floor(experience / LEVEL_COST), [experience]);
 
-  const faceRef = useCallback(
-    (node) => {
-      if (node.current === null) return;
-
-      const height = node.current.offsetHeight;
-      node.current.style.setProperty('font-size', `${height * fontRate}px`);
-    },
-    [fontRate],
-  );
+  const faceRef = (node: HTMLDivElement) => {
+    const height = node?.offsetHeight ?? 0;
+    node?.style.setProperty('font-size', `${height * fontRate}px`);
+  };
 
   return (
     <Box className={className}>

@@ -36,3 +36,5 @@ export const Input = ({
     />
   );
 };
+
+export { StyledInput as InputRef } from '@/components/Input/Input.styles';

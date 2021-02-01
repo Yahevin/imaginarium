@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 
-import AuthPage from '@/pages/Auth';
-import StartPage from '@/pages/Start';
-import HubPage from '@/pages/Hub';
-import PartyCreate from '@/pages/Party_create';
-import LobbyPage from '@/pages/Lobby';
-import Game from '@/pages/Game';
-import Scores from '@/pages/Scores';
+import { StartPage } from '@/pages/Start/StartPage';
+import { HubPage } from '@/pages/Hub/HubPage';
+import { PartyCreate } from '@/pages/PartyCreate/PartyCreate';
+import { LobbyPage } from '@/pages/Lobby/LobbyPage';
+import { GamePage } from '@/pages/Game/GamePage';
+import { ScoresPage } from '@/pages/Scores/ScoresPage';
 
 function IndexPage() {
   const history = useHistory();
@@ -15,18 +14,17 @@ function IndexPage() {
   useEffect(() => {
     const { hash } = window.location;
     if (hash.length === 0) return;
-    history.push(hash.replace(/#/, ''));
+    history.replace(hash.replace(/#/, ''));
   });
 
   return (
     <Switch>
       <Route exact path="/" component={StartPage} />
-      <Route exact path="/auth" component={AuthPage} />
       <Route exact path="/main" component={HubPage} />
       <Route exact path="/create" component={PartyCreate} />
       <Route exact path="/lobby" component={LobbyPage} />
-      <Route exact path="/game" component={Game} />
-      <Route exact path="/scores" component={Scores} />
+      <Route exact path="/game" component={GamePage} />
+      <Route exact path="/scores" component={ScoresPage} />
     </Switch>
   );
 }

@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { MEDIA_QUERY } from '@my-app/constants';
+import { ContentSize } from '@/styled/Content';
 
-export const Menu = styled.article`
-  max-width: 1300px;
+export const Menu = styled.div`
+  ${ContentSize};
   padding: 40px 60px;
 
   ${MEDIA_QUERY.PHONE} {
@@ -10,7 +11,7 @@ export const Menu = styled.article`
   }
 `;
 
-export const Menu__item = styled.section`
+export const Menu__item = styled.div`
   & + & {
     margin: 24px 0 0 0;
   }
