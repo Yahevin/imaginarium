@@ -7,6 +7,11 @@ export const Modal: React.FC<TModal> = ({ isOpen, close, children, customRoot })
   const container = useRef(document.createElement('div'));
   const root = useRef(customRoot || document.body);
 
+  const removeSteps = () => {
+    root.current.removeChild(container.current);
+    document.body.style.setProperty('overflow-y', 'auto');
+  };
+
   useEffect(() => {
     if (!root.current) return;
     if (isOpen) {
@@ -14,10 +19,11 @@ export const Modal: React.FC<TModal> = ({ isOpen, close, children, customRoot })
       document.body.style.setProperty('overflow-y', 'hidden');
     }
     if (!isOpen && document.body.contains(container.current)) {
-      root.current.removeChild(container.current);
-      document.body.style.setProperty('overflow-y', 'auto');
+      removeSteps();
     }
   }, [isOpen]);
+
+  useEffect(() => removeSteps, []);
 
   const overlayHandle = (event: React.SyntheticEvent) => {
     event.stopPropagation();
