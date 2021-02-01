@@ -15,8 +15,10 @@ import updateHand from '@/api-actions/updateHand';
 
 import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';
 import { Button } from '@/components/Button/Button';
+import Spacer from '@/styled/Spacer';
+import { FlexRowBox } from '@/styled/Flex';
 
-function LobbyPage() {
+export const LobbyPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
@@ -43,13 +45,13 @@ function LobbyPage() {
   return (
     <Menu>
       <Menu__item>
-        <Button callback={leaveParty} theme={BUTTON_THEME.DARK}>
-          Покинуть игру
-        </Button>
-      </Menu__item>
-
-      <Menu__item>
-        <h1>Начало игры</h1>
+        <FlexRowBox>
+          <h4>Начало игры</h4>
+          <Spacer />
+          <Button callback={leaveParty} theme={BUTTON_THEME.DARK}>
+            Покинуть игру
+          </Button>
+        </FlexRowBox>
       </Menu__item>
 
       <Menu__item>
@@ -57,6 +59,4 @@ function LobbyPage() {
       </Menu__item>
     </Menu>
   );
-}
-
-export default LobbyPage;
+};
