@@ -10,9 +10,11 @@ import { BUTTON_THEME, GAME_ACTION, MIN_PLAYERS_COUNT, PAGES } from '@my-app/con
 import { Menu, Menu__item } from '@/styled/Menu';
 
 import { Button } from '@/components/Button/Button';
-import { QuestInput } from '@/pages/Game/parts/QuestInput';
-import { TableGrid } from '@/pages/Game/parts/TableGrid';
+import { QuestInput } from '@/pages/Game/parts/QuestInput/QuestInput';
+import { TableGrid } from '@/pages/Game/parts/TableGrid/TableGrid';
 import { HandGrid } from '@/pages/Game/parts/HandGrid/HandGrid';
+import { FlexRowBox } from '@/styled/Flex';
+import Spacer from '@/styled/Spacer';
 
 export const GamePage = () => {
   const dispatch = useDispatch();
@@ -44,12 +46,16 @@ export const GamePage = () => {
   return (
     <Menu>
       <Menu__item>
-        <Button callback={leaveParty} theme={BUTTON_THEME.DARK}>
-          Выйти
-        </Button>
-      </Menu__item>
+        <FlexRowBox>
+          {game_master && game_action === GAME_ACTION.START ? <QuestInput /> : <h4>Загадано: &quot;{question}&quot;</h4>}
 
-      <Menu__item>{game_master && game_action === GAME_ACTION.START ? <QuestInput /> : <h2>{question}</h2>}</Menu__item>
+          <Spacer />
+
+          <Button callback={leaveParty} theme={BUTTON_THEME.DARK}>
+            Выйти
+          </Button>
+        </FlexRowBox>
+      </Menu__item>
 
       <Menu__item>{game_action === GAME_ACTION.ALL_CARD_SET ? <TableGrid /> : <HandGrid />}</Menu__item>
     </Menu>
