@@ -89,6 +89,7 @@ module.exports = {
     'react/destructuring-assignment': 'off',
     'react/require-default-props': 'off',
     'react/jsx-props-no-spreading': 0,
+    'react/jsx-no-undef': 0,
     'react/prop-types': 0,
     'react/no-did-mount-set-state': 1,
     'react/no-did-update-set-state': 1,

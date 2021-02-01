@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid } from './CardGrid.styles';
+import { Grid, Grid__Img, Grid__Item } from './CardGrid.styles';
 import { TCardGrid } from './CardGrid.model';
 
 export const CardGrid: React.FC<TCardGrid> = ({ cards, setSelect, selected_id }) => {
@@ -10,15 +10,16 @@ export const CardGrid: React.FC<TCardGrid> = ({ cards, setSelect, selected_id })
         const selected = selected_id === card.id;
 
         return (
-          <img
-            key={card.id}
-            src={card.img_url}
-            className={selected ? 'active' : ''}
-            onClick={() => {
-              setSelect(card.id);
-            }}
-            alt="card"
-          />
+          <Grid__Item isActive={selected}>
+            <Grid__Img
+              key={card.id}
+              src={card.img_url}
+              onClick={() => {
+                setSelect(card.id);
+              }}
+              alt="card"
+            />
+          </Grid__Item>
         );
       })}
     </Grid>
