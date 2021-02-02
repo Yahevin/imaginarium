@@ -52,8 +52,5 @@ server.listen(port, () => {
 });
 
 app.use((req: any, res: any) => {
-  // TODO if auth
   res.redirect(`/#${req.url}`);
-  // TODO else
-  // res.redirect('/#auth');
 });

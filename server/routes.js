@@ -16,17 +16,17 @@ const userJoin = require('./router/user-join');
 const putCard = require('./router/put-card');
 const registration = require('./router/registration');
 const authentication = require('./router/authentication');
+const authVerify = require('./router/auth-verify');
 const getPlayers = require('./router/get-players');
-const getRole = require('./router/get-role');
+const userRoom = require('./router/user_room');
 const getAction = require('./router/get-action');
 
 const getRecentGames = require('./router/get-recent-games');
 
 module.exports = function (app, db) {
   getRecentGames(app, db);
-
   getAction(app, db);
-  getRole(app, db);
+  userRoom(app, db);
   getPlayers(app, db);
   authentication(app, db);
   registration(app, db);
@@ -46,4 +46,5 @@ module.exports = function (app, db) {
   tableClear(app, db);
   userJoin(app, db);
   putCard(app, db);
+  authVerify(app,db);
 };
