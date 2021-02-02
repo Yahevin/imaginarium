@@ -1,8 +1,8 @@
 // eslint-disable-next-line max-classes-per-file
 import { DB_card, DB_guess, DB_user_room, IMessage } from '@my-app/interfaces';
 import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { Player } from './helpers/Player';
 
-const User = require('./helpers/User');
 const Party = require('./helpers/Party');
 const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
@@ -49,8 +49,15 @@ export class SocketController {
       case CLIENT_EVENTS.JOIN: {
         try {
           const room_id = parseInt(message.payload);
+          const player = await Player.get({
+            app: this.app,
+            db: this.db,
+            user_id: this.user_id ?? 0,
+            room_id,
+            by: 'room',
+          });
           this.room_id = room_id;
-          this.player_id = await User.getPlayerId(this.app, this.db, this.user_id, room_id);
+          this.player_id = player.id;
         } catch (error) {
           console.log(error);
           // TODO send alert to re-auth;
@@ -132,7 +139,7 @@ export class SocketController {
       const new_gm_player_id = active_players[0].id;
 
       await Party.demoteGM(this.app, this.db, this.room_id);
-      await User.setGM(this.app, this.db, new_gm_player_id);
+      await Player.setGM({ app: this.app, db: this.db, player_id: new_gm_player_id });
 
       this.wss.clients.forEach(({ controller, send }: { controller: TSocketClient; send: (arg: string) => void }) => {
         if (controller.player_id === active_players[0].id) {
@@ -252,12 +259,12 @@ export class SocketController {
   async changeGM() {
     try {
       const players_id_list: number[] = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
-      const gm_id: number = await User.findGM(this.app, this.db, this.room_id);
+      const gm_id: number = await Player.findGM({ app: this.app, db: this.db, room_id: this.room_id ?? 0 });
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const new_gm_id: number = findNewGM(players_id_list, gm_id);
 
-      await User.demoteGM(this.app, this.db, gm_id);
-      await User.setGM(this.app, this.db, new_gm_id);
+      await Player.demoteGM({ app: this.app, db: this.db, player_id: gm_id });
+      await Player.setGM({ app: this.app, db: this.db, player_id: new_gm_id });
     } catch (error) {
       console.log(error);
     }

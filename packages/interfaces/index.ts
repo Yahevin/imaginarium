@@ -15,3 +15,11 @@ export * from './parts/db/DB_basket';
 export * from './parts/db/DB_shelter';
 export * from './parts/db/DB_question';
 export * from './parts/db/DB_user_room';
+
+export * from './parts/routes/TGetRecent';
+export * from './parts/routes/TGetPlayers';
+export * from './parts/routes/TGetMyCards';
+export * from './parts/routes/TUserJoin';
+export * from './parts/routes/TAuthVerify';
+export * from './parts/routes/TLeaderBoard';
+export * from './parts/routes/TAuthentication';

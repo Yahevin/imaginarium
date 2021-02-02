@@ -10,6 +10,7 @@ import { ENTER_WINDOW } from '@/pages/Start/constants/EnterWindow';
 import { AuthBox, AuthMessage, AuthTitle, ListedBtn, ListedInput } from '@/pages/Start/Auth/Auth.styles';
 import { ThinButton } from '@/components/ThinButton/ThinButton';
 import { TAuth } from '@/pages/Start/Auth/Auth.model';
+import { TAuthentication } from '@my-app/interfaces';
 
 export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
   const dispatch = useDispatch();
@@ -35,11 +36,9 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
         password: pass.current,
       };
       try {
-        const resp = await deal({ url: api, body });
-        const user_id = parseInt(resp.user_id);
-        const experience = parseInt(resp.experience);
-
-        SocketAction.auth(user_id);
+        const { id: user_id, experience, token } = await deal<TAuthentication>({ url: api, body });
+        document.cookie = `token=${token}`;
+        localStorage.setItem('token', token);
 
         dispatch(
           UserAction.setUser({
@@ -48,6 +47,7 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
             nick_name: name.current,
           }),
         );
+        SocketAction.auth(user_id);
         history.push(PAGES.MAIN);
       } catch (error) {
         submitBlocked.current = false;
