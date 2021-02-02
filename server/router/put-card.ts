@@ -1,14 +1,17 @@
-const Table = require('../helpers/Table');
-const User = require('../helpers/User');
+import { ROUTES } from '@my-app/constants';
+import { TResponseFunc } from '@my-app/types';
+import { Player } from '../helpers/Player';
 
-module.exports = function (app, db) {
-  app.post('/put-card', async (req, res) => {
+const Table = require('../helpers/Table');
+
+module.exports = (app: any, db: any) => {
+  app.post(ROUTES.PUT_CARD, async (req: any, res: TResponseFunc<unknown>) => {
     try {
       const { card_id } = req.body;
       const { user_id } = req.body;
       const { room_id } = req.body;
 
-      const player_id = await User.getPlayerId(app, db, user_id, room_id);
+      const player_id = await Player.get({ app, db, user_id, room_id, by: 'room' });
       const already_put = await Table.alreadyPut(app, db, player_id);
 
       if (already_put) {

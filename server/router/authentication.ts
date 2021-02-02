@@ -1,0 +1,31 @@
+import { TResponseFunc } from '@my-app/types';
+import { TAuthentication } from '@my-app/interfaces';
+import { User } from '../helpers/User';
+import { generateToken } from '../utils/generateToken';
+
+module.exports = (app: any, db: any) => {
+  app.post('/authentication', async (req: any, res: TResponseFunc<TAuthentication>) => {
+    const { nick_name } = req.body;
+    const { password } = req.body;
+
+    try {
+      const { experience, id } = await User.get({ app, db, nick_name, password, by: 'password' });
+
+      console.log(experience, id);
+
+      const token = generateToken({ user_id: id });
+      console.log(token);
+      return res.json({
+        success: true,
+        experience,
+        token,
+        id,
+      });
+    } catch (error) {
+      return res.json({
+        success: false,
+        error,
+      });
+    }
+  });
+};

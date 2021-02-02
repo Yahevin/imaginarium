@@ -22,19 +22,23 @@ function IndexPage() {
     if (hash.length === 0) return;
 
     (async () => {
-      const { user_id, nick_name, experience } = await deal<TAuthVerify>({
-        url: ROUTES.AUTH_VERIFY,
-      });
+      try {
+        const { user_id, nick_name, experience } = await deal<TAuthVerify>({
+          url: ROUTES.AUTH_VERIFY,
+        });
 
-      dispatch(
-        UserAction.setUser({
-          user_id,
-          nick_name,
-          experience,
-        }),
-      );
+        dispatch(
+          UserAction.setUser({
+            user_id,
+            nick_name,
+            experience,
+          }),
+        );
 
-      history.replace(hash.replace(/#/, ''));
+        history.replace(hash.replace(/#/, ''));
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
 

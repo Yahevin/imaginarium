@@ -1,8 +1,12 @@
-const Party = require('../helpers/Party');
-const User = require('../helpers/User');
+import { TResponseFunc } from '@my-app/types';
+import { TUserJoin } from '@my-app/interfaces';
+import { ROUTES } from '@my-app/constants';
+import { Player } from '../helpers/Player';
 
-module.exports = function (app, db) {
-  app.post('/user-join', async function (req, res) {
+const Party = require('../helpers/Party');
+
+module.exports = (app: any, db: any) => {
+  app.post(ROUTES.USER_JOIN, async (req: any, res: TResponseFunc<TUserJoin>) => {
     const { room_id } = req.body;
     const { user_id } = req.body;
 
@@ -15,7 +19,8 @@ module.exports = function (app, db) {
 
         if (user_exist) {
           await Party.playerJoin(app, db, player_id);
-          game_master = await User.gameMaster(app, db, player_id);
+          const player = await Player.get({ app, db, player_id, by: 'id' });
+          game_master = player.game_master;
         } else {
           await Party.addPlayer(app, db, user_id, room_id, false);
         }

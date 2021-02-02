@@ -1,17 +1,23 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable no-magic-numbers */
+import { TResponseFunc } from '@my-app/types';
+import { ROUTES } from '../../packages/constants';
+import { DB_card, TGetMyCards } from '../../packages/interfaces';
+import { Player } from '../helpers/Player';
+
 const Basket = require('../helpers/Basket');
 const Cards = require('../helpers/Cards');
-const User = require('../helpers/User');
 
-module.exports = function (app, db) {
-  app.post('/get-new-cards', async (req, res) => {
+module.exports = (app: any, db: any) => {
+  app.post(ROUTES.GET_MY_CARDS, async (req: any, res: TResponseFunc<TGetMyCards>) => {
     try {
       const { room_id } = req.body;
       const { user_id } = req.body;
 
-      const player_id = await User.getPlayerId(app, db, user_id, room_id);
+      const player_id = await Player.get({ app, db, user_id, room_id, by: 'room' });
       const basket_id = await Basket.getSelf(app, db, room_id);
       const my_cards = await Cards.getAllMy(app, db, player_id);
-      let new_cards = await Cards.getNew(app, db, basket_id);
+      let new_cards: DB_card[] = await Cards.getNew(app, db, basket_id);
       const deficit = 6 - my_cards.length;
 
       if (new_cards.length < deficit) {
@@ -41,9 +47,9 @@ module.exports = function (app, db) {
   });
 };
 
-function getSelected(new_cards, deficit) {
-  const selected_id_list = [];
-  const selected_cards = [];
+function getSelected(new_cards: DB_card[], deficit: number) {
+  const selected_id_list: number[] = [];
+  const selected_cards: DB_card[] = [];
 
   for (let i = 0; i < deficit; i++) {
     const index = Math.floor(new_cards.length * Math.random());
