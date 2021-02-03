@@ -1,3 +1,6 @@
 import { DB_user } from '@my-app/interfaces';
 
-export type TAuthentication = Pick<DB_user, 'id' | 'experience'> & { token: string };
+export type TAuthentication = (props: {
+  nick_name: string;
+  password: string;
+}) => Pick<DB_user, 'id' | 'experience'> & { token: string };

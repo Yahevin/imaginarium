@@ -3,14 +3,16 @@ import { ROUTES } from '@my-app/constants';
 import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@my-app/interfaces';
 import { TResponseFunc } from '@my-app/types/parts/TResponse';
 import { TGetRecent } from '@my-app/interfaces/parts/routes/TGetRecent';
+import { TRequirement } from '@my-app/types/parts/TRequirement';
 import { User } from '../helpers/User';
+import { authToken } from '../utils/authToken';
 
 const Party = require('../helpers/Party');
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_RECENT_GAMES, async (req: any, res: TResponseFunc<TGetRecent>) => {
+  app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequirement<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
     try {
-      const { user_id } = req.body;
+      const { user_id } = authToken(req);
 
       const self_player_list: DB_user_room[] = await Party.getMyReincarnations(app, db, user_id);
       const visited_room_id_list = self_player_list.map((user_room) => user_room.room_id);

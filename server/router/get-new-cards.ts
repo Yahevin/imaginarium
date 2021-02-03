@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-magic-numbers */
 import { TResponseFunc } from '@my-app/types';
+import { TRequirement } from '@my-app/types/parts/TRequirement';
 import { ROUTES } from '../../packages/constants';
 import { DB_card, TGetMyCards } from '../../packages/interfaces';
 import { Player } from '../helpers/Player';
+import { authToken } from '../utils/authToken';
 
 const Basket = require('../helpers/Basket');
 const Cards = require('../helpers/Cards');
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_MY_CARDS, async (req: any, res: TResponseFunc<TGetMyCards>) => {
+  app.post(ROUTES.GET_MY_CARDS, async (req: TRequirement<TGetMyCards>, res: TResponseFunc<TGetMyCards>) => {
     try {
+      const { user_id } = authToken(req);
       const { room_id } = req.body;
-      const { user_id } = req.body;
 
       const player_id = await Player.get({ app, db, user_id, room_id, by: 'room' });
       const basket_id = await Basket.getSelf(app, db, room_id);

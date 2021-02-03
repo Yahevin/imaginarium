@@ -6,7 +6,7 @@ const dbQuery = require('../mixins/dbQuery');
 const isNotEmpty = require('../mixins/isNotEmpty');
 
 export const User = {
-  async create({ db, nick_name, password }: TQuery<{ nick_name: number; password: string }>) {
+  async create({ db, nick_name, password }: TQuery<{ nick_name: string; password: string }>) {
     const format = db.format(sql.ii3, ['user', 'nick_name', 'password', 'experience', nick_name, password, 0]);
     const { insertId } = await dbQuery(format, db);
 

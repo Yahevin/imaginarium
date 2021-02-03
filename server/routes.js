@@ -18,7 +18,7 @@ const registration = require('./router/registration');
 const authentication = require('./router/authentication');
 const authVerify = require('./router/auth-verify');
 const getPlayers = require('./router/get-players');
-const userRoom = require('./router/user_room');
+const getPlayer = require('./router/get-player');
 const getAction = require('./router/get-action');
 
 const getRecentGames = require('./router/get-recent-games');
@@ -26,7 +26,7 @@ const getRecentGames = require('./router/get-recent-games');
 module.exports = function (app, db) {
   getRecentGames(app, db);
   getAction(app, db);
-  userRoom(app, db);
+  getPlayer(app, db);
   getPlayers(app, db);
   authentication(app, db);
   registration(app, db);

@@ -1,13 +1,16 @@
 import { ROUTES } from '@my-app/constants';
 import { TResponseFunc } from '@my-app/types';
 import { DB_user, DB_user_room, TGetPlayers } from '@my-app/interfaces';
+import { TRequirement } from '@my-app/types/parts/TRequirement';
 import { User } from '../helpers/User';
+import { authToken } from '../utils/authToken';
 
 const Party = require('../helpers/Party');
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_PLAYERS, async (req: any, res: TResponseFunc<TGetPlayers>) => {
+  app.post(ROUTES.GET_PLAYERS, async (req: TRequirement<TGetPlayers>, res: TResponseFunc<TGetPlayers>) => {
     try {
+      authToken(req);
       const { room_id } = req.body;
 
       const playersList: DB_user_room[] = await Party.getActivePlayersList(app, db, room_id);

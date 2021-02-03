@@ -32,7 +32,7 @@ export const HubPage = () => {
     try {
       const { game_action, game_master } = await deal<TUserJoin>({
         url: ROUTES.USER_JOIN,
-        body: { room_id: partyId },
+        body: { room_id: parseInt(partyId) },
       });
 
       dispatch(PartyAction.setPartyId(parseInt(partyId)));

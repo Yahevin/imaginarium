@@ -17,6 +17,7 @@ export * from './parts/db/DB_question';
 export * from './parts/db/DB_user_room';
 
 export * from './parts/routes/TGetRecent';
+export * from './parts/routes/TGetPlayer';
 export * from './parts/routes/TGetPlayers';
 export * from './parts/routes/TGetMyCards';
 export * from './parts/routes/TUserJoin';

@@ -7,10 +7,13 @@ import { TGetMyCards } from '@my-app/interfaces/parts/routes/TGetMyCards';
 
 async function getNew() {
   const hand_cards = store.getState().cardsReducer.hand;
+  const { room_id } = store.getState().partyReducer;
 
+  if (room_id === null) return;
   try {
     const { cards } = await deal<TGetMyCards>({
       url: ROUTES.GET_NEW_CARDS,
+      body: { room_id },
     });
 
     store.dispatch(CardsAction.setHand([...cards, ...hand_cards]));
@@ -20,11 +23,13 @@ async function getNew() {
 }
 
 async function updateHand() {
-  const { game_action } = store.getState().partyReducer;
+  const { game_action, room_id } = store.getState().partyReducer;
 
+  if (room_id === null) return;
   try {
     const { cards } = await deal<TGetMyCards>({
       url: ROUTES.GET_MY_CARDS,
+      body: { room_id },
     });
 
     store.dispatch(CardsAction.setHand(cards));

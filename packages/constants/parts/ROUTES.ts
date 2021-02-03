@@ -7,7 +7,7 @@ export const ROUTES = {
   GET_PLAYERS: '/get-players' as const,
   REGISTRATION: '/registration' as const,
   AUTH_VERIFY: '/auth-verify' as const,
-  USER_ROOM: '/user_room' as const,
+  GET_PLAYER: '/get-player' as const,
   USER_JOIN: '/user-join' as const,
   PUT_CARD: '/put-card' as const,
   LEADER_BOARD: '/leader-board' as const,
