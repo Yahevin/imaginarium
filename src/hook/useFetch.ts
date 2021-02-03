@@ -1,22 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
-import deal from '@/helpers/deal';
-import { InferArgumentsType } from '@my-app/types';
+import deal, { InferBodyType } from '@/helpers/deal';
+import { InferResultType } from '@my-app/types';
 
-type TUseFetch = <S>(props: InferArgumentsType<typeof deal>, initial: S) => S;
+type TUseFetch = <S>(
+  props: {
+    url: string;
+    method?: 'POST' | 'GET' | 'PUT' | 'DELETE';
+  } & InferBodyType<S>,
+  initial: InferResultType<S>,
+) => InferResultType<S>;
 
 export const useFetch: TUseFetch = (props, initial) => {
   const [result, setResult] = useState(initial);
-  const memoized = useRef<typeof props.body | null>(null);
+  const memoized = useRef<any>(null);
+  const body = props.body as any;
 
   useEffect(() => {
     const propsChanged = memoized.current
       ? Object.keys(memoized.current).reduce((accum, item) => {
-          return accum || memoized.current[item] !== props.body[item];
+          return accum || memoized.current[item] !== body[item];
         }, false)
       : true;
 
     if (propsChanged) {
-      memoized.current = { ...props?.body };
+      memoized.current = { ...body };
       (async () => {
         try {
           const fetched = await deal(props);
