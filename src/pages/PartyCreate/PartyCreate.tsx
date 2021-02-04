@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import styled from 'styled-components';
 import deal from '@/helpers/deal';
 
 import { PartyAction } from '@/store/party/action';
 import { TStore } from '@/store/reducer';
 import SocketAction from '@/web-socket/action';
 
-import { BUTTON_THEME, GAME_ACTION, PAGES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, PAGES, ROUTES } from '@my-app/constants';
 import { Button } from '@/components/Button/Button';
 import { Menu, Menu__item } from '@/styled/Menu';
 import Spacer from '@/styled/Spacer';
 import { PartyCreateContent } from '@/pages/PartyCreate/PartyCreate.styles';
 import { FlexRowBox } from '@/styled/Flex';
+import { TPartyCreate } from '@my-app/interfaces';
 
 export const PartyCreate = () => {
   const dispatch = useDispatch();
@@ -26,9 +26,8 @@ export const PartyCreate = () => {
 
   const createNewGame = useCallback(async () => {
     try {
-      const response = await deal({
-        url: '/party-create',
-        body: { user_id },
+      const response = await deal<TPartyCreate>({
+        url: ROUTES.PARTY_CREATE,
       });
 
       dispatch(PartyAction.setGAction(GAME_ACTION.START));
@@ -63,6 +62,6 @@ export const PartyCreate = () => {
       </Menu>
     </PartyCreateContent>
   );
-}
+};
 
 export default PartyCreate;

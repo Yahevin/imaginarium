@@ -1,12 +1,11 @@
-import { TResponseFunc } from '@my-app/types';
+import { TResponseFunc, TRequest } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
 import { TAuthVerify } from '@my-app/interfaces/parts/routes/TAuthVerify';
-import { TRequirement } from '@my-app/types/parts/TRequirement';
 import { User } from '../helpers/User';
 import { authToken } from '../utils/authToken';
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.AUTH_VERIFY, async (req: TRequirement<TAuthVerify>, res: TResponseFunc<TAuthVerify>) => {
+  app.post(ROUTES.AUTH_VERIFY, async (req: TRequest<TAuthVerify>, res: TResponseFunc<TAuthVerify>) => {
     try {
       const { user_id } = authToken(req);
       const { nick_name, experience } = await User.get({ app, db, user_id, by: 'id' });

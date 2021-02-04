@@ -2,8 +2,8 @@
 import { DB_card, DB_guess, DB_user_room, IMessage } from '@my-app/interfaces';
 import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Player } from './helpers/Player';
+import { Party } from './helpers/Party';
 
-const Party = require('./helpers/Party');
 const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
@@ -105,11 +105,11 @@ export class SocketController {
   async terminate() {
     if (this.room_id !== null) {
       try {
-        await Party.playerLeave(this.app, this.db, this.player_id);
+        await Party.playerLeave({ app: this.app, db: this.db, player_id: this.player_id ?? -1 });
 
-        const new_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
+        const new_count = await Party.getPlayersCount({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
 
-        await Party.countUpdate(this.app, this.db, this.room_id, new_count);
+        await Party.countUpdate({ app: this.app, db: this.db, room_id: this.room_id ?? -1, new_count });
         await this.maybeStartToGuess();
         this.makeUpdateParty();
       } catch (error) {
@@ -126,7 +126,11 @@ export class SocketController {
   async checkGameMaster() {
     console.log('checkGameMaster()');
     try {
-      const active_players: DB_user_room[] = await Party.getActivePlayersList(this.app, this.db, this.room_id);
+      const active_players: DB_user_room[] = await Party.getActivePlayersList({
+        app: this.app,
+        db: this.db,
+        room_id: this.room_id ?? -1,
+      });
       if (active_players.length < MIN_PLAYERS_COUNT) return;
       // Players count is enough
 
@@ -138,7 +142,7 @@ export class SocketController {
 
       const new_gm_player_id = active_players[0].id;
 
-      await Party.demoteGM(this.app, this.db, this.room_id);
+      await Party.demoteGM({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
       await Player.setGM({ app: this.app, db: this.db, player_id: new_gm_player_id });
 
       this.wss.clients.forEach(({ controller, send }: { controller: TSocketClient; send: (arg: string) => void }) => {
@@ -154,17 +158,22 @@ export class SocketController {
   async maybeStartToGuess() {
     console.log('maybeStartToGuess()');
     try {
-      const game_action = await Party.getStatus(this.app, this.db, this.room_id);
+      const { game_action } = await Party.getRoom({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
       if (game_action !== gameStatus.gmCardSet) return;
 
-      const players_count = await Party.getPlayersCount(this.app, this.db, this.room_id);
+      const players_count = await Party.getPlayersCount({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
       const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
       const table_cards = await Table.getCardsList(this.app, this.db, basket_id);
 
-      if (parseInt(players_count) === parseInt(table_cards.length)) {
+      if (players_count === parseInt(table_cards.length)) {
         console.log('set status! ', gameStatus.allCardSet);
 
-        await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allCardSet);
+        await Party.setStatus({
+          app: this.app,
+          db: this.db,
+          room_id: this.room_id ?? -1,
+          game_action: gameStatus.allCardSet,
+        });
 
         this.sendToMyRoom(COMMANDS.START_GUESS);
       }
@@ -176,14 +185,23 @@ export class SocketController {
   async maybeCountResults() {
     console.log('maybeCountResults()');
     try {
-      const users_id_list = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
+      const users_id_list = await Party.getActivePlayersIdList({
+        app: this.app,
+        db: this.db,
+        room_id: this.room_id ?? -1,
+      });
       const users_voted = await Guess.getVoteList(this.app, this.db, users_id_list);
       const voted_count = users_voted.length;
       const user_count = users_id_list.length;
       const last_vote = voted_count === user_count - 1;
 
       if (last_vote) {
-        await Party.setStatus(this.app, this.db, this.room_id, gameStatus.allGuessDone);
+        await Party.setStatus({
+          app: this.app,
+          db: this.db,
+          room_id: this.room_id ?? -1,
+          game_action: gameStatus.allGuessDone,
+        });
         console.log('set status! ', gameStatus.allGuessDone);
         await this.countResults();
         this.sendToMyRoom(COMMANDS.SHOW_SCORE);
@@ -196,7 +214,11 @@ export class SocketController {
   async countResults() {
     console.log('countResults');
     try {
-      const players_list: DB_user_room[] = await Party.getActivePlayersList(this.app, this.db, this.room_id);
+      const players_list: DB_user_room[] = await Party.getActivePlayersList({
+        app: this.app,
+        db: this.db,
+        room_id: this.room_id ?? -1,
+      });
       const players_id_list = players_list.map((player) => {
         return player.id;
       });
@@ -248,7 +270,7 @@ export class SocketController {
       await Guess.clearGuess(this.app, this.db, basket_id);
       await Guess.clearQuestion(this.app, this.db, this.room_id);
       await Cards.moveToBasket(this.app, this.db, basket_id);
-      await Party.setStatus(this.app, this.db, this.room_id, gameStatus.start);
+      await Party.setStatus({ app: this.app, db: this.db, room_id: this.room_id ?? -1, game_action: gameStatus.start });
 
       this.sendToMyRoom(COMMANDS.UPDATE_ALL);
     } catch (error) {
@@ -258,8 +280,12 @@ export class SocketController {
 
   async changeGM() {
     try {
-      const players_id_list: number[] = await Party.getActivePlayersIdList(this.app, this.db, this.room_id);
-      const gm_id: number = await Player.findGM({ app: this.app, db: this.db, room_id: this.room_id ?? 0 });
+      const players_id_list: number[] = await Party.getActivePlayersIdList({
+        app: this.app,
+        db: this.db,
+        room_id: this.room_id ?? -1,
+      });
+      const gm_id: number = await Player.findGM({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       const new_gm_id: number = findNewGM(players_id_list, gm_id);
 

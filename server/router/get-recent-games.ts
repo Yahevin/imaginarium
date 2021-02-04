@@ -3,20 +3,19 @@ import { ROUTES } from '@my-app/constants';
 import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@my-app/interfaces';
 import { TResponseFunc } from '@my-app/types/parts/TResponse';
 import { TGetRecent } from '@my-app/interfaces/parts/routes/TGetRecent';
-import { TRequirement } from '@my-app/types/parts/TRequirement';
+import { TRequest } from '@my-app/types';
 import { User } from '../helpers/User';
+import { Party } from '../helpers/Party';
 import { authToken } from '../utils/authToken';
 
-const Party = require('../helpers/Party');
-
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequirement<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
+  app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequest<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
     try {
       const { user_id } = authToken(req);
 
-      const self_player_list: DB_user_room[] = await Party.getMyReincarnations(app, db, user_id);
+      const self_player_list: DB_user_room[] = await Party.getMyReincarnations({ app, db, user_id });
       const visited_room_id_list = self_player_list.map((user_room) => user_room.room_id);
-      const visited_room_list: DB_room[] = await Party.getRoomsList(app, db, visited_room_id_list);
+      const visited_room_list: DB_room[] = await Party.getRoomsList({ app, db, room_id_list: visited_room_id_list });
 
       const games: IGameAbout[] = await Promise.all(
         visited_room_list.map(async (room) => {
@@ -37,7 +36,7 @@ module.exports = (app: any, db: any) => {
   });
 
   const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-    const players_list: DB_user_room[] = await Party.getPlayersList(app, db, room.id);
+    const players_list: DB_user_room[] = await Party.getPlayersList({ app, db, room_id: room.id });
     const users_id_list = players_list.map((item) => item.user_id);
     const users_list = await User.getList({ app, db, users_id_list });
 

@@ -1,11 +1,15 @@
+import { TQuery } from '@my-app/types';
+import { DB_room, DB_user_room } from '@my-app/interfaces';
+import { T_GAME_ACTION } from '@my-app/constants';
+
 const sql = require('../mixins/sqlCommands');
 const gameSt = require('../mixins/gameStatus');
 const dbQuery = require('../mixins/dbQuery');
 const isNotEmpty = require('../mixins/isNotEmpty');
 const getRandomPartyName = require('../mixins/getRandomPartyName');
 
-module.exports = {
-  async create(app, db) {
+export const Party = {
+  async create({ db }: TQuery<unknown>) {
     const created_at = new Date().getTime();
     const game_name = getRandomPartyName();
     const format = db.format(sql.ii4, [
@@ -19,20 +23,22 @@ module.exports = {
       created_at,
       1,
     ]);
-    const results = await dbQuery(format, db);
+    const results: { insertId: number } = await dbQuery(format, db);
 
-    if (results.hasOwnProperty('insertId')) {
-      return results.insertId;
-    }
-    throw 'Party create failed. The insert id unknown';
+    return results.insertId;
   },
-  async exist(app, db, room_id) {
+  async exist({ db, room_id }: TQuery<{ room_id: number }>): Promise<boolean> {
     const format = db.format(sql.sfw, ['room', 'id', room_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_room[] = await dbQuery(format, db);
 
     return isNotEmpty(results);
   },
-  async addPlayer(app, db, user_id, room_id, game_master) {
+  async addPlayer({
+    db,
+    user_id,
+    room_id,
+    game_master,
+  }: TQuery<{ user_id: number; room_id: number; game_master: boolean }>) {
     const format = db.format(sql.ii4, [
       'user__room',
       'room_id',
@@ -48,13 +54,9 @@ module.exports = {
 
     return { success: true };
   },
-  async getUsersIn(app, db, room_id) {
+  async getUsersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    return await dbQuery(format, db);
-  },
-  async getUsersIdList(app, db, room_id) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.map((item) => {
@@ -63,9 +65,9 @@ module.exports = {
     }
     throw 'The getUsersIdList failed. There is no users in this room';
   },
-  async getPlayersIdList(app, db, room_id) {
+  async getPlayersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.map((item) => {
@@ -74,27 +76,27 @@ module.exports = {
     }
     throw 'The getPlayersIdList failed. There is no users in this room';
   },
-  async getPlayersList(app, db, room_id) {
+  async getPlayersList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results;
     }
     throw 'The getPlayersList failed. There is no users in this room';
   },
-  async getActivePlayersList(app, db, room_id) {
+  async getActivePlayersList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results;
     }
     throw 'The getActivePlayersList failed. There is no users in this room';
   },
-  async getActivePlayersIdList(app, db, room_id) {
+  async getActivePlayersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.map((item) => {
@@ -103,39 +105,30 @@ module.exports = {
     }
     throw 'The getActivePlayersIdList failed. There is no users in this room';
   },
-  async setStatus(app, db, room_id, game_action) {
+  async setStatus({ db, room_id, game_action }: TQuery<{ room_id: number; game_action: T_GAME_ACTION }>) {
     const format = db.format(sql.usw, ['room', 'game_action', game_action, 'id', room_id]);
     await dbQuery(format, db);
 
     return { success: true };
   },
-  async getStatus(app, db, room_id) {
-    const format = db.format(sql.sfw, ['room', 'id', room_id]);
-    const results = await dbQuery(format, db);
-
-    if (isNotEmpty(results) && results[0].hasOwnProperty('game_action')) {
-      return results[0].game_action;
-    }
-    throw 'The getStatus failed. There is no users in this room';
-  },
-  async getPlayersCount(app, db, room_id) {
+  async getPlayersCount({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results.length;
     }
     throw 'All players are inactive';
   },
-  async countUpdate(app, db, room_id, new_count) {
+  async countUpdate({ db, room_id, new_count }: TQuery<{ room_id: number; new_count: number }>) {
     const format = db.format(sql.usw, ['room', 'player_count', new_count, 'id', room_id]);
     await dbQuery(format, db);
 
     return { success: true };
   },
-  async includesUser(app, db, user_id, room_id) {
+  async includesUser({ db, user_id, room_id }: TQuery<{ user_id: number; room_id: number }>) {
     const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'user_id', user_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return {
@@ -148,45 +141,45 @@ module.exports = {
       player_id: null,
     };
   },
-  async playerJoin(app, db, player_id) {
+  async playerJoin({ db, player_id }: TQuery<{ player_id: number }>) {
     const format = db.format(sql.usw, ['user__room', 'is_active', true, 'id', player_id]);
     await dbQuery(format, db);
 
     return { success: true };
   },
-  async playerLeave(app, db, player_id) {
+  async playerLeave({ db, player_id }: TQuery<{ player_id: number }>) {
     const format = db.format(sql.usw, ['user__room', 'is_active', false, 'id', player_id]);
     await dbQuery(format, db);
 
     return { success: true };
   },
-  async demoteGM(app, db, room_id) {
+  async demoteGM({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.usww, ['user__room', 'game_master', false, 'game_master', true, 'room_id', room_id]);
     await dbQuery(format, db);
 
     return { success: true };
   },
-  async getMyReincarnations(app, db, user_id) {
+  async getMyReincarnations({ db, user_id }: TQuery<{ user_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'user_id', user_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results;
     }
     throw 'User has`t recent games';
   },
-  async getRoom(app, db, room_id) {
+  async getRoom({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['room', 'id', room_id]);
-    const results = await dbQuery(format, db);
+    const results: DB_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
-      return results;
+      return results[0];
     }
     throw 'This room not exist';
   },
-  async getRoomsList(app, db, room_id_list) {
+  async getRoomsList({ db, room_id_list }: TQuery<{ room_id_list: number[] }>) {
     const format = db.format(sql.sfwi, ['room', 'id', room_id_list]);
-    const results = await dbQuery(format, db);
+    const results: DB_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
       return results;
