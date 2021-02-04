@@ -1,15 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { DB_card, DB_guess, DB_user_room, IMessage } from '@my-app/interfaces';
-import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
-import { Player } from './helpers/Player';
-import { Party } from './helpers/Party';
-import { Basket } from './helpers/Basket';
-import { Cards } from './helpers/Cards';
-import { Guess } from './helpers/Guess';
-import { Score } from './helpers/Score';
-import { Table } from './helpers/Table';
-
-const gameStatus = require('./mixins/gameStatus');
+import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 
 type TSocketClient = {
   room_id: number | null;
@@ -162,20 +154,20 @@ export class SocketController {
 
     try {
       const { game_action } = await Party.getRoom({ app, db, room_id });
-      if (game_action !== gameStatus.gmCardSet) return;
+      if (game_action !== GAME_ACTION.GM_CARD_SET) return;
 
       const players_count = await Party.getPlayersCount({ app, db, room_id });
       const { basket_id } = await Basket.get({ app, db, room_id });
       const table_cards = await Table.getCardsList({ app, db, basket_id });
 
       if (players_count === parseInt(table_cards.length)) {
-        console.log('set status! ', gameStatus.allCardSet);
+        console.log('set status! ', GAME_ACTION.ALL_CARD_SET);
 
         await Party.setStatus({
           app: this.app,
           db: this.db,
           room_id: this.room_id ?? -1,
-          game_action: gameStatus.allCardSet,
+          game_action: GAME_ACTION.ALL_CARD_SET,
         });
 
         this.sendToMyRoom(COMMANDS.START_GUESS);
@@ -205,9 +197,9 @@ export class SocketController {
           app,
           db,
           room_id,
-          game_action: gameStatus.allGuessDone,
+          game_action: GAME_ACTION.ALL_GUESS_DONE,
         });
-        console.log('set status! ', gameStatus.allGuessDone);
+        console.log('set status! ', GAME_ACTION.ALL_GUESS_DONE);
         await this.countResults();
         this.sendToMyRoom(COMMANDS.SHOW_SCORE);
       }
@@ -280,7 +272,7 @@ export class SocketController {
       await Guess.clearGuess({ app, db, basket_id });
       await Guess.clearQuestion({ app, db, room_id });
       await Cards.moveToBasket({ app, db, basket_id });
-      await Party.setStatus({ app, db, room_id, game_action: gameStatus.start });
+      await Party.setStatus({ app, db, room_id, game_action: GAME_ACTION.START });
 
       this.sendToMyRoom(COMMANDS.UPDATE_ALL);
     } catch (error) {

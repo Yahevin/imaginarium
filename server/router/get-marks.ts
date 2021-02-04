@@ -2,9 +2,8 @@ import { ROUTES } from '@my-app/constants';
 import { TRequest } from '@my-app/types/parts/TRequest';
 import { TResponseFunc } from '@my-app/types';
 import { TGetMarks } from '@my-app/interfaces/parts/routes/TGetMarks';
-import { Party } from '../helpers/Party';
-import { authToken } from '../utils/authToken';
-import { Guess } from '../helpers/Guess';
+import { Party, Guess } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.get(ROUTES.GET_MARKS, async (req: TRequest<TGetMarks>, res: TResponseFunc<TGetMarks>) => {
@@ -27,6 +26,7 @@ module.exports = (app: any, db: any) => {
     }
     async function getMembersGuess(membersId: number[]) {
       try {
+        // @ts-ignore
         return await Guess.getByUsersId(app, db, membersId);
       } catch (error) {
         return res.json({

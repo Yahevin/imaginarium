@@ -1,10 +1,7 @@
 import { TQuery } from '@my-app/types';
 import { DB_card, DB_shelter } from '@my-app/interfaces';
-import { isNotEmpty } from '../mixins/isNotEmpty';
-
-const sql = require('../mixins/sqlCommands');
-const cardStatus = require('../mixins/cardStatus');
-const dbQuery = require('../mixins/dbQuery');
+import { CARD_STATUS } from '@my-app/constants';
+import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Cards = {
   async getExistingCards({ db, players_id_list }: TQuery<{ players_id_list: number[] }>) {
@@ -26,7 +23,7 @@ export const Cards = {
     throw 'Cards are lost';
   },
   async getNew({ db, basket_id }: TQuery<{ basket_id: number }>) {
-    const format = db.format(sql.sfww, ['card', 'basket_id', basket_id, 'status', cardStatus.new]);
+    const format = db.format(sql.sfww, ['card', 'basket_id', basket_id, 'status', CARD_STATUS.NEW]);
     const results: DB_card[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
@@ -35,7 +32,7 @@ export const Cards = {
     throw 'The getNew failed. There is no new cards ready';
   },
   async getHand({ db, player_id }: TQuery<{ player_id: number }>) {
-    const format = db.format(sql.sfww, ['card', 'player_id', player_id, 'status', cardStatus.hand]);
+    const format = db.format(sql.sfww, ['card', 'player_id', player_id, 'status', CARD_STATUS.HAND]);
     const results: DB_card[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
@@ -49,7 +46,7 @@ export const Cards = {
       'player_id',
       player_id,
       'status',
-      [cardStatus.hand, cardStatus.table],
+      [CARD_STATUS.HAND, CARD_STATUS.TABLE],
     ]);
     return await dbQuery(format, db);
   },
@@ -57,11 +54,11 @@ export const Cards = {
     const format = db.format(sql.usww, [
       'card',
       'status',
-      cardStatus.basket,
+      CARD_STATUS.BASKET,
       'basket_id',
       basket_id,
       'status',
-      cardStatus.table,
+      CARD_STATUS.TABLE,
     ]);
     await dbQuery(format, db);
 
@@ -71,11 +68,11 @@ export const Cards = {
     const format = db.format(sql.usww, [
       'card',
       'status',
-      cardStatus.new,
+      CARD_STATUS.NEW,
       'basket_id',
       basket_id,
       'status',
-      cardStatus.basket,
+      CARD_STATUS.BASKET,
     ]);
     await dbQuery(format, db);
 
@@ -85,7 +82,7 @@ export const Cards = {
     const format = db.format(sql.usswi, [
       'card',
       'status',
-      cardStatus.hand,
+      CARD_STATUS.HAND,
       'player_id',
       player_id,
       'id',
@@ -96,7 +93,7 @@ export const Cards = {
     return { success: true };
   },
   async createPool({ db, new_cards, basket_id }: TQuery<{ new_cards: DB_shelter[]; basket_id: number }>) {
-    const insertArray = new_cards.map((card) => [card.img_url, card.id, basket_id, cardStatus.new]);
+    const insertArray = new_cards.map((card) => [card.img_url, card.id, basket_id, CARD_STATUS.NEW]);
     const format = db.format(sql.im4, ['card', 'img_url', 'origin_id', 'basket_id', 'status', insertArray]);
 
     await dbQuery(format, db);

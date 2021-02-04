@@ -1,9 +1,8 @@
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { TLeaderBoard } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { User } from '../helpers/User';
-import { Party } from '../helpers/Party';
-import { authToken } from '../utils/authToken';
+import { User, Party } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.get(ROUTES.LEADER_BOARD, async (req: TRequest<TLeaderBoard>, res: TResponseFunc<TLeaderBoard>) => {
