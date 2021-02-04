@@ -1,11 +1,11 @@
 import { TQuery } from '@my-app/types';
 import { DB_room, DB_user_room } from '@my-app/interfaces';
 import { T_GAME_ACTION } from '@my-app/constants';
+import { isNotEmpty } from '../mixins/isNotEmpty';
 
 const sql = require('../mixins/sqlCommands');
 const gameSt = require('../mixins/gameStatus');
 const dbQuery = require('../mixins/dbQuery');
-const isNotEmpty = require('../mixins/isNotEmpty');
 const getRandomPartyName = require('../mixins/getRandomPartyName');
 
 export const Party = {

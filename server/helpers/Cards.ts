@@ -1,10 +1,10 @@
 import { TQuery } from '@my-app/types';
 import { DB_card, DB_shelter } from '@my-app/interfaces';
+import {isNotEmpty} from "../mixins/isNotEmpty";
 
 const sql = require('../mixins/sqlCommands');
 const cardStatus = require('../mixins/cardStatus');
 const dbQuery = require('../mixins/dbQuery');
-const isNotEmpty = require('../mixins/isNotEmpty');
 
 export const Cards = {
   async getExistingCards({ db, players_id_list }: TQuery<{ players_id_list: number[] }>) {

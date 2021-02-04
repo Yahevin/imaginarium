@@ -1,9 +1,9 @@
 import { TQuery } from '@my-app/types';
 import { DB_basket } from '@my-app/interfaces';
+import { isNotEmpty } from '../mixins/isNotEmpty';
 
 const sql = require('../mixins/sqlCommands');
 const dbQuery = require('../mixins/dbQuery');
-const isNotEmpty = require('../mixins/isNotEmpty');
 
 export const Basket = {
   async get({ db, room_id }: TQuery<{ room_id: number }>) {
