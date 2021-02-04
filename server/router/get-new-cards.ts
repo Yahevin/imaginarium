@@ -4,7 +4,7 @@ import { TRequest, TResponseFunc } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
 import { DB_card, TGetCards } from '../../packages/interfaces';
 import { Player, Basket, Cards } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {

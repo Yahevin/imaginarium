@@ -1,7 +1,5 @@
 import { TQuery } from '@my-app/types';
-
-const sql = require('../mixins/sqlCommands');
-const dbQuery = require('../mixins/dbQuery');
+import { dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Score = {
   async updateLocal({ db, rewards }: TQuery<{ rewards: { score: number; player_id: number }[] }>) {

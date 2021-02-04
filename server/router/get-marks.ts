@@ -3,7 +3,7 @@ import { TRequest } from '@my-app/types/parts/TRequest';
 import { TResponseFunc } from '@my-app/types';
 import { TGetMarks } from '@my-app/interfaces/parts/routes/TGetMarks';
 import { Party, Guess } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.get(ROUTES.GET_MARKS, async (req: TRequest<TGetMarks>, res: TResponseFunc<TGetMarks>) => {

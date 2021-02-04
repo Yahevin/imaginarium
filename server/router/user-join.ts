@@ -2,7 +2,7 @@ import { TResponseFunc } from '@my-app/types';
 import { TUserJoin } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
 import { Player, Party } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.USER_JOIN, async (req: any, res: TResponseFunc<TUserJoin>) => {

@@ -1,9 +1,6 @@
 import { TQuery } from '@my-app/types';
 import { DB_guess, DB_question } from '@my-app/interfaces';
-import { isNotEmpty } from '../mixins/isNotEmpty';
-
-const sql = require('../mixins/sqlCommands');
-const dbQuery = require('../mixins/dbQuery');
+import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Guess = {
   async createQuestion({

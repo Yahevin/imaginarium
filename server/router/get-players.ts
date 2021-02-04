@@ -2,7 +2,7 @@ import { ROUTES } from '@my-app/constants';
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { DB_user, DB_user_room, TGetPlayers } from '@my-app/interfaces';
 import { Party, User } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_PLAYERS, async (req: TRequest<TGetPlayers>, res: TResponseFunc<TGetPlayers>) => {

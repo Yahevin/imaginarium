@@ -1,9 +1,6 @@
 import { DB_user } from '@my-app/interfaces';
 import { TQuery } from '@my-app/types';
-import { isNotEmpty } from '../mixins/isNotEmpty';
-
-const sql = require('../mixins/sqlCommands');
-const dbQuery = require('../mixins/dbQuery');
+import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const User = {
   async create({ db, nick_name, password }: TQuery<{ nick_name: string; password: string }>) {

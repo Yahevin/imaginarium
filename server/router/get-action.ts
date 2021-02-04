@@ -1,7 +1,7 @@
 import { ROUTES } from '@my-app/constants';
 import { TRequest, TResponseFunc } from '@my-app/types';
 import { TGetAction } from '@my-app/interfaces';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 import { Party } from '../queries';
 
 module.exports = (app: any, db: any) => {

@@ -1,10 +1,8 @@
 import { TPartyCreate, DB_shelter } from '@my-app/interfaces';
 import { TRequest, TResponseFunc } from '@my-app/types';
-import { ROUTES } from '@my-app/constants';
-import { authToken } from '../utils/authToken';
+import { GAME_ACTION, ROUTES } from '@my-app/constants';
 import { Party, Basket, Cards, Guess } from '../queries';
-
-const gameSt = require('../mixins/gameStatus');
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.PARTY_CREATE, async (req: TRequest<TPartyCreate>, res: TResponseFunc<TPartyCreate>) => {
@@ -24,7 +22,7 @@ module.exports = (app: any, db: any) => {
         success: true,
         room_id,
         game_master: true,
-        game_action: gameSt.prepare,
+        game_action: GAME_ACTION.START,
       });
     } catch (error) {
       return res.json({

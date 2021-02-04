@@ -1,4 +1,4 @@
-module.exports = {
+export const sqlCommands = {
   sf: 'SELECT * FROM ??',
   sfw: 'SELECT * FROM ?? WHERE ?? = ?',
   sfww: 'SELECT * FROM ?? WHERE ?? = ? AND ?? = ?',

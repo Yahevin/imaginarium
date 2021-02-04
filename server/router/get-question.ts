@@ -2,7 +2,7 @@ import { TRequest, TResponseFunc } from '@my-app/types';
 import { TGetQuestion } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
 import { Guess } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_QUESTION, async (req: TRequest<TGetQuestion>, res: TResponseFunc<TGetQuestion>) => {

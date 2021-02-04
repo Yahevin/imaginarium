@@ -1,8 +1,8 @@
-function getRandom(array) {
+function getRandom(array: string[]) {
   return array[Math.round(array.length * Math.random())];
 }
 
-module.exports = function getRandomPartyName() {
+export const getRandomPartyName = () => {
   const colors = ['white', 'yellow', 'green', 'blue', 'orange', 'lemon', 'red', 'black'];
   const group = ['fleet', 'party', 'band', 'army', 'bunch', 'squad', 'circle'];
   const char = ['madness', 'glory', 'death', 'strength', 'fury', 'imagination'];

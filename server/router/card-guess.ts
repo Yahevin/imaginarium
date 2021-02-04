@@ -1,6 +1,6 @@
 import { TResponseFunc } from '@my-app/types';
 import { Player, Basket, Guess, Table } from '../queries';
-import { authToken } from '../utils/authToken';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post('/card-guess', async (req: any, res: TResponseFunc<unknown>) => {

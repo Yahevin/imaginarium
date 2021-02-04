@@ -1,10 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { DB_user_room } from '@my-app/interfaces';
 import { TQuery } from '@my-app/types';
-import { isNotEmpty } from '../mixins/isNotEmpty';
-
-const sql = require('../mixins/sqlCommands');
-const dbQuery = require('../mixins/dbQuery');
+import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Player = {
   async get(props: TQuery<{ by: 'room'; user_id: number; room_id: number } | { by: 'id'; player_id: number }>) {
