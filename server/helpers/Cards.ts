@@ -1,6 +1,6 @@
 import { TQuery } from '@my-app/types';
 import { DB_card, DB_shelter } from '@my-app/interfaces';
-import {isNotEmpty} from "../mixins/isNotEmpty";
+import { isNotEmpty } from '../mixins/isNotEmpty';
 
 const sql = require('../mixins/sqlCommands');
 const cardStatus = require('../mixins/cardStatus');

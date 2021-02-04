@@ -5,8 +5,7 @@ import { TGetCards } from '@my-app/interfaces/parts/routes/TGetCards';
 import { DB_card } from '@my-app/interfaces';
 import { Basket } from '../helpers/Basket';
 import { authToken } from '../utils/authToken';
-
-const Table = require('../helpers/Table');
+import { Table } from '../helpers/Table';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_TABLE_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
@@ -14,7 +13,7 @@ module.exports = (app: any, db: any) => {
       authToken(req);
       const { room_id } = req.body;
       const { basket_id } = await Basket.get({ app, db, room_id });
-      const cards: DB_card[] = await Table.getCardsList(app, db, basket_id);
+      const cards: DB_card[] = await Table.getCardsList({ app, db, basket_id });
 
       return res.json({
         success: true,

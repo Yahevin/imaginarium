@@ -6,9 +6,9 @@ import { Party } from './helpers/Party';
 import { Basket } from './helpers/Basket';
 import { Cards } from './helpers/Cards';
 import { Guess } from './helpers/Guess';
+import { Score } from './helpers/Score';
+import { Table } from './helpers/Table';
 
-const Score = require('./helpers/Score');
-const Table = require('./helpers/Table');
 const gameStatus = require('./mixins/gameStatus');
 
 type TSocketClient = {
@@ -166,7 +166,7 @@ export class SocketController {
 
       const players_count = await Party.getPlayersCount({ app, db, room_id });
       const { basket_id } = await Basket.get({ app, db, room_id });
-      const table_cards = await Table.getCardsList(this.app, this.db, basket_id);
+      const table_cards = await Table.getCardsList({ app, db, basket_id });
 
       if (players_count === parseInt(table_cards.length)) {
         console.log('set status! ', gameStatus.allCardSet);
@@ -230,7 +230,7 @@ export class SocketController {
         return player.id;
       });
       const marks: DB_guess[] = await Guess.getVoteList({ app, db, players_id_list });
-      const table_cards: DB_card[] = await Table.getPlayersCards(app, db, players_id_list);
+      const table_cards: DB_card[] = await Table.getPlayersCards({ app, db, players_id_list });
       const max = marks.length;
 
       const rewards = table_cards.map((card) => {
@@ -261,7 +261,7 @@ export class SocketController {
 
       console.log('updated rewards', rewards);
 
-      await Score.updateLocal(this.app, this.db, this.room_id, rewards);
+      await Score.updateLocal({ app, db, rewards });
     } catch (error) {
       console.log(error);
     }

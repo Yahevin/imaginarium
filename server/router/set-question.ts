@@ -4,8 +4,8 @@ import { ROUTES } from '@my-app/constants';
 import { Party } from '../helpers/Party';
 import { Guess } from '../helpers/Guess';
 import { authToken } from '../utils/authToken';
+import { Table } from '../helpers/Table';
 
-const Table = require('../helpers/Table');
 const gameStatus = require('../mixins/gameStatus');
 
 module.exports = (app: any, db: any) => {
@@ -21,7 +21,7 @@ module.exports = (app: any, db: any) => {
       } catch (e) {
         await Guess.createQuestion({ app, db, room_id, question, card_id });
       }
-      await Table.putCard(app, db, card_id, true);
+      await Table.putCard({ app, db, card_id, is_main: true });
       await Party.setStatus({ app, db, room_id, game_action: gameStatus.gmCardSet });
 
       return res.json({

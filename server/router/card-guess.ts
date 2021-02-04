@@ -3,8 +3,7 @@ import { Player } from '../helpers/Player';
 import { authToken } from '../utils/authToken';
 import { Basket } from '../helpers/Basket';
 import { Guess } from '../helpers/Guess';
-
-const Table = require('../helpers/Table');
+import { Table } from '../helpers/Table';
 
 module.exports = (app: any, db: any) => {
   app.post('/card-guess', async (req: any, res: TResponseFunc<unknown>) => {
@@ -13,7 +12,7 @@ module.exports = (app: any, db: any) => {
       const { card_id } = req.body;
       const { user_id } = authToken(req);
       const { id: player_id } = await Player.get({ app, db, user_id, room_id, by: 'room' });
-      const table_card = await Table.getCard(app, db, player_id);
+      const table_card = await Table.getCard({ app, db, player_id });
       const { basket_id } = await Basket.get({ app, db, room_id });
 
       if (parseInt(table_card.id) === parseInt(card_id)) {
