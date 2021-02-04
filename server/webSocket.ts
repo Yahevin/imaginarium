@@ -4,11 +4,11 @@ import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/
 import { Player } from './helpers/Player';
 import { Party } from './helpers/Party';
 import { Basket } from './helpers/Basket';
+import { Cards } from './helpers/Cards';
 
 const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
-const Cards = require('./helpers/Cards');
 const gameStatus = require('./mixins/gameStatus');
 
 type TSocketClient = {
@@ -275,7 +275,7 @@ export class SocketController {
 
       await Guess.clearGuess(this.app, this.db, basket_id);
       await Guess.clearQuestion(this.app, this.db, this.room_id);
-      await Cards.moveToBasket(this.app, this.db, basket_id);
+      await Cards.moveToBasket({ app, db, basket_id });
       await Party.setStatus({ app, db, room_id, game_action: gameStatus.start });
 
       this.sendToMyRoom(COMMANDS.UPDATE_ALL);

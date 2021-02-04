@@ -4,10 +4,9 @@ import { ROUTES } from '@my-app/constants';
 import { authToken } from '../utils/authToken';
 import { Party } from '../helpers/Party';
 import { Basket } from '../helpers/Basket';
+import { Cards } from '../helpers/Cards';
 
-const cardStatus = require('../mixins/cardStatus');
 const gameSt = require('../mixins/gameStatus');
-const Cards = require('../helpers/Cards');
 const Guess = require('../helpers/Guess');
 
 module.exports = (app: any, db: any) => {
@@ -20,11 +19,9 @@ module.exports = (app: any, db: any) => {
       await Party.addPlayer({ app, db, user_id, room_id, game_master: true });
       await Guess.createQuestion(app, db, room_id);
 
-      const pure_cards: DB_shelter[] = await Cards.getCardShelter(app, db);
-      const new_cards = pure_cards.map((card) => {
-        return [card.img_url, card.id, basket_id, cardStatus.new];
-      });
-      await Cards.createPool(app, db, new_cards);
+      const new_cards: DB_shelter[] = await Cards.getCardShelter(db);
+
+      await Cards.createPool({ app, db, new_cards, basket_id });
 
       return res.json({
         success: true,

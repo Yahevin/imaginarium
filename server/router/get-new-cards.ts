@@ -6,8 +6,7 @@ import { DB_card, TGetCards } from '../../packages/interfaces';
 import { Player } from '../helpers/Player';
 import { authToken } from '../utils/authToken';
 import { Basket } from '../helpers/Basket';
-
-const Cards = require('../helpers/Cards');
+import { Cards } from '../helpers/Cards';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
@@ -17,18 +16,18 @@ module.exports = (app: any, db: any) => {
 
       const { id: player_id } = await Player.get({ app, db, user_id, room_id, by: 'room' });
       const { basket_id } = await Basket.get({ app, db, room_id });
-      const my_cards = await Cards.getAllMy(app, db, player_id);
-      let new_cards: DB_card[] = await Cards.getNew(app, db, basket_id);
+      const my_cards = await Cards.getAllMy({ app, db, player_id });
+      let new_cards: DB_card[] = await Cards.getNew({ app, db, basket_id });
       const deficit = 6 - my_cards.length;
 
       if (new_cards.length < deficit) {
-        await Cards.mixBasket(app, db, basket_id);
-        new_cards = await Cards.getNew(app, db, basket_id);
+        await Cards.mixBasket({ app, db, basket_id });
+        new_cards = await Cards.getNew({ app, db, basket_id });
       }
 
       const { selected_id_list, selected_cards } = getSelected(new_cards, deficit);
 
-      await Cards.noteTaken(app, db, player_id, selected_id_list);
+      await Cards.noteTaken({ app, db, player_id, cards_id_list: selected_id_list });
 
       return res.json({
         success: true,
