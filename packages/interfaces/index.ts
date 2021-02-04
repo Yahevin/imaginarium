@@ -16,6 +16,7 @@ export * from './parts/db/DB_shelter';
 export * from './parts/db/DB_question';
 export * from './parts/db/DB_user_room';
 
+export * from './parts/routes/TGetQuestion';
 export * from './parts/routes/TGetRecent';
 export * from './parts/routes/TGetPlayer';
 export * from './parts/routes/TGetPlayers';

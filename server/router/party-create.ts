@@ -5,9 +5,9 @@ import { authToken } from '../utils/authToken';
 import { Party } from '../helpers/Party';
 import { Basket } from '../helpers/Basket';
 import { Cards } from '../helpers/Cards';
+import { Guess } from '../helpers/Guess';
 
 const gameSt = require('../mixins/gameStatus');
-const Guess = require('../helpers/Guess');
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.PARTY_CREATE, async (req: TRequest<TPartyCreate>, res: TResponseFunc<TPartyCreate>) => {
@@ -17,7 +17,7 @@ module.exports = (app: any, db: any) => {
       const { basket_id } = await Basket.create({ app, db, room_id });
 
       await Party.addPlayer({ app, db, user_id, room_id, game_master: true });
-      await Guess.createQuestion(app, db, room_id);
+      await Guess.createQuestion({ app, db, room_id });
 
       const new_cards: DB_shelter[] = await Cards.getCardShelter(db);
 

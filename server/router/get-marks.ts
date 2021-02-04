@@ -4,8 +4,7 @@ import { TResponseFunc } from '@my-app/types';
 import { TGetMarks } from '@my-app/interfaces/parts/routes/TGetMarks';
 import { Party } from '../helpers/Party';
 import { authToken } from '../utils/authToken';
-
-const Guess = require('../helpers/Guess');
+import { Guess } from '../helpers/Guess';
 
 module.exports = (app: any, db: any) => {
   app.get(ROUTES.GET_MARKS, async (req: TRequest<TGetMarks>, res: TResponseFunc<TGetMarks>) => {

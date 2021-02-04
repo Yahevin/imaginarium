@@ -5,6 +5,7 @@ export const ROUTES = {
   GET_TABLE_CARDS: '/get-table-cards' as const,
   GET_NEW_CARDS: '/get-new-cards' as const,
   GET_MY_CARDS: '/get-my-cards' as const,
+  GET_QUESTION: '/get-question' as const,
   GET_PLAYERS: '/get-players' as const,
   GET_ACTION: '/get-action' as const,
   GET_MARKS: '/get-marks' as const,

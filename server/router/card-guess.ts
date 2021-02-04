@@ -2,9 +2,9 @@ import { TResponseFunc } from '@my-app/types';
 import { Player } from '../helpers/Player';
 import { authToken } from '../utils/authToken';
 import { Basket } from '../helpers/Basket';
+import { Guess } from '../helpers/Guess';
 
 const Table = require('../helpers/Table');
-const Guess = require('../helpers/Guess');
 
 module.exports = (app: any, db: any) => {
   app.post('/card-guess', async (req: any, res: TResponseFunc<unknown>) => {
@@ -23,7 +23,7 @@ module.exports = (app: any, db: any) => {
         });
       }
 
-      const already_guess = await Guess.alReady(app, db, player_id);
+      const already_guess = await Guess.alReady({ app, db, player_id });
 
       if (already_guess) {
         return res.json({
@@ -32,7 +32,7 @@ module.exports = (app: any, db: any) => {
         });
       }
 
-      await Guess.make(app, db, player_id, card_id, basket_id);
+      await Guess.make({ app, db, player_id, card_id, basket_id });
 
       return res.json({
         success: true,

@@ -5,9 +5,9 @@ import { Player } from './helpers/Player';
 import { Party } from './helpers/Party';
 import { Basket } from './helpers/Basket';
 import { Cards } from './helpers/Cards';
+import { Guess } from './helpers/Guess';
 
 const Score = require('./helpers/Score');
-const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
 const gameStatus = require('./mixins/gameStatus');
 
@@ -187,22 +187,24 @@ export class SocketController {
 
   async maybeCountResults() {
     console.log('maybeCountResults()');
+    const room_id = this.room_id ?? -1;
+    const { app, db } = this;
     try {
-      const users_id_list = await Party.getActivePlayersIdList({
-        app: this.app,
-        db: this.db,
-        room_id: this.room_id ?? -1,
+      const players_id_list = await Party.getActivePlayersIdList({
+        app,
+        db,
+        room_id,
       });
-      const users_voted = await Guess.getVoteList(this.app, this.db, users_id_list);
-      const voted_count = users_voted.length;
-      const user_count = users_id_list.length;
-      const last_vote = voted_count === user_count - 1;
+      const players_voted = await Guess.getVoteList({ app, db, players_id_list });
+      const voted_count = players_voted.length;
+      const players_count = players_id_list.length;
+      const last_vote = voted_count === players_count - 1;
 
       if (last_vote) {
         await Party.setStatus({
-          app: this.app,
-          db: this.db,
-          room_id: this.room_id ?? -1,
+          app,
+          db,
+          room_id,
           game_action: gameStatus.allGuessDone,
         });
         console.log('set status! ', gameStatus.allGuessDone);
@@ -216,17 +218,19 @@ export class SocketController {
 
   async countResults() {
     console.log('countResults');
+    const room_id = this.room_id ?? -1;
+    const { app, db } = this;
     try {
       const players_list: DB_user_room[] = await Party.getActivePlayersList({
-        app: this.app,
-        db: this.db,
-        room_id: this.room_id ?? -1,
+        app,
+        db,
+        room_id,
       });
       const players_id_list = players_list.map((player) => {
         return player.id;
       });
-      const marks: DB_guess[] = await Guess.getVoteList(this.app, this.db, players_id_list);
-      const table_cards: DB_card[] = await Table.getPlayersCards(this.app, this.db, players_id_list);
+      const marks: DB_guess[] = await Guess.getVoteList({ app, db, players_id_list });
+      const table_cards: DB_card[] = await Table.getPlayersCards(app, db, players_id_list);
       const max = marks.length;
 
       const rewards = table_cards.map((card) => {
@@ -273,8 +277,8 @@ export class SocketController {
 
       const { basket_id } = await Basket.get({ app, db, room_id });
 
-      await Guess.clearGuess(this.app, this.db, basket_id);
-      await Guess.clearQuestion(this.app, this.db, this.room_id);
+      await Guess.clearGuess({ app, db, basket_id });
+      await Guess.clearQuestion({ app, db, room_id });
       await Cards.moveToBasket({ app, db, basket_id });
       await Party.setStatus({ app, db, room_id, game_action: gameStatus.start });
 
