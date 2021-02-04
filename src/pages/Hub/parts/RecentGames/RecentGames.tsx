@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useFetch } from '@/hook/useFetch';
 import { TStore } from '@/store/reducer';
 import { ROUTES } from '@my-app/constants';
-import { IGameAbout } from '@my-app/interfaces';
+import { IGameAbout, TGetRecent } from '@my-app/interfaces';
 import {
   GameCreated,
   GamesList,
@@ -17,14 +17,17 @@ import { FlexRowBox } from '@/styled/Flex';
 import Spacer from '@/styled/Spacer';
 import { getDate } from '@/helpers/getDate';
 
-// TODO create 'loading' component
-
 export const RecentGames = () => {
-  const user_id = useSelector((store: TStore) => store.userReducer.user_id);
-  const { games }: { games: IGameAbout[] } = useFetch(
+  const user_id = useSelector((store: TStore) => store.userReducer.user_id) ?? -1;
+
+  // TODO create 'loading' component
+  const renderLoader = () => null;
+
+  if (user_id === null) renderLoader();
+
+  const { games }: { games: IGameAbout[] } = useFetch<TGetRecent>(
     {
       url: ROUTES.GET_RECENT_GAMES,
-      body: { user_id },
     },
     { games: [] },
   );

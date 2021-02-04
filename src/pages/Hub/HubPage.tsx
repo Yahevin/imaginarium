@@ -8,8 +8,8 @@ import { PartyAction } from '@/store/party/action';
 
 import { Menu, Menu__item } from '@/styled/Menu';
 
-import { BUTTON_THEME, PAGES } from '@my-app/constants';
-import { TInputHandler } from '@my-app/interfaces';
+import { BUTTON_THEME, PAGES, ROUTES } from '@my-app/constants';
+import { TInputHandler, TUserJoin } from '@my-app/interfaces';
 import { strOrNull } from '@/helpers/nullable';
 
 import { UserAbout } from '@/pages/Hub/parts/UserAbout/UserAbout';
@@ -17,7 +17,6 @@ import { RecentGames } from '@/pages/Hub/parts/RecentGames/RecentGames';
 import { Button } from '@/components/Button/Button';
 import { Input } from '@/components/Input/Input';
 import { HubContent, HubHeader, JoinPanel } from '@/pages/Hub/HubPage.styles';
-import { ContentSizeBox } from '@/styled/Content';
 
 export const HubPage = () => {
   const dispatch = useDispatch();
@@ -31,9 +30,9 @@ export const HubPage = () => {
     if (!partyId) return;
 
     try {
-      const { game_action, game_master } = await deal({
-        url: '/user-join',
-        body: { room_id: partyId },
+      const { game_action, game_master } = await deal<TUserJoin>({
+        url: ROUTES.USER_JOIN,
+        body: { room_id: parseInt(partyId) },
       });
 
       dispatch(PartyAction.setPartyId(parseInt(partyId)));

@@ -8,10 +8,12 @@ import { TInputHandler } from '@my-app/interfaces';
 
 import { Input } from '@/components/Input/Input';
 import { Button } from '@/components/Button/Button';
-import { BUTTON_THEME } from '@my-app/constants';
+import { BUTTON_THEME, ROUTES } from '@my-app/constants';
+import { TSetQuestion } from '@my-app/interfaces/parts/routes/TSetQuestion';
 
 export const QuestInput = () => {
   const dispatch = useDispatch();
+  const room_id = useSelector((store: TStore) => store.partyReducer.room_id) ?? -1;
   const selectedHand = useSelector((store: TStore) => store.cardsReducer.selectedHand);
 
   const [question, setQuestion] = useState('');
@@ -27,9 +29,9 @@ export const QuestInput = () => {
     if (!selectedHand) return;
 
     try {
-      await deal({
-        url: '/set-question',
-        body: { question, card_id: selectedHand },
+      await deal<TSetQuestion>({
+        url: ROUTES.SET_QUESTION,
+        body: { room_id, question, card_id: selectedHand },
       });
 
       // remove selectedHand card from hand
@@ -41,7 +43,7 @@ export const QuestInput = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [question, selectedHand, dispatch]);
+  }, [room_id, question, selectedHand, dispatch]);
 
   return (
     <>

@@ -56,6 +56,7 @@ module.exports = {
     'no-undef': 0,
     'no-unused-vars': 0,
     'no-shadow': 'off',
+    'no-return-await': 0,
     'no-use-before-define': 'off',
     'no-magic-numbers': [
       'error',
