@@ -1,8 +1,8 @@
 import { TResponseFunc } from '@my-app/types';
 import { Player } from '../helpers/Player';
-import {authToken} from "../utils/authToken";
+import { authToken } from '../utils/authToken';
+import { Basket } from '../helpers/Basket';
 
-const Basket = require('../helpers/Basket');
 const Table = require('../helpers/Table');
 const Guess = require('../helpers/Guess');
 
@@ -14,7 +14,7 @@ module.exports = (app: any, db: any) => {
       const { user_id } = authToken(req);
       const { id: player_id } = await Player.get({ app, db, user_id, room_id, by: 'room' });
       const table_card = await Table.getCard(app, db, player_id);
-      const basket_id = await Basket.getSelf(app, db, room_id);
+      const { basket_id } = await Basket.get({ app, db, room_id });
 
       if (parseInt(table_card.id) === parseInt(card_id)) {
         return res.json({

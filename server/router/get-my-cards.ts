@@ -1,5 +1,5 @@
 import { TResponseFunc, TRequest } from '@my-app/types';
-import { TGetMyCards, DB_card } from '@my-app/interfaces';
+import { TGetCards, DB_card } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
 import { Player } from '../helpers/Player';
 import { authToken } from '../utils/authToken';
@@ -7,7 +7,7 @@ import { authToken } from '../utils/authToken';
 const Cards = require('../helpers/Cards');
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetMyCards>, res: TResponseFunc<TGetMyCards>) => {
+  app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
     try {
       const { user_id } = authToken(req);
       const { room_id } = req.body;

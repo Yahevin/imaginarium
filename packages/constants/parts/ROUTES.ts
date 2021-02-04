@@ -2,6 +2,7 @@ import { InferValueTypes } from '@my-app/types';
 
 export const ROUTES = {
   GET_RECENT_GAMES: '/get-recent-games' as const,
+  GET_TABLE_CARDS: '/get-table-cards' as const,
   GET_NEW_CARDS: '/get-new-cards' as const,
   GET_MY_CARDS: '/get-my-cards' as const,
   GET_PLAYERS: '/get-players' as const,

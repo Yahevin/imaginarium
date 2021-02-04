@@ -3,10 +3,10 @@ import { TRequest, TResponseFunc } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
 import { authToken } from '../utils/authToken';
 import { Party } from '../helpers/Party';
+import { Basket } from '../helpers/Basket';
 
 const cardStatus = require('../mixins/cardStatus');
 const gameSt = require('../mixins/gameStatus');
-const Basket = require('../helpers/Basket');
 const Cards = require('../helpers/Cards');
 const Guess = require('../helpers/Guess');
 
@@ -15,9 +15,11 @@ module.exports = (app: any, db: any) => {
     try {
       const { user_id } = authToken(req);
       const room_id = await Party.create({ app, db });
+      const { basket_id } = await Basket.create({ app, db, room_id });
+
       await Party.addPlayer({ app, db, user_id, room_id, game_master: true });
       await Guess.createQuestion(app, db, room_id);
-      const basket_id = await Basket.create(app, db, room_id);
+
       const pure_cards: DB_shelter[] = await Cards.getCardShelter(app, db);
       const new_cards = pure_cards.map((card) => {
         return [card.img_url, card.id, basket_id, cardStatus.new];

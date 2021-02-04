@@ -2,21 +2,21 @@
 /* eslint-disable no-magic-numbers */
 import { TRequest, TResponseFunc } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
-import { DB_card, TGetMyCards } from '../../packages/interfaces';
+import { DB_card, TGetCards } from '../../packages/interfaces';
 import { Player } from '../helpers/Player';
 import { authToken } from '../utils/authToken';
+import { Basket } from '../helpers/Basket';
 
-const Basket = require('../helpers/Basket');
 const Cards = require('../helpers/Cards');
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetMyCards>, res: TResponseFunc<TGetMyCards>) => {
+  app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
     try {
       const { user_id } = authToken(req);
       const { room_id } = req.body;
 
-      const player_id = await Player.get({ app, db, user_id, room_id, by: 'room' });
-      const basket_id = await Basket.getSelf(app, db, room_id);
+      const { id: player_id } = await Player.get({ app, db, user_id, room_id, by: 'room' });
+      const { basket_id } = await Basket.get({ app, db, room_id });
       const my_cards = await Cards.getAllMy(app, db, player_id);
       let new_cards: DB_card[] = await Cards.getNew(app, db, basket_id);
       const deficit = 6 - my_cards.length;

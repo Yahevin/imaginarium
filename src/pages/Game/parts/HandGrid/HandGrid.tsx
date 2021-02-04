@@ -5,10 +5,10 @@ import SocketAction from '@/web-socket/action';
 import { TStore } from '@/store/reducer';
 import { CardsAction } from '@/store/cards/action';
 import { Menu, Menu__item } from '@/styled/Menu';
-import { BUTTON_THEME, GAME_ACTION } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, ROUTES } from '@my-app/constants';
 import { CardGrid } from '@/components/CardGrid/CardGrid';
 import { Button } from '@/components/Button/Button';
-import { ICard } from '@my-app/interfaces';
+import { ICard, TPutTheCard } from '@my-app/interfaces';
 
 export const HandGrid = () => {
   const dispatch = useDispatch();
@@ -16,14 +16,16 @@ export const HandGrid = () => {
   const hand_cards = useSelector((store: TStore) => store.cardsReducer.hand);
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
   const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
+  const room_id = useSelector((store: TStore) => store.partyReducer.room_id);
 
   const confirm_select = useCallback(async () => {
-    if (!selectedHand) return;
+    if (!selectedHand || room_id === null) return;
 
     try {
-      await deal({
-        url: '/put-card',
+      await deal<TPutTheCard>({
+        url: ROUTES.PUT_CARD,
         body: {
+          room_id,
           card_id: selectedHand,
         },
       });
@@ -36,7 +38,7 @@ export const HandGrid = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [selectedHand, dispatch]);
+  }, [room_id, selectedHand, dispatch]);
 
   const submit_disabled = useMemo(() => {
     return selectedHand === null;

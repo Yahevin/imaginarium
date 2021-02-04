@@ -3,12 +3,12 @@ import { DB_card, DB_guess, DB_user_room, IMessage } from '@my-app/interfaces';
 import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Player } from './helpers/Player';
 import { Party } from './helpers/Party';
+import { Basket } from './helpers/Basket';
 
 const Score = require('./helpers/Score');
 const Guess = require('./helpers/Guess');
 const Table = require('./helpers/Table');
 const Cards = require('./helpers/Cards');
-const Basket = require('./helpers/Basket');
 const gameStatus = require('./mixins/gameStatus');
 
 type TSocketClient = {
@@ -157,12 +157,15 @@ export class SocketController {
 
   async maybeStartToGuess() {
     console.log('maybeStartToGuess()');
+    const room_id = this.room_id ?? -1;
+    const { app, db } = this;
+
     try {
-      const { game_action } = await Party.getRoom({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
+      const { game_action } = await Party.getRoom({ app, db, room_id });
       if (game_action !== gameStatus.gmCardSet) return;
 
-      const players_count = await Party.getPlayersCount({ app: this.app, db: this.db, room_id: this.room_id ?? -1 });
-      const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
+      const players_count = await Party.getPlayersCount({ app, db, room_id });
+      const { basket_id } = await Basket.get({ app, db, room_id });
       const table_cards = await Table.getCardsList(this.app, this.db, basket_id);
 
       if (players_count === parseInt(table_cards.length)) {
@@ -262,15 +265,18 @@ export class SocketController {
 
   async newRound() {
     console.log('newRound()');
+    const room_id = this.room_id ?? -1;
+    const { app, db } = this;
+
     try {
       await this.changeGM();
 
-      const basket_id = await Basket.getSelf(this.app, this.db, this.room_id);
+      const { basket_id } = await Basket.get({ app, db, room_id });
 
       await Guess.clearGuess(this.app, this.db, basket_id);
       await Guess.clearQuestion(this.app, this.db, this.room_id);
       await Cards.moveToBasket(this.app, this.db, basket_id);
-      await Party.setStatus({ app: this.app, db: this.db, room_id: this.room_id ?? -1, game_action: gameStatus.start });
+      await Party.setStatus({ app, db, room_id, game_action: gameStatus.start });
 
       this.sendToMyRoom(COMMANDS.UPDATE_ALL);
     } catch (error) {
