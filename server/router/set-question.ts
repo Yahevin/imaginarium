@@ -1,10 +1,8 @@
 import { TRequest, TResponseFunc } from '@my-app/types';
 import { TSetQuestion } from '@my-app/interfaces/parts/routes/TSetQuestion';
 import { ROUTES } from '@my-app/constants';
-import { Party } from '../helpers/Party';
-import { Guess } from '../helpers/Guess';
+import { Party, Guess, Table } from '../queries';
 import { authToken } from '../utils/authToken';
-import { Table } from '../helpers/Table';
 
 const gameStatus = require('../mixins/gameStatus');
 

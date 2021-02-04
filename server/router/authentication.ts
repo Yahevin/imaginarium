@@ -1,6 +1,6 @@
 import { TResponseFunc } from '@my-app/types';
 import { TAuthentication } from '@my-app/interfaces';
-import { User } from '../helpers/User';
+import { User } from '../queries';
 import { generateToken } from '../utils/generateToken';
 
 module.exports = (app: any, db: any) => {

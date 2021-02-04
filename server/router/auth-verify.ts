@@ -1,7 +1,7 @@
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
 import { TAuthVerify } from '@my-app/interfaces/parts/routes/TAuthVerify';
-import { User } from '../helpers/User';
+import { User } from '../queries';
 import { authToken } from '../utils/authToken';
 
 module.exports = (app: any, db: any) => {

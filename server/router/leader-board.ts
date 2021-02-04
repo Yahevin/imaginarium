@@ -1,8 +1,7 @@
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { TLeaderBoard } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { User } from '../helpers/User';
-import { Party } from '../helpers/Party';
+import { User, Party } from '../queries';
 import { authToken } from '../utils/authToken';
 
 module.exports = (app: any, db: any) => {

@@ -1,8 +1,7 @@
 import { TResponseFunc } from '@my-app/types';
 import { TUserJoin } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { Player } from '../helpers/Player';
-import { Party } from '../helpers/Party';
+import { Player, Party } from '../queries';
 import { authToken } from '../utils/authToken';
 
 module.exports = (app: any, db: any) => {

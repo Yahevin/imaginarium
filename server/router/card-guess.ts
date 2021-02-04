@@ -1,9 +1,6 @@
 import { TResponseFunc } from '@my-app/types';
-import { Player } from '../helpers/Player';
+import { Player, Basket, Guess, Table } from '../queries';
 import { authToken } from '../utils/authToken';
-import { Basket } from '../helpers/Basket';
-import { Guess } from '../helpers/Guess';
-import { Table } from '../helpers/Table';
 
 module.exports = (app: any, db: any) => {
   app.post('/card-guess', async (req: any, res: TResponseFunc<unknown>) => {

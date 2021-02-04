@@ -2,7 +2,7 @@ import { TResponseFunc, TRequest } from '@my-app/types';
 import { ROUTES } from '@my-app/constants';
 import { TAuthentication } from '@my-app/interfaces';
 import { generateToken } from '../utils/generateToken';
-import { User } from '../helpers/User';
+import { User } from '../queries';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.REGISTRATION, async (req: TRequest<TAuthentication>, res: TResponseFunc<TAuthentication>) => {

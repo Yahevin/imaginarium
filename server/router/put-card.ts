@@ -1,9 +1,8 @@
 import { ROUTES } from '@my-app/constants';
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { TPutTheCard } from '@my-app/interfaces';
-import { Player } from '../helpers/Player';
+import { Player, Table } from '../queries';
 import { authToken } from '../utils/authToken';
-import { Table } from '../helpers/Table';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.PUT_CARD, async (req: TRequest<TPutTheCard>, res: TResponseFunc<TPutTheCard>) => {

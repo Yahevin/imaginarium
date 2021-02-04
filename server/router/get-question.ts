@@ -1,7 +1,7 @@
 import { TRequest, TResponseFunc } from '@my-app/types';
 import { TGetQuestion } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { Guess } from '../helpers/Guess';
+import { Guess } from '../queries';
 import { authToken } from '../utils/authToken';
 
 module.exports = (app: any, db: any) => {

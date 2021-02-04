@@ -1,13 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { DB_card, DB_guess, DB_user_room, IMessage } from '@my-app/interfaces';
 import { CLIENT_EVENTS, COMMANDS, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
-import { Player } from './helpers/Player';
-import { Party } from './helpers/Party';
-import { Basket } from './helpers/Basket';
-import { Cards } from './helpers/Cards';
-import { Guess } from './helpers/Guess';
-import { Score } from './helpers/Score';
-import { Table } from './helpers/Table';
+import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 
 const gameStatus = require('./mixins/gameStatus');
 
