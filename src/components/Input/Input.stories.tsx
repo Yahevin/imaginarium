@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: TInput) => <Input {...args} />;
-
+// @ts-ignore
 export const Primary: { args: TInput } = Template.bind({});
 Primary.args = {
   disabled: false,
@@ -18,6 +18,7 @@ Primary.args = {
   onChangeEvent: (e) => {
     console.log(e);
   },
+  placeholder: 'placeholder',
   theme: INPUT_THEME.LIGHT,
   width: '100%',
 };

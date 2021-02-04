@@ -4,7 +4,7 @@ import { T_GAME_ACTION } from '@my-app/constants';
 import { IPlayer } from '@my-app/interfaces';
 
 const PartyAction = {
-  setPartyId(room_id: number) {
+  setPartyId(room_id: number | null) {
     return {
       type: SET_PARTY_ID,
       payload: room_id,

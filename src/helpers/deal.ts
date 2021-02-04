@@ -1,11 +1,15 @@
-import store from '@/store';
+import { InferArgumentsType, InferResultType } from '@my-app/types';
 
-type Imagick = (props: { url: string; method?: 'POST' | 'GET' | 'PUT' | 'DELETE'; body?: any }) => any;
+export type InferBodyType<U> = InferArgumentsType<U> extends never ? { body?: {} } : { body: InferArgumentsType<U> };
 
-const deal: Imagick = async ({ url, method = 'POST', body = {} }) => {
-  const { room_id } = store.getState().partyReducer;
-  const { user_id } = store.getState().userReducer;
-  body = { user_id, room_id, ...body };
+type TDeal = <U>(
+  props: {
+    url: string;
+    method?: 'POST' | 'GET' | 'PUT' | 'DELETE';
+  } & InferBodyType<U>,
+) => Promise<InferResultType<U>>;
+
+const deal: TDeal = async ({ url, method = 'POST', body = {} }) => {
   const myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
 

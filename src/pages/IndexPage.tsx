@@ -1,57 +1,55 @@
 import React, { useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
-import { TStore } from '@/store/reducer';
-
-import AuthPage from '@/pages/Auth';
-import StartPage from '@/pages/Start';
-import HubPage from '@/pages/Hub';
-import PartyCreate from '@/pages/Party_create';
-import LobbyPage from '@/pages/Lobby';
-import Game from '@/pages/Game';
-import Scores from '@/pages/Scores';
-
-const reloadPrepare = (event: KeyboardEvent) => {
-  if (event.code !== 'MetaLeft') return;
-
-  const path = window.location.pathname.slice(1);
-
-  window.location.pathname = '';
-  window.location.hash = path;
-};
+import { StartPage } from '@/pages/Start/StartPage';
+import { HubPage } from '@/pages/Hub/HubPage';
+import { PartyCreate } from '@/pages/PartyCreate/PartyCreate';
+import { LobbyPage } from '@/pages/Lobby/LobbyPage';
+import { GamePage } from '@/pages/Game/GamePage';
+import { ScoresPage } from '@/pages/Scores/ScoresPage';
+import deal from '@/helpers/deal';
+import { TAuthVerify } from '@my-app/interfaces';
+import { ROUTES } from '@my-app/constants';
+import { UserAction } from '@/store/user/action';
+import { useDispatch } from 'react-redux';
 
 function IndexPage() {
   const history = useHistory();
-  const page = useSelector((state: TStore) => state.pageReducer.page);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const { hash } = window.location;
     if (hash.length === 0) return;
-    history.push(hash.replace(/#/, ''));
-  });
 
-  useEffect(() => {
-    history.push(page);
-  }, [page]);
+    (async () => {
+      try {
+        const { user_id, nick_name, experience } = await deal<TAuthVerify>({
+          url: ROUTES.AUTH_VERIFY,
+        });
 
-  useEffect(() => {
-    window.addEventListener('keydown', reloadPrepare);
+        dispatch(
+          UserAction.setUser({
+            user_id,
+            nick_name,
+            experience,
+          }),
+        );
 
-    return () => {
-      window.removeEventListener('keydown', reloadPrepare);
-    };
-  });
+        history.replace(hash.replace(/#/, ''));
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   return (
     <Switch>
       <Route exact path="/" component={StartPage} />
-      <Route exact path="/auth" component={AuthPage} />
       <Route exact path="/main" component={HubPage} />
       <Route exact path="/create" component={PartyCreate} />
       <Route exact path="/lobby" component={LobbyPage} />
-      <Route exact path="/game" component={Game} />
-      <Route exact path="/scores" component={Scores} />
+      <Route exact path="/game" component={GamePage} />
+      <Route exact path="/scores" component={ScoresPage} />
     </Switch>
   );
 }

@@ -3,7 +3,9 @@ import { InferValueTypes } from '@my-app/types';
 export const COLOR = {
   red: '#f7786b' as const,
   rust: '#ff9200' as const,
+  link: '#920fff' as const,
   white: '#f0efef' as const,
+  black: '#0C0C0C' as const,
   slate: '#3e4444' as const,
   green: '#4CAF50' as const,
   active: '#666666' as const,

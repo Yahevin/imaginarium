@@ -9,7 +9,7 @@ export default {
 };
 
 const Template = (args: IAvatar) => <Avatar {...args}>123</Avatar>;
-
+// @ts-ignore
 export const Primary: { args: IAvatar } = Template.bind({});
 Primary.args = {
   id: 1,

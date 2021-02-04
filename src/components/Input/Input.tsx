@@ -26,7 +26,7 @@ export const Input = ({
       name={name}
       className={className}
       placeholder={placeholder}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue ?? ''}
       onChange={onChangeEvent}
       onFocus={onFocusEvent}
       onBlur={onBlurEvent}
@@ -36,3 +36,5 @@ export const Input = ({
     />
   );
 };
+
+export { StyledInput as InputRef } from '@/components/Input/Input.styles';

@@ -18,9 +18,6 @@
     "bugs": {
         "url": "https://github.com/Yahevin/imaginarium/issues"
     },
-    "engines": {
-        "node": "14.13.0"
-    },
     "homepage": "https://github.com/Yahevin/imaginarium#readme",
     "devDependencies": {
         "@types/html-webpack-plugin": "^3.2.3",
