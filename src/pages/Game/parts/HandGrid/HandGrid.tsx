@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import deal from '@/helpers/deal';
 import SocketAction from '@/web-socket/action';
@@ -12,6 +12,7 @@ import { ICard, TPutTheCard } from '@my-app/interfaces';
 
 export const HandGrid = () => {
   const dispatch = useDispatch();
+  const [awaitDeal, setAwaitDeal] = useState(false);
   const selectedHand = useSelector((store: TStore) => store.cardsReducer.selectedHand);
   const hand_cards = useSelector((store: TStore) => store.cardsReducer.hand);
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
@@ -21,6 +22,7 @@ export const HandGrid = () => {
   const confirm_select = useCallback(async () => {
     if (!selectedHand || room_id === null) return;
 
+    setAwaitDeal(true);
     try {
       await deal<TPutTheCard>({
         url: ROUTES.PUT_CARD,
@@ -36,13 +38,15 @@ export const HandGrid = () => {
       // remove card from hand
       dispatch(CardsAction.putToTable(selectedHand));
     } catch (error) {
+      setAwaitDeal(false);
       console.log(error);
     }
   }, [room_id, selectedHand, dispatch]);
 
   const submit_disabled = useMemo(() => {
-    return selectedHand === null;
-  }, [selectedHand]);
+    // eslint-disable-next-line no-magic-numbers
+    return selectedHand === null || awaitDeal || hand_cards.length < 6;
+  }, [selectedHand, hand_cards, awaitDeal]);
 
   const setSelected = (card_id: ICard['id']) => {
     dispatch(CardsAction.setSelectedHand(card_id));
@@ -56,7 +60,7 @@ export const HandGrid = () => {
 
       <Menu__item>
         {GAME_ACTION.GM_CARD_SET === game_action && !game_master && (
-          <Button callback={confirm_select} disabled={submit_disabled} theme={BUTTON_THEME.LIGHT} width="100%">
+          <Button callback={confirm_select} disabled={submit_disabled} theme={BUTTON_THEME.GREEN} width="100%">
             Выбрать
           </Button>
         )}
