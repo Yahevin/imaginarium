@@ -60,6 +60,12 @@ socket.onmessage = async function (event) {
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
       break;
     }
+    case COMMANDS.END_GAME: {
+      console.log('[message] END_GAME');
+      updateParty();
+      store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
+      break;
+    }
     default: {
       console.log(`[message] Данные получены с сервера: ${event.data}`);
     }
