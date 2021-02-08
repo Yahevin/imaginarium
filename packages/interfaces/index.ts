@@ -28,3 +28,4 @@ export * from './parts/routes/TLeaderBoard';
 export * from './parts/routes/TAuthentication';
 export * from './parts/routes/TPartyCreate';
 export * from './parts/routes/TPutTheCard';
+export * from './parts/routes/TGuessCard';

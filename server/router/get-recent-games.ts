@@ -4,9 +4,8 @@ import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@my-app/interfaces';
 import { TResponseFunc } from '@my-app/types/parts/TResponse';
 import { TGetRecent } from '@my-app/interfaces/parts/routes/TGetRecent';
 import { TRequest } from '@my-app/types';
-import { User } from '../helpers/User';
-import { Party } from '../helpers/Party';
-import { authToken } from '../utils/authToken';
+import { User, Party } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequest<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
@@ -36,9 +35,8 @@ module.exports = (app: any, db: any) => {
   });
 
   const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-    const players_list: DB_user_room[] = await Party.getPlayersList({ app, db, room_id: room.id });
-    const users_id_list = players_list.map((item) => item.user_id);
-    const users_list = await User.getList({ app, db, users_id_list });
+    const players_list = await Party.getPlayersList({ app, db, room_id: room.id });
+    const users_list = await User.getList({ app, db, room_id: room.id });
 
     const full_players_list: IPlayer[] = users_list.map((user) => {
       const current_player = players_list.filter((player) => {

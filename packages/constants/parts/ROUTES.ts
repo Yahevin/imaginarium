@@ -14,6 +14,7 @@ export const ROUTES = {
   GET_PLAYER: '/get-player' as const,
   USER_JOIN: '/user-join' as const,
   PUT_CARD: '/put-card' as const,
+  GUESS_CARD: '/guess-card' as const,
   LEADER_BOARD: '/leader-board' as const,
   SET_QUESTION: '/set-question' as const,
   PARTY_CREATE: '/party-create' as const,

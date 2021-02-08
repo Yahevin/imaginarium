@@ -99,6 +99,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'error',
     'react/jsx-pascal-case': 0,
     '@typescript-eslint/no-shadow': ['error'],
+    '@typescript-eslint/no-this-alias': 0,
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-unused-vars': 2,

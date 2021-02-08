@@ -1,4 +1,5 @@
 export const COMMANDS = {
+  END_GAME: 'END_GAME' as const,
   SHOW_SCORE: 'SHOW_SCORE' as const,
   UPDATE_ALL: 'UPDATE_ALL' as const,
   UPDATE_ROLE: 'UPDATE_ROLE' as const,

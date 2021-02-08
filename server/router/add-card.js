@@ -1,4 +1,4 @@
-const sql = require('../mixins/sqlCommands');
+import { sqlCommands as sql } from '../utils';
 
 module.exports = function (app, db) {
   app.post('/add-card', async (req, res) => {

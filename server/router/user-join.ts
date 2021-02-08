@@ -1,9 +1,8 @@
 import { TResponseFunc } from '@my-app/types';
 import { TUserJoin } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { Player } from '../helpers/Player';
-import { Party } from '../helpers/Party';
-import { authToken } from '../utils/authToken';
+import { Player, Party } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.USER_JOIN, async (req: any, res: TResponseFunc<TUserJoin>) => {
@@ -26,8 +25,6 @@ module.exports = (app: any, db: any) => {
         }
 
         const { game_action } = await Party.getRoom({ app, db, room_id });
-        const new_count = await Party.getPlayersCount({ app, db, room_id });
-        await Party.countUpdate({ app, db, room_id, new_count });
 
         return res.json({
           game_action,

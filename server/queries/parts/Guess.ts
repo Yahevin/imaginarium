@@ -1,9 +1,6 @@
 import { TQuery } from '@my-app/types';
 import { DB_guess, DB_question } from '@my-app/interfaces';
-import { isNotEmpty } from '../mixins/isNotEmpty';
-
-const sql = require('../mixins/sqlCommands');
-const dbQuery = require('../mixins/dbQuery');
+import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Guess = {
   async createQuestion({
@@ -40,7 +37,7 @@ export const Guess = {
     throw 'Question in not exist';
   },
   async clearQuestion({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.ussw, ['question', 'question', '', 'card_id', null, 'room_id', room_id]);
+    const format = db.format(sql.ussw, ['question', 'question', null, 'card_id', null, 'room_id', room_id]);
 
     await dbQuery(format, db);
 

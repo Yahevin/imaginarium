@@ -1,12 +1,11 @@
-import { TResponseFunc } from '@my-app/types';
-import { Player } from '../helpers/Player';
-import { authToken } from '../utils/authToken';
-import { Basket } from '../helpers/Basket';
-import { Guess } from '../helpers/Guess';
-import { Table } from '../helpers/Table';
+import { TRequest, TResponseFunc } from '@my-app/types';
+import { ROUTES } from '@my-app/constants';
+import { TGuessCard } from '@my-app/interfaces';
+import { Player, Basket, Guess, Table } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
-  app.post('/card-guess', async (req: any, res: TResponseFunc<unknown>) => {
+  app.post(ROUTES.GUESS_CARD, async (req: TRequest<TGuessCard>, res: TResponseFunc<TGuessCard>) => {
     try {
       const { room_id } = req.body;
       const { card_id } = req.body;
@@ -15,7 +14,7 @@ module.exports = (app: any, db: any) => {
       const table_card = await Table.getCard({ app, db, player_id });
       const { basket_id } = await Basket.get({ app, db, room_id });
 
-      if (parseInt(table_card.id) === parseInt(card_id)) {
+      if (table_card.id === card_id) {
         return res.json({
           error: 'That`s your card',
           success: false,

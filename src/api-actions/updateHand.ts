@@ -1,7 +1,7 @@
 import store from '@/store';
 import deal from '@/helpers/deal';
 import { CardsAction } from '@/store/cards/action';
-import { GAME_ACTION, ROUTES } from '@my-app/constants';
+import { ERROR, GAME_ACTION, ROUTES } from '@my-app/constants';
 import { MAX_HAND_CARDS } from '@my-app/constants/parts/MAX_HAND_CARDS';
 import { TGetCards } from '@my-app/interfaces';
 
@@ -35,10 +35,10 @@ async function updateHand() {
     store.dispatch(CardsAction.setHand(cards));
 
     if (cards.length < MAX_HAND_CARDS && game_action === GAME_ACTION.START) {
-      // await getNew();
+      await getNew();
     }
-  } catch (e) {
-    // await getNew();
+  } catch (error) {
+    if (error === ERROR.ASK_NEW_CARDS) await getNew();
   }
 }
 

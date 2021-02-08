@@ -1,5 +1,5 @@
 import { TResponseFunc } from '@my-app/types';
-import { Player } from '../helpers/Player';
+import { Player } from '../queries';
 
 module.exports = (app: any, db: any) => {
   app.post('/set-style', async (req: any, res: TResponseFunc<unknown>) => {

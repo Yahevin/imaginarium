@@ -42,7 +42,7 @@ export const HubPage = () => {
       // after this, will get command to update party list;
       SocketAction.join(parseInt(partyId));
 
-      history.replace(PAGES.LOBBY);
+      history.push(PAGES.LOBBY);
     } catch (e) {
       console.log(e);
     }

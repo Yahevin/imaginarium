@@ -1,7 +1,7 @@
 import { TResponseFunc } from '@my-app/types';
 import { TAuthentication } from '@my-app/interfaces';
-import { User } from '../helpers/User';
-import { generateToken } from '../utils/generateToken';
+import { User } from '../queries';
+import { generateToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post('/authentication', async (req: any, res: TResponseFunc<TAuthentication>) => {

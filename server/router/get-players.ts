@@ -1,9 +1,8 @@
 import { ROUTES } from '@my-app/constants';
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { DB_user, DB_user_room, TGetPlayers } from '@my-app/interfaces';
-import { Party } from '../helpers/Party';
-import { User } from '../helpers/User';
-import { authToken } from '../utils/authToken';
+import { Party, User } from '../queries';
+import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
   app.post(ROUTES.GET_PLAYERS, async (req: TRequest<TGetPlayers>, res: TResponseFunc<TGetPlayers>) => {
@@ -12,8 +11,7 @@ module.exports = (app: any, db: any) => {
       const { room_id } = req.body;
 
       const playersList: DB_user_room[] = await Party.getActivePlayersList({ app, db, room_id });
-      const users_id_list: number[] = await Party.getUsersIdList({ app, db, room_id });
-      const usersList = await User.getList({ app, db, users_id_list });
+      const usersList = await User.getList({ app, db, room_id });
 
       const party = playersList.map((player) => {
         const userIndex = usersList.findIndex((user) => {
