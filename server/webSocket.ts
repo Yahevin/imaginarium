@@ -303,9 +303,9 @@ export class SocketController {
 
   async SetNewRoundTimeout() {
     const oneMinute = 60000;
-    const ctx = this;
+    const callback = this.newRound.bind(this);
 
-    this.timer = setTimeout(ctx.newRound, oneMinute);
+    this.timer = setTimeout(callback, oneMinute);
   }
 
   extract() {
