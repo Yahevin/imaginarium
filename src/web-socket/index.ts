@@ -57,6 +57,7 @@ socket.onmessage = async function (event) {
     case COMMANDS.SHOW_SCORE: {
       console.log('[message] SHOW_SCORE');
       updateParty();
+      store.dispatch(PartyAction.setQuestion(null));
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
       break;
     }

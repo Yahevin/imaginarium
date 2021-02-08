@@ -43,7 +43,7 @@ export const TableGrid = () => {
 
   const submit_disabled = useMemo(() => {
     // eslint-disable-next-line no-magic-numbers
-    return selected === null || awaitDeal || table_cards.length < 6;
+    return selected === null || awaitDeal;
   }, [selected, table_cards, awaitDeal]);
 
   return (

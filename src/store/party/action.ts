@@ -28,7 +28,7 @@ const PartyAction = {
       payload: game_master,
     };
   },
-  setQuestion(question: string) {
+  setQuestion(question: string | null) {
     return {
       type: SET_QUESTION,
       payload: question,
