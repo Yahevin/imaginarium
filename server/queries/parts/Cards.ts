@@ -1,6 +1,6 @@
 import { TQuery } from '@my-app/types';
 import { DB_card, DB_shelter } from '@my-app/interfaces';
-import { CARD_STATUS } from '@my-app/constants';
+import { CARD_STATUS, ERROR } from '@my-app/constants';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Cards = {
@@ -38,7 +38,7 @@ export const Cards = {
     if (isNotEmpty(results)) {
       return results;
     }
-    throw 'The getCards failed. There is no cards in his hand';
+    throw ERROR.ASK_NEW_CARDS;
   },
   async getAllMy({ db, player_id }: TQuery<{ player_id: number }>) {
     const format: DB_card[] = db.format(sql.sfwwi, [

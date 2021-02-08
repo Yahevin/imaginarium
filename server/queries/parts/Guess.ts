@@ -37,7 +37,7 @@ export const Guess = {
     throw 'Question in not exist';
   },
   async clearQuestion({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.ussw, ['question', 'question', '', 'card_id', null, 'room_id', room_id]);
+    const format = db.format(sql.ussw, ['question', 'question', null, 'card_id', null, 'room_id', room_id]);
 
     await dbQuery(format, db);
 

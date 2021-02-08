@@ -11,8 +11,7 @@ module.exports = (app: any, db: any) => {
       const { room_id } = req.body;
 
       const playersList: DB_user_room[] = await Party.getActivePlayersList({ app, db, room_id });
-      const users_id_list: number[] = await Party.getUsersIdList({ app, db, room_id });
-      const usersList = await User.getList({ app, db, users_id_list });
+      const usersList = await User.getList({ app, db, room_id });
 
       const party = playersList.map((player) => {
         const userIndex = usersList.findIndex((user) => {

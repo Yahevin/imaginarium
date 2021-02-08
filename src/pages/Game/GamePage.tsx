@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ export const GamePage = () => {
   const leaveParty = useCallback(() => {
     SocketAction.leave();
 
-    dispatch(PartyAction.setPartyId(null));
+    dispatch(PartyAction.leave());
     history.push(PAGES.MAIN);
   }, [dispatch, history]);
 
@@ -43,11 +43,15 @@ export const GamePage = () => {
     }
   }, [players, history]);
 
+  const QuestLine = useMemo(() => {
+    return question && question?.length > 0 ? <h4>Загадано: &quot;{question}&quot;</h4> : null;
+  }, [question]);
+
   return (
     <Menu>
       <Menu__item>
         <FlexRowBox>
-          {game_master && game_action === GAME_ACTION.START ? <QuestInput /> : <h4>Загадано: &quot;{question}&quot;</h4>}
+          {game_master && game_action === GAME_ACTION.START ? <QuestInput /> : QuestLine}
 
           <Spacer />
 

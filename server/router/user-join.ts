@@ -25,8 +25,6 @@ module.exports = (app: any, db: any) => {
         }
 
         const { game_action } = await Party.getRoom({ app, db, room_id });
-        const new_count = await Party.getPlayersCount({ app, db, room_id });
-        await Party.countUpdate({ app, db, room_id, new_count });
 
         return res.json({
           game_action,

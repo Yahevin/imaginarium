@@ -38,7 +38,7 @@ export const LobbyPage = () => {
   const leaveParty = useCallback(() => {
     SocketAction.leave();
 
-    dispatch(PartyAction.setPartyId(null));
+    dispatch(PartyAction.leave());
     history.replace(PAGES.MAIN);
   }, [dispatch, history]);
 

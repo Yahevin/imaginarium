@@ -89,7 +89,7 @@ conn.connect(function (err, result) {
     ' origin_id INT, ' +
     ' player_id INT, ' +
     ' basket_id INT, ' +
-    ' status INT, ' +
+    ' status VARCHAR(255), ' +
     ' is_main BOOLEAN,' +
     ' FOREIGN KEY (origin_id) REFERENCES shelter(id)' +
     ' ON DELETE CASCADE, ' +

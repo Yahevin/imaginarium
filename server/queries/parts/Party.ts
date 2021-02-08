@@ -1,9 +1,7 @@
 import { TQuery } from '@my-app/types';
 import { DB_room, DB_user_room } from '@my-app/interfaces';
 import { GAME_ACTION, T_GAME_ACTION } from '@my-app/constants';
-import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
-
-const getRandomPartyName = require('../mixins/getRandomPartyName');
+import { isNotEmpty, dbQuery, sqlCommands as sql, getRandomPartyName } from '../../utils';
 
 export const Party = {
   async create({ db }: TQuery<unknown>) {
@@ -51,28 +49,6 @@ export const Party = {
 
     return { success: true };
   },
-  async getUsersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results: DB_user_room[] = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results.map((item) => {
-        return item.user_id;
-      });
-    }
-    throw 'The getUsersIdList failed. There is no users in this room';
-  },
-  async getPlayersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results: DB_user_room[] = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results.map((item) => {
-        return item.id;
-      });
-    }
-    throw 'The getPlayersIdList failed. There is no users in this room';
-  },
   async getPlayersList({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const results: DB_user_room[] = await dbQuery(format, db);
@@ -104,21 +80,6 @@ export const Party = {
   },
   async setStatus({ db, room_id, game_action }: TQuery<{ room_id: number; game_action: T_GAME_ACTION }>) {
     const format = db.format(sql.usw, ['room', 'game_action', game_action, 'id', room_id]);
-    await dbQuery(format, db);
-
-    return { success: true };
-  },
-  async getPlayersCount({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results: DB_user_room[] = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results.length;
-    }
-    throw 'All players are inactive';
-  },
-  async countUpdate({ db, room_id, new_count }: TQuery<{ room_id: number; new_count: number }>) {
-    const format = db.format(sql.usw, ['room', 'player_count', new_count, 'id', room_id]);
     await dbQuery(format, db);
 
     return { success: true };

@@ -7,7 +7,7 @@ import { Player, Basket, Cards } from '../queries';
 import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
-  app.post(ROUTES.GET_MY_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
+  app.post(ROUTES.GET_NEW_CARDS, async (req: TRequest<TGetCards>, res: TResponseFunc<TGetCards>) => {
     try {
       const { user_id } = authToken(req);
       const { room_id } = req.body;

@@ -35,9 +35,8 @@ module.exports = (app: any, db: any) => {
   });
 
   const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-    const players_list: DB_user_room[] = await Party.getPlayersList({ app, db, room_id: room.id });
-    const users_id_list = players_list.map((item) => item.user_id);
-    const users_list = await User.getList({ app, db, users_id_list });
+    const players_list = await Party.getPlayersList({ app, db, room_id: room.id });
+    const users_list = await User.getList({ app, db, room_id: room.id });
 
     const full_players_list: IPlayer[] = users_list.map((user) => {
       const current_player = players_list.filter((player) => {

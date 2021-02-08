@@ -1,3 +1,4 @@
+export const LEAVE_PARTY = 'LEAVE_PARTY' as const;
 export const SET_PLAYERS = 'SET_PLAYERS' as const;
 export const SET_PARTY_ID = 'SET_PARTY_ID' as const;
 export const SET_QUESTION = 'SET_QUESTION' as const;
