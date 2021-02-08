@@ -1,7 +1,7 @@
 import { TResponseFunc, TRequest } from '@my-app/types';
 import { TLeaderBoard } from '@my-app/interfaces';
 import { ROUTES } from '@my-app/constants';
-import { User, Party } from '../queries';
+import { User } from '../queries';
 import { authToken } from '../utils';
 
 module.exports = (app: any, db: any) => {
@@ -9,8 +9,7 @@ module.exports = (app: any, db: any) => {
     try {
       authToken(req);
       const { room_id } = req.body;
-      const users_id_list = await Party.getUsersIdList({ app, db, room_id });
-      const users = await User.getList({ app, db, users_id_list });
+      const users = await User.getList({ app, db, room_id });
 
       return res.json({
         success: true,

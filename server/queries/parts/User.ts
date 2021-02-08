@@ -1,4 +1,4 @@
-import { DB_user } from '@my-app/interfaces';
+import { DB_user, DB_user_room } from '@my-app/interfaces';
 import { TQuery } from '@my-app/types';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
@@ -24,14 +24,21 @@ export const User = {
     }
     throw 'Such user not found';
   },
+  async getList({ db, room_id }: TQuery<{ room_id: number }>) {
+    const format1 = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
+    const results: DB_user_room[] = await dbQuery(format1, db);
 
-  async getList({ db, users_id_list }: TQuery<{ users_id_list: number[] }>) {
-    const format = db.format(sql.sfwi, ['user', 'id', users_id_list]);
-    const result: DB_user[] = await dbQuery(format, db);
+    const users_id_list = results.map((item) => {
+      return item.user_id;
+    });
+
+    const format2 = db.format(sql.sfwi, ['user', 'id', users_id_list]);
+    const result: DB_user[] = await dbQuery(format2, db);
 
     if (isNotEmpty(result)) {
       return result;
     }
+
     throw 'Users not found';
   },
 };
