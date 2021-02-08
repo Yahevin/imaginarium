@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { TModal } from '@/components/Modal/Modal.model';
-import { FixedContainer, ModalContent, ModalWrap } from '@/components/Modal/Modal.styles';
+import { FixedContainer, ModalContent, ModalSpacer, ModalWrap } from '@/components/Modal/Modal.styles';
 
 export const Modal: React.FC<TModal> = ({ isOpen, close, children, customRoot }) => {
   const container = useRef(document.createElement('div'));
   const root = useRef(customRoot || document.body);
 
   const removeSteps = useCallback(() => {
-    if (!isOpen && document.body.contains(container.current)) {
+    if (document.body.contains(container.current)) {
       root.current.removeChild(container.current);
       document.body.style.setProperty('overflow-y', 'auto');
     }
@@ -19,11 +19,12 @@ export const Modal: React.FC<TModal> = ({ isOpen, close, children, customRoot })
     if (isOpen) {
       root.current.appendChild(container.current);
       document.body.style.setProperty('overflow-y', 'hidden');
+    } else {
+      removeSteps();
     }
-    removeSteps();
-  }, [isOpen, removeSteps]);
 
-  useEffect(() => removeSteps, []);
+    return removeSteps;
+  }, [isOpen, removeSteps]);
 
   const overlayHandle = (event: React.SyntheticEvent) => {
     event.stopPropagation();
@@ -33,7 +34,9 @@ export const Modal: React.FC<TModal> = ({ isOpen, close, children, customRoot })
     ? createPortal(
         <FixedContainer onClick={close}>
           <ModalWrap>
+            <ModalSpacer />
             <ModalContent onClick={overlayHandle}>{children}</ModalContent>
+            <ModalSpacer />
           </ModalWrap>
         </FixedContainer>,
         container.current,
