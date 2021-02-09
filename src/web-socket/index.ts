@@ -58,13 +58,15 @@ socket.onmessage = async function (event) {
       console.log('[message] SHOW_SCORE');
       updateParty();
       store.dispatch(PartyAction.setQuestion(null));
+      store.dispatch(PartyAction.setRewards(message.payload));
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
       break;
     }
     case COMMANDS.END_GAME: {
       console.log('[message] END_GAME');
       updateParty();
-      store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
+      store.dispatch(PartyAction.setRewards(message.payload));
+      store.dispatch(PartyAction.setGAction(GAME_ACTION.END_GAME));
       break;
     }
     default: {
