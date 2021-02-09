@@ -56,15 +56,17 @@ socket.onmessage = async function (event) {
     }
     case COMMANDS.SHOW_SCORE: {
       console.log('[message] SHOW_SCORE');
-      updateParty();
       store.dispatch(PartyAction.setQuestion(null));
+      store.dispatch(PartyAction.updatePlayers(message.payload.scores));
+      store.dispatch(PartyAction.setRewards(message.payload.rewards));
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
       break;
     }
     case COMMANDS.END_GAME: {
       console.log('[message] END_GAME');
-      updateParty();
-      store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
+      store.dispatch(PartyAction.updatePlayers(message.payload.scores));
+      store.dispatch(PartyAction.setRewards(message.payload.rewards));
+      store.dispatch(PartyAction.setGAction(GAME_ACTION.END_GAME));
       break;
     }
     default: {

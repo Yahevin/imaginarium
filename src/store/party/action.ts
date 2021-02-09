@@ -1,7 +1,16 @@
 import { InferValueTypes } from '@my-app/types';
-import { LEAVE_PARTY, SET_GAME_ROLE, SET_PARTY_ID, SET_PARTY_STATUS, SET_PLAYERS, SET_QUESTION } from '@/store/actions';
+import {
+  LEAVE_PARTY,
+  SET_GAME_ROLE,
+  SET_PARTY_ID,
+  SET_PARTY_STATUS,
+  SET_PLAYERS,
+  SET_QUESTION,
+  SET_REWARDS,
+  UPDATE_PLAYERS,
+} from '@/store/actions';
 import { T_GAME_ACTION } from '@my-app/constants';
-import { IPlayer } from '@my-app/interfaces';
+import { IPlayer, TReward, TScore } from '@my-app/interfaces';
 
 const PartyAction = {
   setPartyId(room_id: number | null) {
@@ -22,6 +31,12 @@ const PartyAction = {
       payload: players,
     };
   },
+  updatePlayers(scores: TScore[]) {
+    return {
+      type: UPDATE_PLAYERS,
+      payload: scores,
+    };
+  },
   setGameRole(game_master: boolean) {
     return {
       type: SET_GAME_ROLE,
@@ -32,6 +47,12 @@ const PartyAction = {
     return {
       type: SET_QUESTION,
       payload: question,
+    };
+  },
+  setRewards(rewards: TReward[]) {
+    return {
+      type: SET_REWARDS,
+      payload: rewards,
     };
   },
   leave() {

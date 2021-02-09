@@ -25,22 +25,23 @@ export const QuestInput = () => {
   const submit_disabled = storeQuestion !== null || question.length === 0 || selectedHand === null || awaitDeal;
 
   const quest_submit = useCallback(async () => {
-    if (!selectedHand && !room_id) return;
     setAwaitDeal(true);
 
     try {
-      await deal<TSetQuestion>({
-        url: ROUTES.SET_QUESTION,
-        body: { room_id, question, card_id: selectedHand },
-      });
+      if (selectedHand && room_id) {
+        await deal<TSetQuestion>({
+          url: ROUTES.SET_QUESTION,
+          body: { room_id, question, card_id: selectedHand },
+        });
 
-      // remove selectedHand card from hand
-      dispatch(CardsAction.putToTable(selectedHand));
-      dispatch(PartyAction.setQuestion(question));
+        // remove selectedHand card from hand
+        dispatch(CardsAction.putToTable(selectedHand));
+        dispatch(PartyAction.setQuestion(question));
 
-      // after this action, will come command
-      // to update game_action and question
-      SocketAction.putTheOrigin(question);
+        // after this action, will come command
+        // to update game_action and question
+        SocketAction.putTheOrigin(question);
+      }
     } catch (error) {
       setAwaitDeal(false);
       console.log(error);

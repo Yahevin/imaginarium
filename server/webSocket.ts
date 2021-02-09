@@ -1,16 +1,18 @@
 // eslint-disable-next-line max-classes-per-file
 import { DB_user_room, IMessage } from '@my-app/interfaces';
-import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 import { findNewGM } from './utils/parts/findNewGM';
 import { countRewards } from './utils/parts/countRewards';
 
-const END_GAME = 60;
+type TWebSocket = { controller: TSocketClient; send: (arg: string) => void };
 
 type TSocketClient = {
   room_id: number | null;
   user_id: number | null;
   player_id: number | null;
+  timer: null | NodeJS.Timeout;
+  stopTimeout: () => void;
 };
 
 export class SocketController {
@@ -86,6 +88,7 @@ export class SocketController {
         break;
       }
       case CLIENT_EVENTS.START_NEW_ROUND: {
+        this.removeNewRoundTimeout();
         this.newRound();
         break;
       }
@@ -115,9 +118,7 @@ export class SocketController {
         await this.maybeStartToGuess();
         await this.maybeCountResults();
         await this.makeUpdateParty();
-        if (this.timer !== null) {
-          this.newRound();
-        }
+        this.stopTimeout();
       } catch (error) {
         console.log(error);
       }
@@ -238,17 +239,16 @@ export class SocketController {
       });
       const marks = await Guess.getVoteList({ app, db, players_id_list });
       const table_cards = await Table.getPlayersCards({ app, db, players_id_list });
-      const { rewards, highestScore } = countRewards({ players_list, table_cards, marks });
+      const { scores, rewards, highestScore } = countRewards({ players_list, table_cards, marks });
 
-      console.log('updated rewards', rewards);
-      await Score.updateLocal({ app, db, rewards });
+      await Score.updateLocal({ app, db, scores });
 
-      if (highestScore >= END_GAME) {
-        this.sendToMyRoom(COMMANDS.END_GAME);
+      if (highestScore >= GAME_MAX_SCORE) {
+        this.sendToMyRoom(COMMANDS.END_GAME, { rewards, scores });
       } else {
-        await this.SetNewRoundTimeout();
+        await this.setNewRoundTimeout();
 
-        this.sendToMyRoom(COMMANDS.SHOW_SCORE);
+        this.sendToMyRoom(COMMANDS.SHOW_SCORE, { rewards, scores });
       }
     } catch (error) {
       console.log(error);
@@ -259,11 +259,6 @@ export class SocketController {
     console.log('newRound()');
     try {
       const { app, db, room_id } = this.extract();
-
-      if (this.timer !== null) {
-        clearTimeout(this.timer);
-        this.timer = null;
-      }
       const { game_action } = await Party.getRoom({ app, db, room_id });
       if (game_action !== GAME_ACTION.ALL_GUESS_DONE) return;
 
@@ -301,11 +296,27 @@ export class SocketController {
     }
   }
 
-  async SetNewRoundTimeout() {
-    const oneMinute = 60000;
-    const callback = this.newRound.bind(this);
+  setNewRoundTimeout() {
+    const oneMinute = 20000;
+    const ctx = this;
 
-    this.timer = setTimeout(callback, oneMinute);
+    this.timer = setTimeout(() => {
+      ctx.newRound();
+    }, oneMinute);
+  }
+
+  removeNewRoundTimeout() {
+    this.wss.clients.forEach(({ controller }: TWebSocket) => {
+      if (controller.room_id === this.room_id && controller.timer !== null) {
+        controller.stopTimeout();
+      }
+    });
+  }
+
+  stopTimeout() {
+    if (!this.timer) return;
+    clearTimeout(this.timer);
+    this.timer = null;
   }
 
   extract() {

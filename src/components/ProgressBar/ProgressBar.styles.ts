@@ -13,17 +13,30 @@ export const Bar = styled.div`
   background: ${COLOR.passive};
   border-radius: 8px;
   position: relative;
+  overflow: hidden;
 `;
-export const Progress = styled.div<{ width: number }>`
+const ProgressBar = css`
   ${Absolute};
-  width: calc(${(props) => props.width}% + 8px);
   height: 100%;
+  max-width: 110%;
   border-radius: 8px;
+  left: -10%;
+`;
+export const Progress = styled.div<{ width?: string }>`
+  ${ProgressBar};
+  width: ${(props) => (props.width ? props.width : `auto`)};
+  z-index: 2;
   background: ${COLOR.active};
+`;
+export const ProgressNew = styled.div`
+  ${ProgressBar};
+  z-index: 1;
+  background: ${COLOR.rust};
 `;
 export const Digit = styled.span`
   ${Absolute};
   ${Font_small};
+  z-index: 5;
   color: ${COLOR.white};
   margin: 0 0 0 8px;
 `;

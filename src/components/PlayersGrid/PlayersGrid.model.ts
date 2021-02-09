@@ -1,5 +1,6 @@
-import { IPlayer } from '@my-app/interfaces/parts/front/IPlayer';
+import { IPlayer, TReward } from '@my-app/interfaces';
 
 export type TPlayersGrid = {
   players: IPlayer[];
+  rewards?: TReward[];
 };
