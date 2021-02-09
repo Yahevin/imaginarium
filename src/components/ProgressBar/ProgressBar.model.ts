@@ -1,1 +1,1 @@
-export type TProgressBar = { score: number; base?: number };
+export type TProgressBar = { score: number; diff?: number; base?: number };
