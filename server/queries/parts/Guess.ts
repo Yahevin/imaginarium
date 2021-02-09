@@ -7,8 +7,8 @@ export const Guess = {
     db,
     room_id,
     card_id = null,
-    question = '',
-  }: TQuery<{ room_id: number; card_id?: number | null; question?: string | '' }>) {
+    question = null,
+  }: TQuery<{ room_id: number; card_id?: number | null; question?: string | null }>) {
     const format = db.format(sql.ii3, ['question', 'room_id', 'question', 'card_id', room_id, question, card_id]);
 
     await dbQuery(format, db);
