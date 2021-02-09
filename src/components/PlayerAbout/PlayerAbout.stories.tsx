@@ -16,5 +16,5 @@ Primary.args = {
   nick_name: 'Test',
   experience: 100,
   game_master: false,
-  score: 50,
+  score: 20,
 };
