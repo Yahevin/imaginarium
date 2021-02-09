@@ -5,12 +5,14 @@ import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 import { findNewGM } from './utils/parts/findNewGM';
 import { countRewards } from './utils/parts/countRewards';
 
-const END_GAME = 60;
+type TWebSocket = { controller: TSocketClient; send: (arg: string) => void };
 
 type TSocketClient = {
   room_id: number | null;
   user_id: number | null;
   player_id: number | null;
+  timer: null | NodeJS.Timeout;
+  stopTimeout: () => void;
 };
 
 export class SocketController {
@@ -86,6 +88,7 @@ export class SocketController {
         break;
       }
       case CLIENT_EVENTS.START_NEW_ROUND: {
+        this.removeNewRoundTimeout();
         this.newRound();
         break;
       }
@@ -115,9 +118,7 @@ export class SocketController {
         await this.maybeStartToGuess();
         await this.maybeCountResults();
         await this.makeUpdateParty();
-        if (this.timer !== null) {
-          this.newRound();
-        }
+        this.stopTimeout();
       } catch (error) {
         console.log(error);
       }
@@ -245,7 +246,7 @@ export class SocketController {
       if (highestScore >= GAME_MAX_SCORE) {
         this.sendToMyRoom(COMMANDS.END_GAME, { rewards, scores });
       } else {
-        await this.SetNewRoundTimeout();
+        await this.setNewRoundTimeout();
 
         this.sendToMyRoom(COMMANDS.SHOW_SCORE, { rewards, scores });
       }
@@ -258,11 +259,6 @@ export class SocketController {
     console.log('newRound()');
     try {
       const { app, db, room_id } = this.extract();
-
-      if (this.timer !== null) {
-        clearTimeout(this.timer);
-        this.timer = null;
-      }
       const { game_action } = await Party.getRoom({ app, db, room_id });
       if (game_action !== GAME_ACTION.ALL_GUESS_DONE) return;
 
@@ -300,11 +296,27 @@ export class SocketController {
     }
   }
 
-  async SetNewRoundTimeout() {
-    const oneMinute = 60000;
-    const callback = this.newRound.bind(this);
+  setNewRoundTimeout() {
+    const oneMinute = 20000;
+    const ctx = this;
 
-    this.timer = setTimeout(callback, oneMinute);
+    this.timer = setTimeout(() => {
+      ctx.newRound();
+    }, oneMinute);
+  }
+
+  removeNewRoundTimeout() {
+    this.wss.clients.forEach(({ controller }: TWebSocket) => {
+      if (controller.room_id === this.room_id && controller.timer !== null) {
+        controller.stopTimeout();
+      }
+    });
+  }
+
+  stopTimeout() {
+    if (!this.timer) return;
+    clearTimeout(this.timer);
+    this.timer = null;
   }
 
   extract() {
