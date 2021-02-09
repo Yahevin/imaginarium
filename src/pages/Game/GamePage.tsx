@@ -20,7 +20,7 @@ export const GamePage = () => {
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
 
   useEffect(() => {
-    if (game_action === GAME_ACTION.ALL_GUESS_DONE) {
+    if (game_action === GAME_ACTION.ALL_GUESS_DONE || game_action === GAME_ACTION.END_GAME) {
       history.replace(PAGES.SCORES);
     }
   }, [game_action, history]);
