@@ -244,11 +244,11 @@ export class SocketController {
       await Score.updateLocal({ app, db, rewards });
 
       if (highestScore >= END_GAME) {
-        this.sendToMyRoom(COMMANDS.END_GAME);
+        this.sendToMyRoom(COMMANDS.END_GAME, rewards);
       } else {
         await this.SetNewRoundTimeout();
 
-        this.sendToMyRoom(COMMANDS.SHOW_SCORE);
+        this.sendToMyRoom(COMMANDS.SHOW_SCORE, rewards);
       }
     } catch (error) {
       console.log(error);

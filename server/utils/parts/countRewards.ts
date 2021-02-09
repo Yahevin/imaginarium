@@ -1,24 +1,29 @@
 import { DB_card, DB_guess, DB_user_room } from '@my-app/interfaces';
+import { TReward } from '@my-app/interfaces/parts/schema/TReward';
 
 type Props = { players_list: DB_user_room[]; table_cards: DB_card[]; marks: DB_guess[] };
 
-export const countRewards = ({ players_list, table_cards, marks }: Props) => {
+export const countRewards = ({
+  players_list,
+  table_cards,
+  marks,
+}: Props): { rewards: TReward[]; highestScore: number } => {
   const max = marks.length;
 
   const rewards = table_cards.map((card) => {
-    let score = 0;
+    let diff = 0;
     marks.forEach((mark) => {
       if (card?.id === mark.card_id) {
-        score++;
+        diff++;
       }
     });
     if (card?.is_main) {
       // eslint-disable-next-line no-magic-numbers
-      score = score === 0 || score === max ? (score = -3) : (score += 3);
+      diff = diff === 0 || diff === max ? (diff = -3) : (diff += 3);
     }
     return {
       player_id: card.player_id,
-      score,
+      diff,
     };
   });
   let highestScore = 0;
@@ -27,10 +32,10 @@ export const countRewards = ({ players_list, table_cards, marks }: Props) => {
     players_list.forEach((player) => {
       if (player.id === reward.player_id) {
         // eslint-disable-next-line no-param-reassign
-        reward.score = +player.score + reward.score;
+        const newScore = +player.score + reward.diff;
 
-        if (highestScore < reward.score) {
-          highestScore = reward.score;
+        if (highestScore < newScore) {
+          highestScore = newScore;
         }
       }
     });
