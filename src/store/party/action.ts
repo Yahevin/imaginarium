@@ -7,9 +7,10 @@ import {
   SET_PLAYERS,
   SET_QUESTION,
   SET_REWARDS,
+  UPDATE_PLAYERS,
 } from '@/store/actions';
 import { T_GAME_ACTION } from '@my-app/constants';
-import { IPlayer, TReward } from '@my-app/interfaces';
+import { IPlayer, TReward, TScore } from '@my-app/interfaces';
 
 const PartyAction = {
   setPartyId(room_id: number | null) {
@@ -28,6 +29,12 @@ const PartyAction = {
     return {
       type: SET_PLAYERS,
       payload: players,
+    };
+  },
+  updatePlayers(scores: TScore[]) {
+    return {
+      type: UPDATE_PLAYERS,
+      payload: scores,
     };
   },
   setGameRole(game_master: boolean) {

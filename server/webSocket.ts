@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { DB_user_room, IMessage } from '@my-app/interfaces';
-import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 import { findNewGM } from './utils/parts/findNewGM';
 import { countRewards } from './utils/parts/countRewards';
@@ -238,17 +238,16 @@ export class SocketController {
       });
       const marks = await Guess.getVoteList({ app, db, players_id_list });
       const table_cards = await Table.getPlayersCards({ app, db, players_id_list });
-      const { rewards, highestScore } = countRewards({ players_list, table_cards, marks });
+      const { scores, rewards, highestScore } = countRewards({ players_list, table_cards, marks });
 
-      console.log('updated rewards', rewards);
-      await Score.updateLocal({ app, db, rewards });
+      await Score.updateLocal({ app, db, scores });
 
-      if (highestScore >= END_GAME) {
-        this.sendToMyRoom(COMMANDS.END_GAME, rewards);
+      if (highestScore >= GAME_MAX_SCORE) {
+        this.sendToMyRoom(COMMANDS.END_GAME, { rewards, scores });
       } else {
         await this.SetNewRoundTimeout();
 
-        this.sendToMyRoom(COMMANDS.SHOW_SCORE, rewards);
+        this.sendToMyRoom(COMMANDS.SHOW_SCORE, { rewards, scores });
       }
     } catch (error) {
       console.log(error);

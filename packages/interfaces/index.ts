@@ -31,3 +31,4 @@ export * from './parts/routes/TPutTheCard';
 export * from './parts/routes/TGuessCard';
 
 export * from './parts/schema/TReward';
+export * from './parts/schema/TScore';
