@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { TStore } from '@/store/reducer';
-import { MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
-import { Menu, Menu__item } from '@/styled/Menu';
+import { COLOR, MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
+import { Menu } from '@/styled/Menu';
 
 import updateQuestion from '@/api-actions/updateQuestion';
 import updateTable from '@/api-actions/updateTable';
@@ -12,6 +12,7 @@ import updateHand from '@/api-actions/updateHand';
 
 import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';
 import { HeaderInGame } from '@/components/HeaderInGame/HeaderInGame';
+import { Flat } from '@/styled/Flat';
 
 export const LobbyPage = () => {
   const history = useHistory();
@@ -30,16 +31,17 @@ export const LobbyPage = () => {
   }, []);
 
   return (
-    <Menu>
-      <Menu__item>
-        <HeaderInGame>
-          <h4>Начало игры</h4>
-        </HeaderInGame>
-      </Menu__item>
-
-      <Menu__item>
+    <>
+      <Flat bg={COLOR.white}>
+        <Menu>
+          <HeaderInGame>
+            <h4>Начало игры</h4>
+          </HeaderInGame>
+        </Menu>
+      </Flat>
+      <Menu>
         <PlayersGrid players={players} />
-      </Menu__item>
-    </Menu>
+      </Menu>
+    </>
   );
 };
