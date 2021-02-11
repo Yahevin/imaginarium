@@ -58,15 +58,8 @@ module.exports = {
     'no-shadow': 'off',
     'no-return-await': 0,
     'no-use-before-define': 'off',
-    'no-magic-numbers': [
-      'error',
-      {
-        ignore: [-1, 0, 1],
-        ignoreArrayIndexes: true,
-        enforceConst: true,
-        detectObjects: true,
-      },
-    ],
+    'no-magic-numbers': 0,
+    'no-nested-ternary': 0,
     'no-irregular-whitespace': [
       'error',
       {
