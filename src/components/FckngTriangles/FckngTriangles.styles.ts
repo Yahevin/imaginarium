@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 
 export const TriangleGrid = styled.div<{ columnWidth: number; rowCount: number }>`
-  position: relative;
-  z-index: 2;
+  position: absolute;
+  z-index: 1;
   margin-left: ${(props) => `-${props.columnWidth / 2}px`};
   height: 100%;
   filter: brightness(linear-gradient(to right, 0, 100%));
@@ -14,7 +14,7 @@ export const TriangleGrid = styled.div<{ columnWidth: number; rowCount: number }
 `;
 
 export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: number; repeat: number }>`
-  width: ${(props) => props.columnWidth + 1}px;
+  width: ${(props) => props.columnWidth}px;
   height: ${(props) => props.rowHeight + 1}px;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   background: rgba(195, 0, 0, 1);
@@ -59,11 +59,11 @@ export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: n
     &&&.hovered {
       &-a {
         transition-delay: 0s;
-        transform: scale(-0.05);
+        transform: scale(0.05, -0.05);
       }
       &-b {
         transition-delay: 0.2s;
-        transform: scale(-0.2);
+        transform: scale(0.2, -0.2);
       }
     }
   }
@@ -98,4 +98,5 @@ export const FckngGrid__BG = styled.img`
   ${Absolute};
   position: absolute;
   object-fit: cover;
+  z-index: 0;
 `;

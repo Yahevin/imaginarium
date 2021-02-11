@@ -1,6 +1,4 @@
-import React, { useRef } from 'react';
-// @ts-ignore
-import img from '@/img/bg-mount.jpg';
+import React, { useCallback, useRef } from 'react';
 import {
   FckngGrid,
   FckngGrid__BG,
@@ -10,12 +8,13 @@ import {
 import { isEven } from '@/helpers/isEven';
 import styled from 'styled-components';
 import { getColor } from '@/components/FckngTriangles/utils/getColor';
-import { TCoordinates } from '@/components/FckngTriangles/types/TCoordinates';
 import { TGridMap } from '@/components/FckngTriangles/types/TGridMap';
 import { patternOne } from '@/components/FckngTriangles/utils/patternOne';
 import { patternZero } from '@/components/FckngTriangles/utils/patternZero';
 import { InferResultType } from '@my-app/types';
 import { removePattern } from '@/components/FckngTriangles/utils/removePattern';
+import { bg_mount } from '@/img';
+import { TCoordinates } from '@/components/FckngTriangles/types/TCoordinates';
 
 const APPEAR_DURATION = 1500;
 const COLUMNS_COUNT = 30;
@@ -26,16 +25,22 @@ export const FckngTriangles = () => {
   const vault = useRef<TGridMap>(new Map());
   const prevAnimated = useRef<InferResultType<typeof patternOne>>({ patternA: [], patternB: [] });
 
+  const vWidth = window.innerWidth;
+  const vHeight = window.innerHeight;
+  const columnWidth = Math.floor((vWidth / (COLUMNS_COUNT - 2)) * 2);
+  let rowCount = Math.floor(vHeight / (columnWidth * 0.85));
+  rowCount = isEven(rowCount) ? rowCount + 1 : rowCount;
+  const rowHeight = Math.floor(vHeight / rowCount);
+
   const gridRef = (node: HTMLDivElement) => {
     if (node === null) return;
 
     setTimeout(() => {
       node.classList.add('visible', 'appearing');
     }, 0);
-
     setTimeout(() => {
       node.classList.remove('appearing');
-      node.classList.add('visible', 'appeared');
+      node.classList.add('appeared');
     }, APPEAR_DURATION);
   };
 
@@ -51,14 +56,7 @@ export const FckngTriangles = () => {
     };
   };
 
-  const vWidth = window.innerWidth;
-  const vHeight = window.innerHeight;
-  const columnWidth = Math.floor((vWidth / (COLUMNS_COUNT - 2)) * 2);
-  let rowCount = Math.round(vHeight / (columnWidth * 0.95));
-  rowCount = isEven(rowCount) ? rowCount + 1 : rowCount;
-  const rowHeight = Math.floor(vHeight / rowCount);
-
-  const TrianglesArray = () => {
+  const TrianglesArray = useCallback(() => {
     const trianglesArray = [];
     const BaseItem = (props: {
       className?: string;
@@ -101,19 +99,19 @@ export const FckngTriangles = () => {
           background: linear-gradient(to right, ${getColor(gradientStart)}, ${getColor(gradientEnd)});
         `;
 
-        trianglesArray.push(<Styled />);
+        trianglesArray.push(<Styled key={key} />);
       }
     }
 
     return trianglesArray;
-  };
+  }, [columnWidth, rowCount, rowHeight]);
 
   return (
     <FckngGrid>
       <TriangleGrid ref={gridRef} columnWidth={columnWidth} rowCount={rowCount}>
         {TrianglesArray()}
       </TriangleGrid>
-      <FckngGrid__BG src={img} alt="background image" />
+      <FckngGrid__BG src={bg_mount} alt="background image" />
     </FckngGrid>
   );
 };
