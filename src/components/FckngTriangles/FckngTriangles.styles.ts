@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const TriangleGrid = styled.div<{ columnWidth: number; rowCount: number }>`
   position: relative;
@@ -14,8 +14,8 @@ export const TriangleGrid = styled.div<{ columnWidth: number; rowCount: number }
 `;
 
 export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: number; repeat: number }>`
-  width: ${(props) => props.columnWidth}px;
-  height: ${(props) => props.rowHeight}px;
+  width: ${(props) => props.columnWidth + 1}px;
+  height: ${(props) => props.rowHeight + 1}px;
   clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   background: rgba(195, 0, 0, 1);
   transition-property: all;
@@ -73,10 +73,29 @@ export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: n
     //ROTATE
 
     &:nth-child(2n) {
-      transform: scale(-1);
+      transform: scale(1, -1);
     }
   }
   .appeared && {
     transition-delay: 0.1s;
   }
+`;
+
+const Absolute = css`
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+`;
+
+export const FckngGrid = styled.section`
+  ${Absolute};
+  position: fixed;
+  z-index: 0;
+`;
+
+export const FckngGrid__BG = styled.img`
+  ${Absolute};
+  position: absolute;
+  object-fit: cover;
 `;

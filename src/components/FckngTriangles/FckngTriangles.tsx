@@ -1,5 +1,12 @@
 import React, { useRef } from 'react';
-import { TriangleGrid, TriangleGrid__Item } from '@/components/FckngTriangles/FckngTriangles.styles';
+// @ts-ignore
+import img from '@/img/bg-mount.jpg';
+import {
+  FckngGrid,
+  FckngGrid__BG,
+  TriangleGrid,
+  TriangleGrid__Item,
+} from '@/components/FckngTriangles/FckngTriangles.styles';
 import { isEven } from '@/helpers/isEven';
 import styled from 'styled-components';
 import { getColor } from '@/components/FckngTriangles/utils/getColor';
@@ -102,8 +109,11 @@ export const FckngTriangles = () => {
   };
 
   return (
-    <TriangleGrid ref={gridRef} columnWidth={columnWidth} rowCount={rowCount}>
-      {TrianglesArray()}
-    </TriangleGrid>
+    <FckngGrid>
+      <TriangleGrid ref={gridRef} columnWidth={columnWidth} rowCount={rowCount}>
+        {TrianglesArray()}
+      </TriangleGrid>
+      <FckngGrid__BG src={img} alt="background image" />
+    </FckngGrid>
   );
 };
