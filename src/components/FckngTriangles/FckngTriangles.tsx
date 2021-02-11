@@ -3,24 +3,21 @@ import { TriangleGrid, TriangleGrid__Item } from '@/components/FckngTriangles/Fc
 import { isEven } from '@/helpers/isEven';
 import styled from 'styled-components';
 import { getColor } from '@/components/FckngTriangles/utils/getColor';
+import { TCoordinates } from '@/components/FckngTriangles/types/TCoordinates';
+import { TGridMap } from '@/components/FckngTriangles/types/TGridMap';
+import { patternOne } from '@/components/FckngTriangles/utils/patternOne';
+import { patternZero } from '@/components/FckngTriangles/utils/patternZero';
+import { InferResultType } from '@my-app/types';
+import { removePattern } from '@/components/FckngTriangles/utils/removePattern';
 
 const APPEAR_DURATION = 1500;
 const COLUMNS_COUNT = 30;
 const GRADIENT_SHIFT = 90;
 const DARK_RED_SHIFT = -60;
 
-type TCoordinates = {
-  row: number;
-  col: number;
-};
-
-type TGridItem = TCoordinates & {
-  node: HTMLDivElement;
-  squashed: boolean;
-};
-
 export const FckngTriangles = () => {
-  const vault = useRef<Map<string, TGridItem>>(new Map());
+  const vault = useRef<TGridMap>(new Map());
+  const prevAnimated = useRef<InferResultType<typeof patternOne>>({ patternA: [], patternB: [] });
 
   const gridRef = (node: HTMLDivElement) => {
     if (node === null) return;
@@ -31,17 +28,19 @@ export const FckngTriangles = () => {
 
     setTimeout(() => {
       node.classList.remove('appearing');
+      node.classList.add('visible', 'appeared');
     }, APPEAR_DURATION);
   };
 
-  const mouseOverHandler = (args: TCoordinates) => {
-    return (event: React.SyntheticEvent) => {
-      console.log(args, event);
-      // if (order > 0) {
-      //   patternOne(this);
-      // } else {
-      //   patternZero(this);
-      // }
+  const mouseOverHandler = ({ row, col }: TCoordinates) => {
+    return () => {
+      removePattern([...prevAnimated.current.patternA, ...prevAnimated.current.patternB]);
+
+      if (isEven(col) ? !isEven(row) : isEven(row)) {
+        prevAnimated.current = patternOne({ vault: vault.current, row, col });
+      } else {
+        prevAnimated.current = patternZero({ vault: vault.current, row, col });
+      }
     };
   };
 
@@ -55,21 +54,31 @@ export const FckngTriangles = () => {
   const TrianglesArray = () => {
     const trianglesArray = [];
     const BaseItem = (props: {
-      onMouseOver?: (event: React.SyntheticEvent) => void;
+      className?: string;
+      onMouseCallback?: (event: React.SyntheticEvent) => void;
       refCallback?: (node: HTMLDivElement) => void;
-    }) => <TriangleGrid__Item rowHeight={rowHeight} columnWidth={columnWidth} repeat={rowCount} {...props} />;
+    }) => (
+      <TriangleGrid__Item
+        rowHeight={rowHeight}
+        columnWidth={columnWidth}
+        repeat={rowCount}
+        onMouseOver={props.onMouseCallback}
+        className={props.className}
+        ref={props.refCallback}
+      />
+    );
 
     for (let col = 0; col < COLUMNS_COUNT; col++) {
       for (let row = 0; row < rowCount; row++) {
-        const key = `${col}-${row}`;
+        const key = `${row}-${col}`;
         const Item = (props: { className?: string }) => {
           return (
             <BaseItem
               key={key}
-              onMouseOver={mouseOverHandler({ row, col })}
+              onMouseCallback={mouseOverHandler({ row, col })}
               refCallback={(node: HTMLDivElement) => {
                 if (node !== null) {
-                  vault.current.set(key, { node, row, col, squashed: false });
+                  vault.current.set(key, node);
                 }
               }}
               {...props}

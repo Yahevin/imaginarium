@@ -45,24 +45,24 @@ export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: n
   }
 
   //HOVER EFFECT
-  &.hovered {
+  &&&.hovered {
     &-a {
-      transition-delay: 0s !important;
+      transition-delay: 0s;
       transform: scale(0.05);
     }
     &-b {
-      transition-delay: 0.2s !important;
+      transition-delay: 0.2s;
       transform: scale(0.2);
     }
   }
   &:nth-child(2n) {
-    &.hovered {
+    &&&.hovered {
       &-a {
-        transition-delay: 0s !important;
+        transition-delay: 0s;
         transform: scale(-0.05);
       }
       &-b {
-        transition-delay: 0.2s !important;
+        transition-delay: 0.2s;
         transform: scale(-0.2);
       }
     }
@@ -75,5 +75,8 @@ export const TriangleGrid__Item = styled.div<{ rowHeight: number; columnWidth: n
     &:nth-child(2n) {
       transform: scale(-1);
     }
+  }
+  .appeared && {
+    transition-delay: 0.1s;
   }
 `;
