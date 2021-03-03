@@ -9,6 +9,7 @@ import { Menu } from '@/styled/Menu';
 import updateQuestion from '@/api-actions/updateQuestion';
 import updateTable from '@/api-actions/updateTable';
 import updateHand from '@/api-actions/updateHand';
+import updateRole from '@/api-actions/updateRole';
 
 import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';
 import { HeaderInGame } from '@/components/HeaderInGame/HeaderInGame';
@@ -17,6 +18,7 @@ import { Flat } from '@/styled/Flat';
 export const LobbyPage = () => {
   const history = useHistory();
   const players = useSelector((store: TStore) => store.partyReducer.players);
+  const room_id = useSelector((store: TStore) => store.partyReducer.room_id);
 
   useEffect(() => {
     if (players.length >= MIN_PLAYERS_COUNT) {
@@ -25,6 +27,7 @@ export const LobbyPage = () => {
   }, [players, history]);
 
   useEffect(() => {
+    updateRole();
     updateHand();
     updateTable();
     updateQuestion();
@@ -35,7 +38,7 @@ export const LobbyPage = () => {
       <Flat bg={COLOR.white}>
         <Menu>
           <HeaderInGame>
-            <h4>Начало игры</h4>
+            <h4>{`Начало игры: комната #${room_id}`}</h4>
           </HeaderInGame>
         </Menu>
       </Flat>

@@ -19,6 +19,11 @@ export const TableGrid = () => {
   const game_action = useSelector((store: TStore) => store.partyReducer.game_action);
   const game_master = useSelector((store: TStore) => store.partyReducer.game_master);
 
+  // TODO create hook to upload selected card, if store is empty
+  const selectedHand = useSelector((store: TStore) => store.cardsReducer.selectedHand);
+
+  const cardsOnTable = game_master ? table_cards : table_cards.filter((card) => card.id !== selectedHand);
+
   const confirm_guess = useCallback(async () => {
     if (!selected || !room_id) return;
     setAwaitDeal(true);
@@ -44,12 +49,12 @@ export const TableGrid = () => {
   const submit_disabled = useMemo(() => {
     // eslint-disable-next-line no-magic-numbers
     return selected === null || awaitDeal;
-  }, [selected, table_cards, awaitDeal]);
+  }, [selected, awaitDeal]);
 
   return (
     <Menu>
       <Menu__item>
-        <CardGrid cards={table_cards} setSelect={setSelected} selected_id={selected} />
+        <CardGrid cards={cardsOnTable} setSelect={setSelected} selected_id={selected} />
       </Menu__item>
 
       <Menu__item>
