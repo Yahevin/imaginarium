@@ -40,6 +40,7 @@ export const ModalContent = styled.section`
 
   ${MEDIA_QUERY.PHONE} {
     width: 100%;
+    min-width: 50vw;
     padding: 10px 10px 20px 10px;
   }
 `;
