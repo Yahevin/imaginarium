@@ -1,7 +1,14 @@
 import CardsState from '@/store/cards/state';
 import ICardsState from '@/store/cards/ICardsState';
 import { CardsActionTypes } from '@/store/cards/action';
-import { PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED_HAND, SET_TABLE_CARDS } from '@/store/actions';
+import {
+  DROP_SELECTED,
+  LEAVE_PARTY,
+  PUT_TO_TABLE,
+  SET_HAND_CARDS,
+  SET_SELECTED_HAND,
+  SET_TABLE_CARDS,
+} from '@/store/actions';
 
 function cardsReducer(state = CardsState, action: CardsActionTypes): ICardsState {
   switch (action.type) {
@@ -23,13 +30,25 @@ function cardsReducer(state = CardsState, action: CardsActionTypes): ICardsState
         hand: state.hand.filter((card) => {
           return card.id !== action.payload;
         }),
-        selectedHand: null,
       };
     }
     case SET_TABLE_CARDS: {
       return {
         ...state,
         table: action.payload,
+      };
+    }
+    case DROP_SELECTED: {
+      return {
+        ...state,
+        selectedHand: null,
+      };
+    }
+    case LEAVE_PARTY: {
+      return {
+        selectedHand: null,
+        hand: [],
+        table: [],
       };
     }
     default: {

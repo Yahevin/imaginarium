@@ -5,7 +5,6 @@ export const StyledButton = styled.button<{ width: 'auto' | '100%'; colorScheme:
   background-color: ${(props) => props.colorScheme.bg};
   color: ${(props) => props.colorScheme.font};
   width: ${(props) => props.width};
-  max-width: 800px;
   padding: 8px 12px;
   border-radius: 10px;
   display: block;

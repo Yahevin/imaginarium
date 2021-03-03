@@ -8,6 +8,7 @@ import { PartyAction } from '@/store/party/action';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { THeaderInGame } from '@/components/HeaderInGame/HeaderInGame.model';
+import { CardsAction } from '@/store/cards/action';
 
 export const HeaderInGame: React.FC<THeaderInGame> = ({ children }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ export const HeaderInGame: React.FC<THeaderInGame> = ({ children }) => {
     SocketAction.leave();
 
     dispatch(PartyAction.leave());
+    dispatch(CardsAction.leave());
+
     history.push(PAGES.MAIN);
   }, [dispatch, history]);
 
