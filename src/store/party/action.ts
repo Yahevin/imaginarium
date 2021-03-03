@@ -40,7 +40,7 @@ const PartyAction = {
   setGameRole(game_master: boolean) {
     return {
       type: SET_GAME_ROLE,
-      payload: game_master,
+      payload: !!game_master,
     };
   },
   setQuestion(question: string | null) {

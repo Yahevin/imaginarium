@@ -7,6 +7,7 @@ import { GAME_ACTION, COMMANDS } from '@my-app/constants';
 
 import updateAction from '@/api-actions/updateAction';
 import updateTable from '@/api-actions/updateTable';
+import { CardsAction } from '@/store/cards/action';
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -16,6 +17,13 @@ socket.onopen = () => {
 
 socket.onmessage = async function (event) {
   const message = JSON.parse(event.data);
+
+  const endGame = () => {
+    store.dispatch(PartyAction.setQuestion(null));
+    store.dispatch(CardsAction.dropSelected());
+    store.dispatch(PartyAction.updatePlayers(message.payload.scores));
+    store.dispatch(PartyAction.setRewards(message.payload.rewards));
+  };
 
   switch (message.type) {
     case COMMANDS.UPDATE_PARTY: {
@@ -37,9 +45,9 @@ socket.onmessage = async function (event) {
     case COMMANDS.UPDATE_ALL: {
       console.log('[message] UPDATE_ALL');
       await updateAction();
-      updateParty();
-      updateHand();
-      updateRole();
+      await updateParty();
+      await updateHand();
+      await updateRole();
       break;
     }
     case COMMANDS.UPDATE_QUESTION: {
@@ -50,23 +58,20 @@ socket.onmessage = async function (event) {
     }
     case COMMANDS.START_GUESS: {
       console.log('[message] START_GUESS');
-      updateTable();
+      await updateTable();
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_CARD_SET));
       break;
     }
     case COMMANDS.SHOW_SCORE: {
       console.log('[message] SHOW_SCORE');
-      store.dispatch(PartyAction.setQuestion(null));
-      store.dispatch(PartyAction.updatePlayers(message.payload.scores));
-      store.dispatch(PartyAction.setRewards(message.payload.rewards));
       store.dispatch(PartyAction.setGAction(GAME_ACTION.ALL_GUESS_DONE));
+      endGame();
       break;
     }
     case COMMANDS.END_GAME: {
       console.log('[message] END_GAME');
-      store.dispatch(PartyAction.updatePlayers(message.payload.scores));
-      store.dispatch(PartyAction.setRewards(message.payload.rewards));
       store.dispatch(PartyAction.setGAction(GAME_ACTION.END_GAME));
+      endGame();
       break;
     }
     default: {
