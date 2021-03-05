@@ -17,7 +17,6 @@ module.exports = (app: any, db: any) => {
         const { user_exist, player_id } = await Party.includesUser({ app, db, user_id, room_id });
 
         if (user_exist && player_id !== null) {
-          await Party.playerJoin({ app, db, player_id });
           const player = await Player.get({ app, db, player_id, by: 'id' });
           game_master = player.game_master;
         } else {

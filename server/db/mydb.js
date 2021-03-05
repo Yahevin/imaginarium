@@ -47,7 +47,6 @@ conn.connect(function (err, result) {
     ' user_id INT, ' +
     ' room_id INT, ' +
     ' score INT, ' +
-    ' is_active BOOLEAN, ' +
     ' game_master BOOLEAN, ' +
     ' player_style VARCHAR(255), ' +
     ' FOREIGN KEY (user_id) REFERENCES user(id)' +

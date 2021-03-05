@@ -35,16 +35,14 @@ export const Party = {
     room_id,
     game_master,
   }: TQuery<{ user_id: number; room_id: number; game_master: boolean }>) {
-    const format = db.format(sql.ii4, [
+    const format = db.format(sql.ii3, [
       'user__room',
       'room_id',
       'user_id',
       'game_master',
-      'is_active',
       room_id,
       user_id,
       game_master,
-      true,
     ]);
     await dbQuery(format, db);
 
@@ -90,18 +88,6 @@ export const Party = {
       user_exist: false,
       player_id: null,
     };
-  },
-  async playerJoin({ db, player_id }: TQuery<{ player_id: number }>) {
-    const format = db.format(sql.usw, ['user__room', 'is_active', true, 'id', player_id]);
-    await dbQuery(format, db);
-
-    return { success: true };
-  },
-  async playerLeave({ db, player_id }: TQuery<{ player_id: number }>) {
-    const format = db.format(sql.usw, ['user__room', 'is_active', false, 'id', player_id]);
-    await dbQuery(format, db);
-
-    return { success: true };
   },
   async demoteGM({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.usww, ['user__room', 'game_master', false, 'game_master', true, 'room_id', room_id]);
