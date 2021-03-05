@@ -1,12 +1,16 @@
 import { DB_card, DB_guess, DB_user_room, TReward, TScore } from '@imaginarium/packages/interfaces';
 
-type Props = { players_list: DB_user_room[]; table_cards: DB_card[]; marks: DB_guess[] };
-
-export const countRewards = ({
+type CountRewards = ({
   players_list,
   table_cards,
   marks,
-}: Props): { scores: TScore[]; rewards: TReward[]; highestScore: number } => {
+}: {
+  players_list: DB_user_room[];
+  table_cards: DB_card[];
+  marks: DB_guess[];
+}) => { scores: TScore[]; rewards: TReward[]; highestScore: number };
+
+export const countRewards: CountRewards = ({ players_list, table_cards, marks }) => {
   const max = marks.length;
 
   const rewards = table_cards.map((card) => {
