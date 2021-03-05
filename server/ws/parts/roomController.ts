@@ -1,15 +1,15 @@
 import { DB_user_room } from '@my-app/interfaces';
 import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Basket, Cards, Guess, Party, Player, Score, Table } from '../../queries';
-import { getNewGmIndex, countRewards } from '../../utils';
+import { getNewGmIndex, countRewards, findActivePlayers } from '../../utils';
 import { Client } from '../../types';
 
 export class RoomController {
   private room_id: number;
 
-  private players: Client[];
-
   private timer: null | NodeJS.Timeout;
+
+  readonly players: Client[];
 
   private readonly wss: any;
 
@@ -94,17 +94,18 @@ export class RoomController {
     console.log('countResults');
     const { app, db, room_id } = this.extract();
     try {
-      const players_list: DB_user_room[] = await Party.getActivePlayersList({
+      const players_list: DB_user_room[] = await Party.getPlayersList({
         app,
         db,
         room_id,
       });
-      const players_id_list = players_list.map((player) => {
-        return player.id;
-      });
-      const marks = await Guess.getVoteList({ app, db, players_id_list });
-      const table_cards = await Table.getPlayersCards({ app, db, players_id_list });
-      const { scores, rewards, highestScore } = countRewards({ players_list, table_cards, marks });
+
+      const activePlayersIdList = this.players.map((item) => item.controller.player_id);
+      const activePlayersList = findActivePlayers({ players_list, activePlayersIdList });
+
+      const marks = await Guess.getVoteList({ app, db, players_id_list: activePlayersIdList });
+      const table_cards = await Table.getPlayersCards({ app, db, players_id_list: activePlayersIdList });
+      const { scores, rewards, highestScore } = countRewards({ players_list: activePlayersList, table_cards, marks });
 
       await Score.updateLocal({ app, db, scores });
 

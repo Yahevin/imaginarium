@@ -28,13 +28,13 @@ app.use(
 );
 app.use(express.json());
 
+const rooms: RoomControllersPull = new Map();
+
 require('./db/mydb');
-require('./routes.js')(app, db);
+require('./routes.js')(app, db, rooms);
 
 const server = http.createServer(app);
 const wss = new webSocket.Server({ server });
-
-const rooms: RoomControllersPull = new Map();
 
 wss.on('connection', (ws: any) => {
   ws.controller = new SocketController(app, db, ws, wss, rooms);

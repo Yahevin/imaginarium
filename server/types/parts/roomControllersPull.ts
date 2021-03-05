@@ -1,3 +1,3 @@
 import { TRoomController } from '../../ws';
 
-export type RoomControllersPull = Map<TRoomController, number>;
+export type RoomControllersPull = Map<number, TRoomController>;

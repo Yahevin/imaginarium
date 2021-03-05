@@ -58,26 +58,6 @@ export const Party = {
     }
     throw 'The getPlayersList failed. There is no users in this room';
   },
-  async getActivePlayersList({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results: DB_user_room[] = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results;
-    }
-    throw 'The getActivePlayersList failed. There is no users in this room';
-  },
-  async getActivePlayersIdList({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format = db.format(sql.sfww, ['user__room', 'room_id', room_id, 'is_active', true]);
-    const results: DB_user_room[] = await dbQuery(format, db);
-
-    if (isNotEmpty(results)) {
-      return results.map((item) => {
-        return item.id;
-      });
-    }
-    throw 'The getActivePlayersIdList failed. There is no users in this room';
-  },
   async setStatus({ db, room_id, game_action }: TQuery<{ room_id: number; game_action: T_GAME_ACTION }>) {
     const format = db.format(sql.usw, ['room', 'game_action', game_action, 'id', room_id]);
     await dbQuery(format, db);

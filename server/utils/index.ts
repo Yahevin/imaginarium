@@ -1,4 +1,5 @@
 export * from './parts/getRandomPartyName';
+export * from './parts/findActivePlayers';
 export * from './parts/getNewGmIndex';
 export * from './parts/generateToken';
 export * from './parts/countRewards';

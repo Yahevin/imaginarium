@@ -20,11 +20,11 @@ const getAction = require('./router/get-action');
 
 const getRecentGames = require('./router/get-recent-games');
 
-module.exports = (app, db) => {
+module.exports = (app, db, rooms) => {
   getRecentGames(app, db);
   getAction(app, db);
   getPlayer(app, db);
-  getPlayers(app, db);
+  getPlayers(app, db, rooms);
   authentication(app, db);
   registration(app, db);
   addCard(app, db);
