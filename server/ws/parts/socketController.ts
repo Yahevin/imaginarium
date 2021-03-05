@@ -5,7 +5,6 @@ import { Client, RoomControllersPull } from '../../types';
 import { Player } from '../../queries';
 import { TRoomController } from './roomController';
 
-
 export class SocketController {
   private room_id: number | null;
 
@@ -27,12 +26,12 @@ export class SocketController {
 
   private readonly db: any;
 
-  constructor(app: any, db: any, ws: Client, wss: any, rooms: RoomControllersPull) {
+  constructor(app: any, db: any, ws: Client, wss: any, roomsMap: RoomControllersPull) {
     this.app = app;
     this.db = db;
     this.wss = wss;
     this.client = ws;
-    this.rooms = rooms;
+    this.rooms = roomsMap;
 
     this.user_id = null;
     this.room_id = null;

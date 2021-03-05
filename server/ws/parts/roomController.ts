@@ -1,8 +1,7 @@
-import { DB_user_room } from '@my-app/interfaces';
 import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
 import { Basket, Cards, Guess, Party, Player, Score, Table } from '../../queries';
-import { getNewGmIndex, countRewards, findActivePlayers } from '../../utils';
-import { Client } from '../../types';
+import { getNewGmIndex, countRewards } from '../../utils';
+import { Client, RoomControllersPull } from '../../types';
 
 export class RoomController {
   private room_id: number;
@@ -11,18 +10,21 @@ export class RoomController {
 
   readonly players: Client[];
 
+  private readonly roomsMap: RoomControllersPull;
+
   private readonly wss: any;
 
   private readonly app: any;
 
   private readonly db: any;
 
-  constructor(app: any, db: any, wss: any, client: Client, room_id: number) {
+  constructor(app: any, db: any, wss: any, client: Client, room_id: number, roomsMap: RoomControllersPull) {
     this.app = app;
     this.db = db;
     this.wss = wss;
     this.players = [];
     this.room_id = room_id;
+    this.roomsMap = roomsMap;
     this.timer = null;
 
     this.addPlayer(client);
@@ -92,20 +94,18 @@ export class RoomController {
 
   async countResults() {
     console.log('countResults');
-    const { app, db, room_id } = this.extract();
+    const { app, db, room_id, roomsMap } = this.extract();
     try {
-      const players_list: DB_user_room[] = await Party.getPlayersList({
+      const { playersIdList, playersList } = await Party.getPlayersList({
         app,
         db,
         room_id,
+        roomsMap,
       });
 
-      const activePlayersIdList = this.players.map((item) => item.controller.player_id);
-      const activePlayersList = findActivePlayers({ players_list, activePlayersIdList });
-
-      const marks = await Guess.getVoteList({ app, db, players_id_list: activePlayersIdList });
-      const table_cards = await Table.getPlayersCards({ app, db, players_id_list: activePlayersIdList });
-      const { scores, rewards, highestScore } = countRewards({ players_list: activePlayersList, table_cards, marks });
+      const marks = await Guess.getVoteList({ app, db, players_id_list: playersIdList });
+      const table_cards = await Table.getPlayersCards({ app, db, players_id_list: playersIdList });
+      const { scores, rewards, highestScore } = countRewards({ players_list: playersList, table_cards, marks });
 
       await Score.updateLocal({ app, db, scores });
 
@@ -220,6 +220,7 @@ export class RoomController {
       db: this.db,
       players: this.players,
       room_id: this.room_id,
+      roomsMap: this.roomsMap,
     };
   }
 }

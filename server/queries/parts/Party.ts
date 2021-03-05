@@ -1,7 +1,8 @@
 import { TQuery } from '@imaginarium/packages/types';
 import { DB_room, DB_user_room } from '@imaginarium/packages/interfaces';
 import { GAME_ACTION, T_GAME_ACTION } from '@imaginarium/packages/constants';
-import { isNotEmpty, dbQuery, sqlCommands as sql, getRandomPartyName } from '../../utils';
+import { isNotEmpty, dbQuery, sqlCommands as sql, getRandomPartyName, findActivePlayers } from '../../utils';
+import { RoomControllersPull } from '../../types';
 
 export const Party = {
   async create({ db }: TQuery<unknown>) {
@@ -49,12 +50,23 @@ export const Party = {
 
     return { success: true };
   },
-  async getPlayersList({ db, room_id }: TQuery<{ room_id: number }>) {
+  async getPlayersList({ db, room_id, roomsMap }: TQuery<{ room_id: number; roomsMap: RoomControllersPull }>) {
+    const currentParty = roomsMap.get(room_id);
+    if (!currentParty) {
+      throw 'Room id incorrect';
+    }
+
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const results: DB_user_room[] = await dbQuery(format, db);
 
     if (isNotEmpty(results)) {
-      return results;
+      const activePlayersIdList = currentParty.players.map((item) => item.controller.player_id);
+      const activePlayersList = findActivePlayers({ players_list: results, activePlayersIdList });
+
+      return {
+        playersList: activePlayersList,
+        playersIdList: activePlayersIdList,
+      };
     }
     throw 'The getPlayersList failed. There is no users in this room';
   },
