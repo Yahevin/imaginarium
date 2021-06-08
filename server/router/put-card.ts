@@ -1,6 +1,6 @@
-import { ROUTES } from '@my-app/constants';
-import { TResponseFunc, TRequest } from '@my-app/types';
-import { TPutTheCard } from '@my-app/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TResponseFunc, TRequest } from '@imaginarium/packages/types';
+import { TPutTheCard } from '@imaginarium/packages/interfaces';
 import { Player, Table } from '../queries';
 import { authToken } from '../utils';
 

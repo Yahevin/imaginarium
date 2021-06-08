@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { useFetch } from '@/hook/useFetch';
 import { TStore } from '@/store/reducer';
-import { ROUTES } from '@my-app/constants';
-import { IGameAbout, TGetRecent } from '@my-app/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { IGameAbout, TGetRecent } from '@imaginarium/packages/interfaces';
 import {
   GameCreated,
   GamesList,

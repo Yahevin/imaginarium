@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import { TStore } from '@/store/reducer';
-import { COLOR, MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
+import { COLOR, MIN_PLAYERS_COUNT, PAGES } from '@imaginarium/packages/constants';
 import { Menu } from '@/styled/Menu';
 
 import updateQuestion from '@/api-actions/updateQuestion';

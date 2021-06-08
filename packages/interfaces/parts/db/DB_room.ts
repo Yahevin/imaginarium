@@ -1,4 +1,4 @@
-import { T_GAME_ACTION } from '@my-app/constants';
+import { T_GAME_ACTION } from '@imaginarium/packages/constants';
 
 export interface DB_room {
   id: number;

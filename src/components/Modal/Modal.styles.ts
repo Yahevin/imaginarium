@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLOR, MEDIA_QUERY } from '@my-app/constants';
+import { COLOR, MEDIA_QUERY } from '@imaginarium/packages/constants';
 
 export const FixedContainer = styled.div`
   width: 100%;

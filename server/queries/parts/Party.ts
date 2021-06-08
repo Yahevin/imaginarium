@@ -1,6 +1,6 @@
-import { TQuery } from '@my-app/types';
-import { DB_room, DB_user_room } from '@my-app/interfaces';
-import { GAME_ACTION, T_GAME_ACTION } from '@my-app/constants';
+import { TQuery } from '@imaginarium/packages/types';
+import { DB_room, DB_user_room } from '@imaginarium/packages/interfaces';
+import { GAME_ACTION, T_GAME_ACTION } from '@imaginarium/packages/constants';
 import { isNotEmpty, dbQuery, sqlCommands as sql, getRandomPartyName } from '../../utils';
 
 export const Party = {

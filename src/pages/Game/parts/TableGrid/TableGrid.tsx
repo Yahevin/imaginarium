@@ -4,12 +4,12 @@ import { TStore } from '@/store/reducer';
 import deal from '@/helpers/deal';
 import SocketAction from '@/web-socket/action';
 
-import { BUTTON_THEME, GAME_ACTION, ROUTES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, ROUTES } from '@imaginarium/packages/constants';
 import { Menu, Menu__item } from '@/styled/Menu';
 import { CardGrid } from '@/components/CardGrid/CardGrid';
 import { Button } from '@/components/Button/Button';
 import { numbOrNull } from '@/helpers/nullable';
-import { TGuessCard } from '@my-app/interfaces';
+import { TGuessCard } from '@imaginarium/packages/interfaces';
 
 export const TableGrid = () => {
   const [selected, setSelected] = useState(numbOrNull);

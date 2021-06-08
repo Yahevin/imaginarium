@@ -2,7 +2,7 @@
 import React from 'react';
 import { Bar, Digit, Progress, ProgressNew } from '@/components/ProgressBar/ProgressBar.styles';
 import { TProgressBar } from '@/components/ProgressBar/ProgressBar.model';
-import { GAME_MAX_SCORE } from '@my-app/constants';
+import { GAME_MAX_SCORE } from '@imaginarium/packages/constants';
 import { animated, useSpring } from 'react-spring';
 
 export const AnimatedProgress = animated(ProgressNew);

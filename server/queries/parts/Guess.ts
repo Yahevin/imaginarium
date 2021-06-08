@@ -1,5 +1,5 @@
-import { TQuery } from '@my-app/types';
-import { DB_guess, DB_question } from '@my-app/interfaces';
+import { TQuery } from '@imaginarium/packages/types';
+import { DB_guess, DB_question } from '@imaginarium/packages/interfaces';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Guess = {

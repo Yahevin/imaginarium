@@ -2,7 +2,7 @@
 import React from 'react';
 import { CardGrid } from '@/components/CardGrid/CardGrid';
 import { TCardGrid } from '@/components/CardGrid/CardGrid.model';
-import { ICard } from '@my-app/interfaces';
+import { ICard } from '@imaginarium/packages/interfaces';
 
 export default {
   title: 'Component/CardGrid',

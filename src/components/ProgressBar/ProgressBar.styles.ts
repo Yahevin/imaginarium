@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 import Font_small from '@/styled/Font_small';
 
 export const Absolute = css`

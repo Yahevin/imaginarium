@@ -1,5 +1,5 @@
-import { TInputHandler } from '@my-app/interfaces';
-import { T_INPUT_THEME } from '@my-app/constants';
+import { TInputHandler } from '@imaginarium/packages/interfaces';
+import { T_INPUT_THEME } from '@imaginarium/packages/constants';
 
 export type TInput = {
   name: string;

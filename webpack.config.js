@@ -46,7 +46,7 @@ const config = {
     extensions: ['*', '.tsx', '.ts', '.js', '.jsx', '.png', 'jpg'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@my-app': path.resolve(__dirname, 'packages'),
+      '@imaginarium/packages': path.resolve(__dirname, 'packages'),
     },
   },
   plugins,

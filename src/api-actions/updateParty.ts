@@ -1,8 +1,8 @@
 import deal from '@/helpers/deal';
 import { PartyAction } from '@/store/party/action';
 import store from '@/store';
-import { ROUTES } from '@my-app/constants';
-import { TGetPlayers } from '@my-app/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TGetPlayers } from '@imaginarium/packages/interfaces';
 
 async function updateParty() {
   const { room_id } = store.getState().partyReducer;

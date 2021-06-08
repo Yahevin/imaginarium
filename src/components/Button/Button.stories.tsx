@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/Button/Button';
-import { TButton } from '@my-app/interfaces';
-import { BUTTON_THEME } from '@my-app/constants';
+import { TButton } from '@imaginarium/packages/interfaces';
+import { BUTTON_THEME } from '@imaginarium/packages/constants';
 
 export default {
   title: 'Component/Button',

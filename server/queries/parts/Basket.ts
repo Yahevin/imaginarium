@@ -1,5 +1,5 @@
-import { TQuery } from '@my-app/types';
-import { DB_basket } from '@my-app/interfaces';
+import { TQuery } from '@imaginarium/packages/types';
+import { DB_basket } from '@imaginarium/packages/interfaces';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Basket = {

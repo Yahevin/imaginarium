@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TColorScheme } from '@my-app/interfaces/parts/front/TColorScheme';
+import { TColorScheme } from '@imaginarium/packages/interfaces';
 
 export const StyledButton = styled.button<{ width: 'auto' | '100%'; colorScheme: TColorScheme; disabled: boolean }>`
   background-color: ${(props) => props.colorScheme.bg};

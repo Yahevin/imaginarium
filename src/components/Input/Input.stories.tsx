@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from '@/components/Input/Input';
 import { TInput } from '@/components/Input/Input.model';
-import { INPUT_THEME } from '@my-app/constants';
+import { INPUT_THEME } from '@imaginarium/packages/constants';
 
 export default {
   title: 'Component/Input',

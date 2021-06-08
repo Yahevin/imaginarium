@@ -1,4 +1,4 @@
-import { InferValueTypes } from '@my-app/types';
+import { InferValueTypes } from '@imaginarium/packages/types';
 import {
   LEAVE_PARTY,
   SET_GAME_ROLE,
@@ -9,8 +9,8 @@ import {
   SET_REWARDS,
   UPDATE_PLAYERS,
 } from '@/store/actions';
-import { T_GAME_ACTION } from '@my-app/constants';
-import { IPlayer, TReward, TScore } from '@my-app/interfaces';
+import { T_GAME_ACTION } from '@imaginarium/packages/constants';
+import { IPlayer, TReward, TScore } from '@imaginarium/packages/interfaces';
 
 const PartyAction = {
   setPartyId(room_id: number | null) {

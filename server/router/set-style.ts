@@ -1,4 +1,4 @@
-import { TResponseFunc } from '@my-app/types';
+import { TResponseFunc } from '@imaginarium/packages/types';
 import { Player } from '../queries';
 
 module.exports = (app: any, db: any) => {

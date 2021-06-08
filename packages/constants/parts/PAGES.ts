@@ -1,4 +1,4 @@
-import { InferValueTypes } from '@my-app/types';
+import { InferValueTypes } from '@imaginarium/packages/types';
 
 export const PAGES = {
   START: '/' as const,

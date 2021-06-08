@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 import { FlexRow } from '@/styled/Flex';
 import { Menu__item } from '@/styled/Menu';
 import { InputRef } from '@/components/Input/Input';

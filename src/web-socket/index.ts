@@ -3,7 +3,7 @@ import updateRole from '@/api-actions/updateRole';
 import updateHand from '@/api-actions/updateHand';
 import store from '@/store';
 import { PartyAction } from '@/store/party/action';
-import { GAME_ACTION, COMMANDS } from '@my-app/constants';
+import { GAME_ACTION, COMMANDS } from '@imaginarium/packages/constants';
 
 import updateAction from '@/api-actions/updateAction';
 import updateTable from '@/api-actions/updateTable';

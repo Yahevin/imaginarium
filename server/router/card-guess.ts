@@ -1,6 +1,6 @@
-import { TRequest, TResponseFunc } from '@my-app/types';
-import { ROUTES } from '@my-app/constants';
-import { TGuessCard } from '@my-app/interfaces';
+import { TRequest, TResponseFunc } from '@imaginarium/packages/types';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TGuessCard } from '@imaginarium/packages/interfaces';
 import { Player, Basket, Guess, Table } from '../queries';
 import { authToken } from '../utils';
 

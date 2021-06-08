@@ -1,6 +1,13 @@
 // eslint-disable-next-line max-classes-per-file
-import { DB_user_room, IMessage } from '@my-app/interfaces';
-import { CLIENT_EVENTS, COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { DB_user_room, IMessage } from '@imaginarium/packages/interfaces';
+import {
+  CLIENT_EVENTS,
+  COMMANDS,
+  GAME_ACTION,
+  GAME_MAX_SCORE,
+  MIN_PLAYERS_COUNT,
+  T_COMMANDS,
+} from '@imaginarium/packages/constants';
 import { Player, Party, Basket, Cards, Guess, Score, Table } from './queries';
 import { findNewGM } from './utils/parts/findNewGM';
 import { countRewards } from './utils/parts/countRewards';

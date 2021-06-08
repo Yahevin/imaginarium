@@ -1,5 +1,5 @@
-import { TResponseFunc } from '@my-app/types';
-import { TAuthentication } from '@my-app/interfaces';
+import { TResponseFunc } from '@imaginarium/packages/types';
+import { TAuthentication } from '@imaginarium/packages/interfaces';
 import { User } from '../queries';
 import { generateToken } from '../utils';
 

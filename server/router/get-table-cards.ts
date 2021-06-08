@@ -1,8 +1,8 @@
-import { ROUTES } from '@my-app/constants';
-import { TRequest } from '@my-app/types/parts/TRequest';
-import { TResponseFunc } from '@my-app/types';
-import { TGetCards } from '@my-app/interfaces/parts/routes/TGetCards';
-import { DB_card } from '@my-app/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TRequest, TResponseFunc } from '@imaginarium/packages/types';
+
+import { TGetCards, DB_card } from '@imaginarium/packages/interfaces';
+
 import { Basket, Table } from '../queries';
 import { authToken } from '../utils';
 

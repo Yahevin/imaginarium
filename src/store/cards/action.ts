@@ -1,4 +1,4 @@
-import { ICard } from '@my-app/interfaces';
+import { ICard } from '@imaginarium/packages/interfaces';
 import {
   PUT_TO_TABLE,
   SET_HAND_CARDS,
@@ -7,7 +7,7 @@ import {
   DROP_SELECTED,
   LEAVE_PARTY,
 } from '@/store/actions';
-import { InferValueTypes } from '@my-app/types';
+import { InferValueTypes } from '@imaginarium/packages/types';
 
 const CardsAction = {
   setHand(hand_cards: ICard[]) {

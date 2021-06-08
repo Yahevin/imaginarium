@@ -1,6 +1,6 @@
-import { GAME_ACTION } from '@my-app/constants';
-import { IPlayer, TReward } from '@my-app/interfaces';
-import { InferValueTypes } from '@my-app/types';
+import { GAME_ACTION } from '@imaginarium/packages/constants';
+import { IPlayer, TReward } from '@imaginarium/packages/interfaces';
+import { InferValueTypes } from '@imaginarium/packages/types';
 
 type IPartyState = {
   room_id: number | null;

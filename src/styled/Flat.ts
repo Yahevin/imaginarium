@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { T_COLOR } from '@my-app/constants';
+import { T_COLOR } from '@imaginarium/packages/constants';
 
 export const Flat = styled.div<{ bg?: T_COLOR }>`
   position: relative;

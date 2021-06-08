@@ -14,4 +14,3 @@ export const PUT_TO_TABLE = 'PUT_TO_TABLE' as const;
 export const SET_TABLE_CARDS = 'SET_TABLE_CARDS' as const;
 export const UPDATE_PLAYERS = 'UPDATE_PLAYERS' as const;
 export const DROP_SELECTED = 'DROP_SELECTED' as const;
-

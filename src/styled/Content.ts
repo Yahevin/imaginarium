@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { MEDIA_QUERY } from '@my-app/constants';
+import { MEDIA_QUERY } from '@imaginarium/packages/constants';
 
 export const ContentSize = css`
   max-width: 1300px;

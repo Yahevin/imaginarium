@@ -1,5 +1,5 @@
 import socket from '@/web-socket/index';
-import { CLIENT_EVENTS } from '@my-app/constants';
+import { CLIENT_EVENTS } from '@imaginarium/packages/constants';
 
 const SocketAction = {
   auth(user_id: number): void {

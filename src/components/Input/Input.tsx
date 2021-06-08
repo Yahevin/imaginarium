@@ -1,9 +1,9 @@
 import React from 'react';
 import { TInput } from '@/components/Input/Input.model';
 import { StyledInput } from '@/components/Input/Input.styles';
-import { TColorScheme } from '@my-app/interfaces/parts/front/TColorScheme';
+import { TColorScheme } from '@imaginarium/packages/interfaces';
 import { getInputTheme } from '@/components/Input/utils/getInputTheme';
-import { INPUT_THEME } from '@my-app/constants';
+import { INPUT_THEME } from '@imaginarium/packages/constants';
 
 export const Input = ({
   theme = INPUT_THEME.LIGHT,

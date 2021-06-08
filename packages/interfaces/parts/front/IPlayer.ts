@@ -1,4 +1,4 @@
-import { MergeTypes } from '@my-app/types/parts/MergeTypes';
+import { MergeTypes } from '@imaginarium/packages/types';
 import { IPerson } from './IPerson';
 
 export type IPlayer = MergeTypes<

@@ -1,4 +1,4 @@
-import { ICard } from '@my-app/interfaces';
+import { ICard } from '@imaginarium/packages/interfaces';
 
 type ICardsState = {
   hand: ICard[];

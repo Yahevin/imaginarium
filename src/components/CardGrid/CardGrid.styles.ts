@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { COLOR, MEDIA_QUERY } from '@my-app/constants';
+import { COLOR, MEDIA_QUERY } from '@imaginarium/packages/constants';
 
 const CardWrapStyle = css`
   min-width: 100%;

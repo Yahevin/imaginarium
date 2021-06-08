@@ -1,4 +1,4 @@
-import { DB_card, DB_guess, DB_user_room, TReward, TScore } from '@my-app/interfaces';
+import { DB_card, DB_guess, DB_user_room, TReward, TScore } from '@imaginarium/packages/interfaces';
 
 type Props = { players_list: DB_user_room[]; table_cards: DB_card[]; marks: DB_guess[] };
 

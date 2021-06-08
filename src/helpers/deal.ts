@@ -1,4 +1,4 @@
-import { InferArgumentsType, InferResultType } from '@my-app/types';
+import { InferArgumentsType, InferResultType } from '@imaginarium/packages/types';
 
 export type InferBodyType<U> = InferArgumentsType<U> extends never ? { body?: {} } : { body: InferArgumentsType<U> };
 

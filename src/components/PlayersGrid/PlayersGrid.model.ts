@@ -1,4 +1,4 @@
-import { IPlayer, TReward } from '@my-app/interfaces';
+import { IPlayer, TReward } from '@imaginarium/packages/interfaces';
 
 export type TPlayersGrid = {
   players: IPlayer[];

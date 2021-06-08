@@ -1,6 +1,6 @@
-import { TResponseFunc } from '@my-app/types';
-import { TUserJoin } from '@my-app/interfaces';
-import { ROUTES } from '@my-app/constants';
+import { TResponseFunc } from '@imaginarium/packages/types';
+import { TUserJoin } from '@imaginarium/packages/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
 import { Player, Party } from '../queries';
 import { authToken } from '../utils';
 

@@ -1,6 +1,6 @@
 import deal from '@/helpers/deal';
-import { TAuthVerify } from '@my-app/interfaces';
-import { ROUTES } from '@my-app/constants';
+import { TAuthVerify } from '@imaginarium/packages/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
 import { UserAction } from '@/store/user/action';
 import SocketAction from '@/web-socket/action';
 import { useHistory } from 'react-router-dom';

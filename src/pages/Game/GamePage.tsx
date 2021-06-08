@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { TStore } from '@/store/reducer';
 
-import { GAME_ACTION, MIN_PLAYERS_COUNT, PAGES } from '@my-app/constants';
+import { GAME_ACTION, MIN_PLAYERS_COUNT, PAGES } from '@imaginarium/packages/constants';
 import { Menu, Menu__item } from '@/styled/Menu';
 
 import { QuestInput } from '@/pages/Game/parts/QuestInput/QuestInput';

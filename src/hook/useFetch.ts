@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import deal, { InferBodyType } from '@/helpers/deal';
-import { InferResultType } from '@my-app/types';
+import { InferResultType } from '@imaginarium/packages/types';
 
 type TUseFetch = <S>(
   props: {

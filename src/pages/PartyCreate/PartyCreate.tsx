@@ -7,13 +7,13 @@ import { PartyAction } from '@/store/party/action';
 import { TStore } from '@/store/reducer';
 import SocketAction from '@/web-socket/action';
 
-import { BUTTON_THEME, GAME_ACTION, PAGES, ROUTES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, PAGES, ROUTES } from '@imaginarium/packages/constants';
 import { Button } from '@/components/Button/Button';
 import { Menu, Menu__item } from '@/styled/Menu';
 import Spacer from '@/styled/Spacer';
 import { PartyCreateContent } from '@/pages/PartyCreate/PartyCreate.styles';
 import { FlexRowBox } from '@/styled/Flex';
-import { TPartyCreate } from '@my-app/interfaces';
+import { TPartyCreate } from '@imaginarium/packages/interfaces';
 
 export const PartyCreate = () => {
   const dispatch = useDispatch();

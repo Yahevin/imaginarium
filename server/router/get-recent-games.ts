@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { ROUTES } from '@my-app/constants';
-import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@my-app/interfaces';
-import { TResponseFunc } from '@my-app/types/parts/TResponse';
-import { TGetRecent } from '@my-app/interfaces/parts/routes/TGetRecent';
-import { TRequest } from '@my-app/types';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@imaginarium/packages/interfaces';
+import { TResponseFunc } from '@imaginarium/packages/types/parts/TResponse';
+import { TGetRecent } from '@imaginarium/packages/interfaces/parts/routes/TGetRecent';
+import { TRequest } from '@imaginarium/packages/types';
 import { User, Party } from '../queries';
 import { authToken } from '../utils';
 

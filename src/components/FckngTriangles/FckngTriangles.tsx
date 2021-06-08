@@ -11,7 +11,7 @@ import { getColor } from '@/components/FckngTriangles/utils/getColor';
 import { TGridMap } from '@/components/FckngTriangles/types/TGridMap';
 import { patternOne } from '@/components/FckngTriangles/utils/patternOne';
 import { patternZero } from '@/components/FckngTriangles/utils/patternZero';
-import { InferResultType } from '@my-app/types';
+import { InferResultType } from '@imaginarium/packages/types';
 import { removePattern } from '@/components/FckngTriangles/utils/removePattern';
 import { bg_mount } from '@/img';
 import { TCoordinates } from '@/components/FckngTriangles/types/TCoordinates';

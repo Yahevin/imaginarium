@@ -1,5 +1,5 @@
-import { COLOR, BUTTON_THEME, T_BUTTON_THEME } from '@my-app/constants';
-import { TColorScheme } from '@my-app/interfaces/parts/front/TColorScheme';
+import { COLOR, BUTTON_THEME, T_BUTTON_THEME } from '@imaginarium/packages/constants';
+import { TColorScheme } from '@imaginarium/packages/interfaces';
 
 function getBUTTON_THEME(theme: T_BUTTON_THEME, disabled: boolean): TColorScheme {
   if (disabled) {

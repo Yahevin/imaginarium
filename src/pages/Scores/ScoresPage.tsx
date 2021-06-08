@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import SocketAction from '@/web-socket/action';
 import { TStore } from '@/store/reducer';
 
-import { BUTTON_THEME, GAME_ACTION, GAME_MAX_SCORE, PAGES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, GAME_MAX_SCORE, PAGES } from '@imaginarium/packages/constants';
 import { Menu, Menu__item } from '@/styled/Menu';
 
 import { PlayersGrid } from '@/components/PlayersGrid/PlayersGrid';

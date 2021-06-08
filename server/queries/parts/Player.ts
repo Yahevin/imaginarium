@@ -1,6 +1,6 @@
 /* eslint-disable no-prototype-builtins */
-import { DB_user_room } from '@my-app/interfaces';
-import { TQuery } from '@my-app/types';
+import { DB_user_room } from '@imaginarium/packages/interfaces';
+import { TQuery } from '@imaginarium/packages/types';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Player = {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MEDIA_QUERY, T_COLOR } from '@my-app/constants';
+import { MEDIA_QUERY, T_COLOR } from '@imaginarium/packages/constants';
 import { ContentSize } from '@/styled/Content';
 
 export const Menu = styled.div<{ bg?: T_COLOR }>`

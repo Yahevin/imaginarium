@@ -4,12 +4,12 @@ import deal from '@/helpers/deal';
 import SocketAction from '@/web-socket/action';
 import { TStore } from '@/store/reducer';
 import { CardsAction } from '@/store/cards/action';
-import { TInputHandler } from '@my-app/interfaces';
+import { TInputHandler, TSetQuestion } from '@imaginarium/packages/interfaces';
 
 import { Input } from '@/components/Input/Input';
 import { Button } from '@/components/Button/Button';
-import { BUTTON_THEME, ROUTES } from '@my-app/constants';
-import { TSetQuestion } from '@my-app/interfaces/parts/routes/TSetQuestion';
+import { BUTTON_THEME, ROUTES } from '@imaginarium/packages/constants';
+
 import { QuestWrap } from '@/pages/Game/parts/QuestInput/QuestInput.styles';
 import { PartyAction } from '@/store/party/action';
 

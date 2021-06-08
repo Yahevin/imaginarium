@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 import Font_large from '@/styled/Font_large';
 import { Button } from '@/components/Button/Button';
 

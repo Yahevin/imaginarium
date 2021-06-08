@@ -1,5 +1,5 @@
-import { TQuery } from '@my-app/types';
-import { TScore } from '@my-app/interfaces';
+import { TQuery } from '@imaginarium/packages/types';
+import { TScore } from '@imaginarium/packages/interfaces';
 import { dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Score = {
