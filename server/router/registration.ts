@@ -9,18 +9,11 @@ module.exports = (app: any, db: any) => {
     const { nick_name } = req.body;
     const { password } = req.body;
 
-    console.log("req.body", req.body);
-
     try {
       const id = await User.create({ app, db, nick_name, password });
-
-      console.log("id", id);
       const { experience } = await User.get({ app, db, user_id: id, by: 'id' });
 
-      console.log("experience", experience);
-      const token = generateToken(`${id}`);
-
-      console.log("token", token);
+      const token = generateToken(id);
 
       return res.json({
         success: true,

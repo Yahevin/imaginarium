@@ -1,6 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
-import { IMessage } from '@my-app/interfaces';
-import { CLIENT_EVENTS, COMMANDS } from '@my-app/constants';
+import { IMessage } from '@imaginarium/packages/interfaces';
+import { CLIENT_EVENTS, COMMANDS } from '@imaginarium/packages/constants';
 import { Client, RoomControllersPull } from '../../types';
 import { Player } from '../../queries';
 import { TRoomController } from './roomController';

@@ -42,6 +42,7 @@ module.exports = {
       },
     ],
     radix: 0,
+    'prefer-destructuring': 0,
     'consistent-return': 0,
     'import/extensions': 0,
     'import/prefer-default-export': 0,

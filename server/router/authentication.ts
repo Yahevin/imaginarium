@@ -11,7 +11,7 @@ module.exports = (app: any, db: any) => {
     try {
       const { experience, id } = await User.get({ app, db, nick_name, password, by: 'password' });
 
-      const token = generateToken({ user_id: id });
+      const token = generateToken(id);
 
       return res.json({
         success: true,

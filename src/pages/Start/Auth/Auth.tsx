@@ -37,7 +37,7 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
       };
       try {
         const { id: user_id, experience, token } = await deal<TAuthentication>({ url: api, body });
-        document.cookie = `token=${token}`;
+        document.cookie = `imaginarium_token=${token}`;
         localStorage.setItem('token', token);
 
         dispatch(

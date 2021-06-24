@@ -1,4 +1,4 @@
-import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@my-app/constants';
+import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@imaginarium/packages/constants';
 import { Basket, Cards, Guess, Party, Player, Score, Table } from '../../queries';
 import { getNewGmIndex, countRewards } from '../../utils';
 import { Client, RoomControllersPull } from '../../types';
