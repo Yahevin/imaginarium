@@ -33,7 +33,6 @@ conn.connect(function (err, result) {
     ' (id INT not null AUTO_INCREMENT, ' +
     ' game_action VARCHAR(255), ' +
     ' game_name VARCHAR(255), ' +
-    ' player_count INT, ' +
     ' created_at BIGINT, ' +
     ' PRIMARY KEY (id) )';
 
