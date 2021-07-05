@@ -35,14 +35,16 @@ export const Party = {
     room_id,
     game_master,
   }: TQuery<{ user_id: number; room_id: number; game_master: boolean }>) {
-    const format = db.format(sql.ii3, [
+    const format = db.format(sql.ii4, [
       'user__room',
       'room_id',
       'user_id',
       'game_master',
+      'score',
       room_id,
       user_id,
       game_master,
+      0,
     ]);
     await dbQuery(format, db);
 

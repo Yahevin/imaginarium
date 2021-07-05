@@ -32,7 +32,8 @@ export const countRewards: CountRewards = ({ players_list, table_cards, marks })
   let highestScore = 0;
 
   const scores = players_list.map((player) => {
-    const newScore = +player.score + rewards.filter((reward) => player.id === reward.player_id)[0].diff;
+    const diff = rewards.filter((reward) => player.id === reward.player_id)[0].diff;
+    const newScore = player.score + diff;
     if (highestScore < newScore) {
       highestScore = newScore;
     }

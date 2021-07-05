@@ -7,6 +7,6 @@ type Props = {
 
 export const findActivePlayers = ({ activePlayersIdList, players_list }: Props) => {
   return players_list.filter((player) => {
-    return !!activePlayersIdList.indexOf(player.id);
+    return activePlayersIdList.some((id) => id === player.id);
   });
 };
