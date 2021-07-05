@@ -3,7 +3,7 @@ import { IMessage } from '@imaginarium/packages/interfaces';
 import { CLIENT_EVENTS, COMMANDS } from '@imaginarium/packages/constants';
 import { Client, RoomControllersPull } from '../../types';
 import { Player } from '../../queries';
-import { TRoomController } from './roomController';
+import { RoomController, TRoomController } from './roomController';
 
 export class SocketController {
   private room_id: number | null;
@@ -16,9 +16,9 @@ export class SocketController {
 
   private current_party: null | TRoomController;
 
-  private rooms: RoomControllersPull;
+  private roomsMap: RoomControllersPull;
 
-  private readonly client: any;
+  private readonly client: Client;
 
   private readonly wss: any;
 
@@ -31,7 +31,7 @@ export class SocketController {
     this.db = db;
     this.wss = wss;
     this.client = ws;
-    this.rooms = roomsMap;
+    this.roomsMap = roomsMap;
 
     this.user_id = null;
     this.room_id = null;
@@ -49,7 +49,7 @@ export class SocketController {
       }
       case CLIENT_EVENTS.JOIN: {
         try {
-          const { app, db, user_id } = this.extract();
+          const { app, db, wss, user_id } = this.extract();
           const room_id = parseInt(message.payload);
           const player = await Player.get({
             app,
@@ -62,10 +62,18 @@ export class SocketController {
           this.player_id = player.id;
           this.game_master = player.game_master;
 
+          this.current_party = this.roomsMap.get(room_id) || null;
+
+          if (this.current_party === null) {
+            // create controller, if room is empty or just created
+            this.roomsMap.set(room_id, new RoomController(app, db, wss, room_id, this.roomsMap));
+            this.current_party = this.roomsMap.get(room_id) || null;
+          }
+
           this.current_party?.addPlayer(this.client);
         } catch (error) {
           console.log(error);
-          // TODO send alert to re-auth;
+          // TODO send alert to re-create party;
         }
         break;
       }
@@ -111,6 +119,7 @@ export class SocketController {
     return {
       app: this.app,
       db: this.db,
+      wss: this.wss,
       room_id: this.room_id as number,
       user_id: this.user_id as number,
       player_id: this.player_id as number,

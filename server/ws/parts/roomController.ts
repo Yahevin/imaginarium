@@ -18,7 +18,7 @@ export class RoomController {
 
   private readonly db: any;
 
-  constructor(app: any, db: any, wss: any, client: Client, room_id: number, roomsMap: RoomControllersPull) {
+  constructor(app: any, db: any, wss: any, room_id: number, roomsMap: RoomControllersPull) {
     this.app = app;
     this.db = db;
     this.wss = wss;
@@ -26,8 +26,6 @@ export class RoomController {
     this.room_id = room_id;
     this.roomsMap = roomsMap;
     this.timer = null;
-
-    this.addPlayer(client);
   }
 
   addPlayer(client: Client) {
