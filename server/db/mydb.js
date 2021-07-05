@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow,@typescript-eslint/no-unused-vars */
 const mysql = require('mysql');
 const dotenv = require('dotenv');
 
@@ -13,7 +14,7 @@ const config = {
 
 const conn = mysql.createConnection(config);
 
-conn.connect(function (err, result) {
+conn.connect((err, result) => {
   if (err) console.log(err);
 
   const user =
@@ -24,7 +25,7 @@ conn.connect(function (err, result) {
     ' experience INT, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(user, function (err, results) {
+  conn.query(user, (err, results) => {
     if (err) throw err;
   });
 
@@ -36,7 +37,7 @@ conn.connect(function (err, result) {
     ' created_at BIGINT, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(room, function (err, results) {
+  conn.query(room, (err, results) => {
     if (err) throw err;
   });
 
@@ -54,7 +55,7 @@ conn.connect(function (err, result) {
     ' ON DELETE CASCADE, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(user__room, function (err, results) {
+  conn.query(user__room, (err, results) => {
     if (err) throw err;
   });
 
@@ -64,7 +65,7 @@ conn.connect(function (err, result) {
     ' img_url VARCHAR(255), ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(shelter, function (err, results) {
+  conn.query(shelter, (err, results) => {
     if (err) throw err;
   });
 
@@ -76,7 +77,7 @@ conn.connect(function (err, result) {
     ' ON DELETE CASCADE, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(basket, function (err, results) {
+  conn.query(basket, (err, results) => {
     if (err) throw err;
   });
 
@@ -97,7 +98,7 @@ conn.connect(function (err, result) {
     ' ON DELETE CASCADE, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(card, function (err, results) {
+  conn.query(card, (err, results) => {
     if (err) throw err;
   });
 
@@ -115,7 +116,7 @@ conn.connect(function (err, result) {
     ' ON DELETE CASCADE, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(guess, function (err, results) {
+  conn.query(guess, (err, results) => {
     if (err) throw err;
   });
 
@@ -131,7 +132,7 @@ conn.connect(function (err, result) {
     ' ON DELETE CASCADE, ' +
     ' PRIMARY KEY (id) )';
 
-  conn.query(question, function (err, results) {
+  conn.query(question, (err, results) => {
     if (err) throw err;
   });
 });
