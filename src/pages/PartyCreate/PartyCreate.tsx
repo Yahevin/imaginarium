@@ -18,7 +18,6 @@ import { TPartyCreate } from '@imaginarium/packages/interfaces';
 export const PartyCreate = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const user_id = useSelector((store: TStore) => store.userReducer.user_id);
 
   const backToHub = useCallback(() => {
     history.push(PAGES.MAIN);
@@ -39,7 +38,7 @@ export const PartyCreate = () => {
     } catch (e) {
       console.log(e);
     }
-  }, [user_id, dispatch, history]);
+  }, [dispatch, history]);
 
   return (
     <PartyCreateContent>

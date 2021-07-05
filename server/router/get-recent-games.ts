@@ -6,9 +6,42 @@ import { TGetRecent } from '@imaginarium/packages/interfaces/parts/routes/TGetRe
 import { TRequest } from '@imaginarium/packages/types';
 import { User, Party } from '../queries';
 import { authToken } from '../utils';
+import { RoomControllersPull } from '../types';
 
-module.exports = (app: any, db: any) => {
+module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
   app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequest<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
+    const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
+      const { playersList } = await Party.getPlayersList({
+        app,
+        db,
+        roomsMap,
+        room_id: room.id,
+      });
+      const users_list = await User.getList({ app, db, room_id: room.id });
+
+      const full_players_list: IPlayer[] = users_list.map((user) => {
+        const current_player = playersList.filter((player) => {
+          return player.user_id === user.id;
+        });
+        if (current_player.length !== 1) throw 'Failed to build players map';
+
+        return {
+          id: current_player[0].id,
+          nick_name: user.nick_name,
+          experience: user.experience,
+          score: current_player[0].score,
+          game_master: current_player[0].game_master,
+        };
+      });
+
+      return {
+        id: room.id,
+        created_at: room.created_at,
+        game_name: room.game_name,
+        players: full_players_list,
+      };
+    };
+
     try {
       const { user_id } = authToken(req);
 
@@ -33,31 +66,4 @@ module.exports = (app: any, db: any) => {
       });
     }
   });
-
-  const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-    const players_list = await Party.getPlayersList({ app, db, room_id: room.id });
-    const users_list = await User.getList({ app, db, room_id: room.id });
-
-    const full_players_list: IPlayer[] = users_list.map((user) => {
-      const current_player = players_list.filter((player) => {
-        return player.user_id === user.id;
-      });
-      if (current_player.length !== 1) throw 'Failed to build players map';
-
-      return {
-        id: current_player[0].id,
-        nick_name: user.nick_name,
-        experience: user.experience,
-        score: current_player[0].score,
-        game_master: current_player[0].game_master,
-      };
-    });
-
-    return {
-      id: room.id,
-      created_at: room.created_at,
-      game_name: room.game_name,
-      players: full_players_list,
-    };
-  };
 };

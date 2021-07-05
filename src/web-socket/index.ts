@@ -8,6 +8,7 @@ import { GAME_ACTION, COMMANDS } from '@imaginarium/packages/constants';
 import updateAction from '@/api-actions/updateAction';
 import updateTable from '@/api-actions/updateTable';
 import { CardsAction } from '@/store/cards/action';
+import updateQuestion from '@/api-actions/updateQuestion';
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -44,6 +45,7 @@ socket.onmessage = async function (event) {
     }
     case COMMANDS.UPDATE_ALL: {
       console.log('[message] UPDATE_ALL');
+      await updateQuestion();
       await updateAction();
       await updateParty();
       await updateHand();
