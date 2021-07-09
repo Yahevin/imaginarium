@@ -1,4 +1,4 @@
-import { DB_user } from '@my-app/interfaces';
+import { DB_user } from '@imaginarium/packages/interfaces';
 
 export type TAuthentication = (props: {
   nick_name: string;

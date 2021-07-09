@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Font_small from '@/styled/Font_small';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 import { PlayerAbout } from '@/components/PlayerAbout/PlayerAbout';
 
 export const Player = styled(PlayerAbout)``;

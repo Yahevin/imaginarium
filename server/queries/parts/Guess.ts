@@ -1,5 +1,5 @@
-import { TQuery } from '@my-app/types';
-import { DB_guess, DB_question } from '@my-app/interfaces';
+import { TQuery } from '@imaginarium/packages/types';
+import { DB_guess, DB_question } from '@imaginarium/packages/interfaces';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Guess = {
@@ -7,8 +7,8 @@ export const Guess = {
     db,
     room_id,
     card_id = null,
-    question = '',
-  }: TQuery<{ room_id: number; card_id?: number | null; question?: string | '' }>) {
+    question = null,
+  }: TQuery<{ room_id: number; card_id?: number | null; question?: string | null }>) {
     const format = db.format(sql.ii3, ['question', 'room_id', 'question', 'card_id', room_id, question, card_id]);
 
     await dbQuery(format, db);

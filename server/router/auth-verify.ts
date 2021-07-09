@@ -1,6 +1,6 @@
-import { TResponseFunc, TRequest } from '@my-app/types';
-import { ROUTES } from '@my-app/constants';
-import { TAuthVerify } from '@my-app/interfaces/parts/routes/TAuthVerify';
+import { TResponseFunc, TRequest } from '@imaginarium/packages/types';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TAuthVerify } from '@imaginarium/packages/interfaces/parts/routes/TAuthVerify';
 import { User } from '../queries';
 import { authToken } from '../utils';
 

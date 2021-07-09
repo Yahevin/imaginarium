@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-magic-numbers */
-import { TRequest, TResponseFunc } from '@my-app/types';
-import { ROUTES } from '@my-app/constants';
-import { DB_card, TGetCards } from '../../packages/interfaces';
+import { TRequest, TResponseFunc } from '@imaginarium/packages/types';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { DB_card, TGetCards } from '@imaginarium/packages/interfaces';
 import { Player, Basket, Cards } from '../queries';
 import { authToken } from '../utils';
 

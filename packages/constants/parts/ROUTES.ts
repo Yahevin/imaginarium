@@ -1,4 +1,4 @@
-import { InferValueTypes } from '@my-app/types';
+import { InferValueTypes } from '@imaginarium/packages/types';
 
 export const ROUTES = {
   GET_RECENT_GAMES: '/get-recent-games' as const,

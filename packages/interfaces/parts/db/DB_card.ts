@@ -1,5 +1,5 @@
-import { DB_basket, DB_shelter, DB_user_room } from '@my-app/interfaces';
-import { CARD_STATUS } from '@my-app/constants';
+import { DB_basket, DB_shelter, DB_user_room } from '@imaginarium/packages/interfaces';
+import { CARD_STATUS } from '@imaginarium/packages/constants';
 
 export interface DB_card {
   id: number;

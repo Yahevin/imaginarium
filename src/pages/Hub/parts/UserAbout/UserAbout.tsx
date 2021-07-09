@@ -5,10 +5,10 @@ import { useHistory } from 'react-router-dom';
 import { Avatar } from '@/components/Avatar/Avatar';
 import { ProgressBar } from '@/components/ProgressBar/ProgressBar';
 
-import { PAGES } from '@my-app/constants';
+import { PAGES, LEVEL_COST } from '@imaginarium/packages/constants';
 import { UserAction } from '@/store/user/action';
 import { TStore } from '@/store/reducer';
-import { LEVEL_COST } from '@my-app/constants/parts/LEVEL_COST';
+
 import { LogOut, UserInfo, Wrap } from './UserAbout.styles';
 
 export const UserAbout = () => {

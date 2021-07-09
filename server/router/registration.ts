@@ -1,6 +1,6 @@
-import { TResponseFunc, TRequest } from '@my-app/types';
-import { ROUTES } from '@my-app/constants';
-import { TAuthentication } from '@my-app/interfaces';
+import { TResponseFunc, TRequest } from '@imaginarium/packages/types';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TAuthentication } from '@imaginarium/packages/interfaces';
 import { generateToken } from '../utils';
 import { User } from '../queries';
 
@@ -12,7 +12,8 @@ module.exports = (app: any, db: any) => {
     try {
       const id = await User.create({ app, db, nick_name, password });
       const { experience } = await User.get({ app, db, user_id: id, by: 'id' });
-      const token = generateToken(`${id}`);
+
+      const token = generateToken(id);
 
       return res.json({
         success: true,

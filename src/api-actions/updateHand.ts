@@ -1,9 +1,9 @@
 import store from '@/store';
 import deal from '@/helpers/deal';
 import { CardsAction } from '@/store/cards/action';
-import { ERROR, GAME_ACTION, ROUTES } from '@my-app/constants';
-import { MAX_HAND_CARDS } from '@my-app/constants/parts/MAX_HAND_CARDS';
-import { TGetCards } from '@my-app/interfaces';
+import { ERROR, GAME_ACTION, ROUTES, MAX_HAND_CARDS } from '@imaginarium/packages/constants';
+
+import { TGetCards } from '@imaginarium/packages/interfaces';
 
 async function getNew() {
   const hand_cards = store.getState().cardsReducer.hand;

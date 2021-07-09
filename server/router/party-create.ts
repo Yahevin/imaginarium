@@ -1,6 +1,6 @@
-import { TPartyCreate, DB_shelter } from '@my-app/interfaces';
-import { TRequest, TResponseFunc } from '@my-app/types';
-import { GAME_ACTION, ROUTES } from '@my-app/constants';
+import { TPartyCreate, DB_shelter } from '@imaginarium/packages/interfaces';
+import { TRequest, TResponseFunc } from '@imaginarium/packages/types';
+import { GAME_ACTION, ROUTES } from '@imaginarium/packages/constants';
 import { Party, Basket, Cards, Guess } from '../queries';
 import { authToken } from '../utils';
 

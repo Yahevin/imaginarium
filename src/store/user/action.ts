@@ -1,4 +1,4 @@
-import { InferValueTypes } from '@my-app/types';
+import { InferValueTypes } from '@imaginarium/packages/types';
 import { SET_USER, SET_USER_ID, SET_USER_EXP } from '@/store/actions';
 
 import IUserState from '@/store/user/IUserState';

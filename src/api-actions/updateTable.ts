@@ -1,8 +1,8 @@
 import store from '@/store';
 import deal from '@/helpers/deal';
 import { CardsAction } from '@/store/cards/action';
-import { ROUTES } from '@my-app/constants';
-import { TGetCards } from '@my-app/interfaces/parts/routes/TGetCards';
+import { ROUTES } from '@imaginarium/packages/constants';
+import { TGetCards } from '@imaginarium/packages/interfaces';
 
 async function updateTable() {
   const { room_id } = store.getState().partyReducer;

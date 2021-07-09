@@ -4,12 +4,12 @@ import deal from '@/helpers/deal';
 import SocketAction from '@/web-socket/action';
 import { TStore } from '@/store/reducer';
 import { CardsAction } from '@/store/cards/action';
-import { TInputHandler } from '@my-app/interfaces';
+import { TInputHandler, TSetQuestion } from '@imaginarium/packages/interfaces';
 
 import { Input } from '@/components/Input/Input';
 import { Button } from '@/components/Button/Button';
-import { BUTTON_THEME, ROUTES } from '@my-app/constants';
-import { TSetQuestion } from '@my-app/interfaces/parts/routes/TSetQuestion';
+import { BUTTON_THEME, ROUTES } from '@imaginarium/packages/constants';
+
 import { QuestWrap } from '@/pages/Game/parts/QuestInput/QuestInput.styles';
 import { PartyAction } from '@/store/party/action';
 
@@ -25,22 +25,19 @@ export const QuestInput = () => {
   const submit_disabled = storeQuestion !== null || question.length === 0 || selectedHand === null || awaitDeal;
 
   const quest_submit = useCallback(async () => {
-    if (!selectedHand && !room_id) return;
     setAwaitDeal(true);
 
     try {
-      await deal<TSetQuestion>({
-        url: ROUTES.SET_QUESTION,
-        body: { room_id, question, card_id: selectedHand },
-      });
+      if (selectedHand && room_id) {
+        await deal<TSetQuestion>({
+          url: ROUTES.SET_QUESTION,
+          body: { room_id, question, card_id: selectedHand },
+        });
 
-      // remove selectedHand card from hand
-      dispatch(CardsAction.putToTable(selectedHand));
-      dispatch(PartyAction.setQuestion(question));
-
-      // after this action, will come command
-      // to update game_action and question
-      SocketAction.putTheOrigin(question);
+        // remove selectedHand card from hand
+        dispatch(CardsAction.putToTable(selectedHand));
+        dispatch(PartyAction.setQuestion(question));
+      }
     } catch (error) {
       setAwaitDeal(false);
       console.log(error);

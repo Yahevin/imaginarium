@@ -1,4 +1,4 @@
-import { T_BUTTON_THEME } from '@my-app/constants';
+import { T_BUTTON_THEME } from '@imaginarium/packages/constants';
 import React from 'react';
 
 export type TButton = {

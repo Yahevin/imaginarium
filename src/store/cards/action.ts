@@ -1,6 +1,13 @@
-import { ICard } from '@my-app/interfaces';
-import { PUT_TO_TABLE, SET_HAND_CARDS, SET_SELECTED_HAND, SET_TABLE_CARDS } from '@/store/actions';
-import { InferValueTypes } from '@my-app/types';
+import { ICard } from '@imaginarium/packages/interfaces';
+import {
+  PUT_TO_TABLE,
+  SET_HAND_CARDS,
+  SET_SELECTED_HAND,
+  SET_TABLE_CARDS,
+  DROP_SELECTED,
+  LEAVE_PARTY,
+} from '@/store/actions';
+import { InferValueTypes } from '@imaginarium/packages/types';
 
 const CardsAction = {
   setHand(hand_cards: ICard[]) {
@@ -25,6 +32,16 @@ const CardsAction = {
     return {
       type: SET_TABLE_CARDS,
       payload: cards,
+    };
+  },
+  dropSelected() {
+    return {
+      type: DROP_SELECTED,
+    };
+  },
+  leave() {
+    return {
+      type: LEAVE_PARTY,
     };
   },
 };

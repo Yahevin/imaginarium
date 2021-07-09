@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 
 export const Box = styled.div`
   flex: 1 1 80px;

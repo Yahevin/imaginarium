@@ -1,10 +1,13 @@
 import styled from 'styled-components';
-import { MEDIA_QUERY } from '@my-app/constants';
+import { MEDIA_QUERY, T_COLOR } from '@imaginarium/packages/constants';
 import { ContentSize } from '@/styled/Content';
 
-export const Menu = styled.div`
+export const Menu = styled.div<{ bg?: T_COLOR }>`
   ${ContentSize};
+  position: relative;
+  z-index: 1;
   padding: 40px 60px;
+  background: ${(props) => props.bg ?? 'none'};
 
   ${MEDIA_QUERY.PHONE} {
     padding: 24px 16px;

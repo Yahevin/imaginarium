@@ -5,10 +5,10 @@ import SocketAction from '@/web-socket/action';
 import { TStore } from '@/store/reducer';
 import { CardsAction } from '@/store/cards/action';
 import { Menu, Menu__item } from '@/styled/Menu';
-import { BUTTON_THEME, GAME_ACTION, ROUTES } from '@my-app/constants';
+import { BUTTON_THEME, GAME_ACTION, ROUTES } from '@imaginarium/packages/constants';
 import { CardGrid } from '@/components/CardGrid/CardGrid';
 import { Button } from '@/components/Button/Button';
-import { ICard, TPutTheCard } from '@my-app/interfaces';
+import { ICard, TPutTheCard } from '@imaginarium/packages/interfaces';
 
 export const HandGrid = () => {
   const dispatch = useDispatch();
@@ -32,9 +32,6 @@ export const HandGrid = () => {
         },
       });
 
-      // after this action, will come a command
-      // to update game_action
-      SocketAction.putTheFake();
       // remove card from hand
       dispatch(CardsAction.putToTable(selectedHand));
     } catch (error) {

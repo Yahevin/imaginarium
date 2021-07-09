@@ -1,4 +1,4 @@
-import { BASE_THEME } from '@my-app/constants/parts/BASE_THEME';
+import { BASE_THEME } from '@imaginarium/packages/constants';
 
 export const INPUT_THEME = { ...BASE_THEME };
 

@@ -1,7 +1,8 @@
 /* eslint-disable import/named */
 /* eslint-disable no-param-reassign */
-import { SocketController } from './webSocket';
 import config from '../webpack.config.js';
+import { RoomControllersPull } from './types';
+import { SocketController } from './ws';
 
 const express = require('express');
 const webpack = require('webpack');
@@ -27,14 +28,16 @@ app.use(
 );
 app.use(express.json());
 
+const roomsMap: RoomControllersPull = new Map();
+
 require('./db/mydb');
-require('./routes.js')(app, db);
+require('./routes.js')(app, db, roomsMap);
 
 const server = http.createServer(app);
 const wss = new webSocket.Server({ server });
 
 wss.on('connection', (ws: any) => {
-  ws.controller = new SocketController(app, db, wss);
+  ws.controller = new SocketController(app, db, ws, wss, roomsMap);
 
   ws.on('message', async (message: string) => {
     console.log('message', message);

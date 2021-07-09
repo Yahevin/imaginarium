@@ -1,4 +1,4 @@
-import { ICard } from '@my-app/interfaces';
+import { ICard } from '@imaginarium/packages/interfaces';
 
 export type TCardGrid = {
   cards: ICard[];

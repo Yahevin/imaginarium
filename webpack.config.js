@@ -2,14 +2,11 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const dotenv = require('dotenv');
+
 dotenv.config();
 
-const isDevelopment = process.env.NODE_ENV ==='development';
-const plugins =  [
-  new CleanWebpackPlugin(),
-  new HtmlWebpackPlugin({template: './src/index.html'}),
-];
-
+const isDevelopment = process.env.NODE_ENV === 'development';
+const plugins = [new CleanWebpackPlugin(), new HtmlWebpackPlugin({ template: './src/index.html' })];
 
 const config = {
   mode: process.env.NODE_ENV === 'development' ? 'development' : 'production',
@@ -22,44 +19,46 @@ const config = {
         test: /\.(js|jsx|ts|tsx)$/,
         loader: 'babel-loader',
         options: {
-          configFile: path.resolve(__dirname, 'babel.config.js')
+          configFile: path.resolve(__dirname, 'babel.config.js'),
         },
-        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'packages')]
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'packages')],
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.(jpg|png)$/,
         include: path.resolve(__dirname, 'src/img'),
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-            outputPath: 'img'
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'img',
+            },
           },
-        }],
+        ],
       },
     ],
   },
   resolve: {
-    extensions: [ '*', '.tsx', '.ts', '.js', '.jsx', '.png','jpg' ],
+    extensions: ['*', '.tsx', '.ts', '.js', '.jsx', '.png', 'jpg'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@my-app': path.resolve(__dirname, 'packages'),
-    }
+      '@imaginarium/packages': path.resolve(__dirname, 'packages'),
+    },
   },
-  plugins: plugins,
+  plugins,
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
     filename: 'js/[name].bundle.js',
-    chunkFilename: 'js/[id].chunk.js'
+    chunkFilename: 'js/[id].chunk.js',
   },
 };
 
-if(isDevelopment) {
+if (isDevelopment) {
   config.devServer = {
     contentBase: path.resolve(__dirname, 'dist'),
     compress: true,
@@ -69,9 +68,9 @@ if(isDevelopment) {
     overlay: true,
     port: process.env.PORT,
     stats: {
-      normal: true
+      normal: true,
     },
-  }
+  };
 }
 
 module.exports = config;

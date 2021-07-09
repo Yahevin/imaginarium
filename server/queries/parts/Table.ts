@@ -1,6 +1,6 @@
-import { TQuery } from '@my-app/types';
-import { DB_card } from '@my-app/interfaces';
-import { CARD_STATUS } from '@my-app/constants';
+import { TQuery } from '@imaginarium/packages/types';
+import { DB_card } from '@imaginarium/packages/interfaces';
+import { CARD_STATUS } from '@imaginarium/packages/constants';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
 
 export const Table = {

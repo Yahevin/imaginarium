@@ -8,8 +8,8 @@ import { PartyAction } from '@/store/party/action';
 
 import { Menu, Menu__item } from '@/styled/Menu';
 
-import { BUTTON_THEME, PAGES, ROUTES } from '@my-app/constants';
-import { TInputHandler, TUserJoin } from '@my-app/interfaces';
+import { BUTTON_THEME, PAGES, ROUTES } from '@imaginarium/packages/constants';
+import { TInputHandler, TUserJoin } from '@imaginarium/packages/interfaces';
 import { strOrNull } from '@/helpers/nullable';
 
 import { UserAbout } from '@/pages/Hub/parts/UserAbout/UserAbout';

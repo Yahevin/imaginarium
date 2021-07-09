@@ -1,6 +1,6 @@
-import { TRequest, TResponseFunc } from '@my-app/types';
-import { TGetQuestion } from '@my-app/interfaces';
-import { ROUTES } from '@my-app/constants';
+import { TRequest, TResponseFunc } from '@imaginarium/packages/types';
+import { TGetQuestion } from '@imaginarium/packages/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
 import { Guess } from '../queries';
 import { authToken } from '../utils';
 

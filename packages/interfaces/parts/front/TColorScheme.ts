@@ -1,4 +1,4 @@
-import { T_COLOR } from '@my-app/constants';
+import { T_COLOR } from '@imaginarium/packages/constants';
 
 export type TColorScheme = {
   bg: T_COLOR;

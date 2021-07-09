@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 
 export const SideTitle = styled.div`
   margin: 0 0 32px 0;

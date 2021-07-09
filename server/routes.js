@@ -20,25 +20,25 @@ const getAction = require('./router/get-action');
 
 const getRecentGames = require('./router/get-recent-games');
 
-module.exports = (app, db) => {
-  getRecentGames(app, db);
+module.exports = (app, db, roomsMap) => {
+  getRecentGames(app, db, roomsMap);
   getAction(app, db);
   getPlayer(app, db);
-  getPlayers(app, db);
+  getPlayers(app, db, roomsMap);
   authentication(app, db);
   registration(app, db);
   addCard(app, db);
-  cardGuess(app, db);
-  getMarks(app, db);
+  cardGuess(app, db, roomsMap);
+  getMarks(app, db, roomsMap);
   getMyCards(app, db);
   getNewCards(app, db);
   getQuestion(app, db);
   leaderBoard(app, db);
   partyCreate(app, db);
-  setQuestion(app, db);
+  setQuestion(app, db, roomsMap);
   setStyle(app, db);
   getTableCards(app, db);
   userJoin(app, db);
-  putCard(app, db);
+  putCard(app, db, roomsMap);
   authVerify(app, db);
 };

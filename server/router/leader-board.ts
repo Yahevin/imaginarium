@@ -1,6 +1,6 @@
-import { TResponseFunc, TRequest } from '@my-app/types';
-import { TLeaderBoard } from '@my-app/interfaces';
-import { ROUTES } from '@my-app/constants';
+import { TResponseFunc, TRequest } from '@imaginarium/packages/types';
+import { TLeaderBoard } from '@imaginarium/packages/interfaces';
+import { ROUTES } from '@imaginarium/packages/constants';
 import { User } from '../queries';
 import { authToken } from '../utils';
 

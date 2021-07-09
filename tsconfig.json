@@ -34,7 +34,7 @@
           "@/*": [
             "src/*"
           ],
-          "@my-app/*": [
+          "@imaginarium/packages/*": [
             "packages/*"
           ]
         }

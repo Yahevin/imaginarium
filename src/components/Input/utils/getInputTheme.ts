@@ -1,5 +1,5 @@
-import { COLOR, INPUT_THEME, T_INPUT_THEME } from '@my-app/constants';
-import { TColorScheme } from '@my-app/interfaces/parts/front/TColorScheme';
+import { COLOR, INPUT_THEME, T_INPUT_THEME } from '@imaginarium/packages/constants';
+import { TColorScheme } from '@imaginarium/packages/interfaces';
 
 export const getInputTheme = (theme: T_INPUT_THEME, disabled: boolean): TColorScheme => {
   if (disabled) {

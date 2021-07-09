@@ -1,4 +1,4 @@
-import { DB_card, DB_room } from '@my-app/interfaces';
+import { DB_card, DB_room } from '@imaginarium/packages/interfaces';
 
 export interface DB_question {
   id: number;

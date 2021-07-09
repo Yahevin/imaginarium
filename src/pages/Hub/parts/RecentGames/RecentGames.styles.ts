@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FlexColumn } from '@/styled/Flex';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 
 export const GamesList = styled.article`
   ${FlexColumn};

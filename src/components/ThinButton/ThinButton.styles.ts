@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { COLOR } from '@my-app/constants';
+import { COLOR } from '@imaginarium/packages/constants';
 
 export const StyledThinButton = styled.span`
   width: auto;

@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import React from 'react';
 import { PlayerAbout } from '@/components/PlayerAbout/PlayerAbout';
-import { IPlayer } from '@my-app/interfaces';
+import { IPlayer } from '@imaginarium/packages/interfaces';
 
 export default {
   title: 'Component/PlayerAbout',
@@ -16,5 +16,5 @@ Primary.args = {
   nick_name: 'Test',
   experience: 100,
   game_master: false,
-  score: 50,
+  score: 20,
 };

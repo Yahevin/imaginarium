@@ -1,5 +1,5 @@
 import React from 'react';
-import { TButton } from '@my-app/interfaces';
+import { TButton } from '@imaginarium/packages/interfaces';
 import { StyledButton } from '@/components/Button/Button.styles';
 import getButtonTheme from './util/getButtonTheme';
 

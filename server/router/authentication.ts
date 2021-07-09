@@ -1,5 +1,5 @@
-import { TResponseFunc } from '@my-app/types';
-import { TAuthentication } from '@my-app/interfaces';
+import { TResponseFunc } from '@imaginarium/packages/types';
+import { TAuthentication } from '@imaginarium/packages/interfaces';
 import { User } from '../queries';
 import { generateToken } from '../utils';
 
@@ -11,7 +11,7 @@ module.exports = (app: any, db: any) => {
     try {
       const { experience, id } = await User.get({ app, db, nick_name, password, by: 'password' });
 
-      const token = generateToken({ user_id: id });
+      const token = generateToken(id);
 
       return res.json({
         success: true,
