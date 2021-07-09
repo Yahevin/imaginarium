@@ -70,8 +70,8 @@ socket.onmessage = async function (event) {
       endGame();
       break;
     }
-    case COMMANDS.END_GAME: {
-      console.log('[message] END_GAME');
+    case COMMANDS.SHOW_THE_END: {
+      console.log('[message] SHOW_THE_END');
       store.dispatch(PartyAction.setGAction(GAME_ACTION.END_GAME));
       endGame();
       break;
