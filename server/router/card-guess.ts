@@ -3,8 +3,9 @@ import { ROUTES } from '@imaginarium/packages/constants';
 import { TGuessCard } from '@imaginarium/packages/interfaces';
 import { Player, Basket, Guess, Table } from '../queries';
 import { authToken } from '../utils';
+import { RoomControllersPull } from '../types';
 
-module.exports = (app: any, db: any) => {
+module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
   app.post(ROUTES.GUESS_CARD, async (req: TRequest<TGuessCard>, res: TResponseFunc<TGuessCard>) => {
     try {
       const { room_id } = req.body;
@@ -31,6 +32,14 @@ module.exports = (app: any, db: any) => {
       }
 
       await Guess.make({ app, db, player_id, card_id, basket_id });
+
+      const currentParty = roomsMap.get(room_id);
+
+      if (currentParty) {
+        await currentParty.maybeCountResults();
+      } else {
+        throw 'maybeCountResult';
+      }
 
       return res.json({
         success: true,

@@ -32,9 +32,6 @@ export const HandGrid = () => {
         },
       });
 
-      // after this action, will come a command
-      // to update game_action
-      SocketAction.putTheFake();
       // remove card from hand
       dispatch(CardsAction.putToTable(selectedHand));
     } catch (error) {

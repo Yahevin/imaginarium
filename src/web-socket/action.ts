@@ -25,28 +25,6 @@ const SocketAction = {
       }),
     );
   },
-  putTheOrigin(question: string): void {
-    socket.send(
-      JSON.stringify({
-        type: CLIENT_EVENTS.PUT_THE_ORIGIN,
-        payload: question,
-      }),
-    );
-  },
-  putTheFake(): void {
-    socket.send(
-      JSON.stringify({
-        type: CLIENT_EVENTS.PUT_THE_FAKE,
-      }),
-    );
-  },
-  makeGuess(): void {
-    socket.send(
-      JSON.stringify({
-        type: CLIENT_EVENTS.MAKE_GUESS,
-      }),
-    );
-  },
   nextRound(): void {
     socket.send(
       JSON.stringify({
