@@ -170,9 +170,9 @@ export class RoomController {
       await Party.demoteGM({ app, db, room_id });
       await Player.setGM({ app, db, player_id: newGmPlayerId });
 
-      this.players.forEach(({ controller, send }: Client) => {
-        if (controller.player_id === newGmPlayerId) {
-          send('UPDATE_ROLE');
+      this.players.forEach((item: Client) => {
+        if (item.controller.player_id === newGmPlayerId) {
+          item.send('UPDATE_ROLE');
         }
       });
     } catch (error) {
