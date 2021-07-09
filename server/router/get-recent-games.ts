@@ -11,7 +11,7 @@ import { RoomControllersPull } from '../types';
 module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
   app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequest<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
     const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-      const { playersList } = await Party.getPlayersList({
+      const { activePlayersList } = await Party.getPlayersList({
         app,
         db,
         roomsMap,
@@ -20,7 +20,7 @@ module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
       const users_list = await User.getList({ app, db, room_id: room.id });
 
       const full_players_list: IPlayer[] = users_list.map((user) => {
-        const current_player = playersList.filter((player) => {
+        const current_player = activePlayersList.filter((player) => {
           return player.user_id === user.id;
         });
         if (current_player.length !== 1) throw 'Failed to build players map';
