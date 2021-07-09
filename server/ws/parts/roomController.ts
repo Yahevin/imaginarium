@@ -93,6 +93,7 @@ export class RoomController {
   async countResults() {
     console.log('countResults');
     const { app, db, room_id, roomsMap } = this.extract();
+
     try {
       const { playersIdList, playersList } = await Party.getPlayersList({
         app,
@@ -108,7 +109,7 @@ export class RoomController {
       await Score.updateLocal({ app, db, scores });
 
       if (highestScore >= GAME_MAX_SCORE) {
-        this.send(COMMANDS.END_GAME, { rewards, scores });
+        this.send(COMMANDS.SHOW_THE_END, { rewards, scores });
       } else {
         await this.setNewRoundTimeout();
 
@@ -131,6 +132,7 @@ export class RoomController {
   async newRound() {
     console.log('newRound()');
     try {
+      this.removeNewRoundTimeout();
       const { app, db, room_id } = this.extract();
       const { game_action } = await Party.getRoom({ app, db, room_id });
       if (game_action !== GAME_ACTION.ALL_GUESS_DONE) return;
@@ -168,9 +170,9 @@ export class RoomController {
       await Party.demoteGM({ app, db, room_id });
       await Player.setGM({ app, db, player_id: newGmPlayerId });
 
-      this.players.forEach(({ controller, send }: Client) => {
-        if (controller.player_id === newGmPlayerId) {
-          send('UPDATE_ROLE');
+      this.players.forEach((item: Client) => {
+        if (item.controller.player_id === newGmPlayerId) {
+          item.send('UPDATE_ROLE');
         }
       });
     } catch (error) {

@@ -57,15 +57,18 @@ export const Party = {
     }
 
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results: DB_user_room[] = await dbQuery(format, db);
+    const playersList: DB_user_room[] = await dbQuery(format, db);
 
-    if (isNotEmpty(results)) {
+    if (isNotEmpty(playersList)) {
+      const playersIdList = playersList.map((item) => item.id);
       const activePlayersIdList = currentParty.players.map((item) => item.controller.player_id);
-      const activePlayersList = findActivePlayers({ players_list: results, activePlayersIdList });
+      const activePlayersList = findActivePlayers({ playersList, activePlayersIdList });
 
       return {
-        playersList: activePlayersList,
-        playersIdList: activePlayersIdList,
+        playersList,
+        playersIdList,
+        activePlayersList,
+        activePlayersIdList,
       };
     }
     throw 'The getPlayersList failed. There is no users in this room';

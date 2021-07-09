@@ -11,7 +11,7 @@ module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
       authToken(req);
       const { room_id } = req.body;
 
-      const { playersList } = await Party.getPlayersList({
+      const { activePlayersList } = await Party.getPlayersList({
         app,
         db,
         room_id,
@@ -19,7 +19,7 @@ module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
       });
       const users_list = await User.getList({ app, db, room_id });
 
-      const party = playersList.map((player) => {
+      const party = activePlayersList.map((player) => {
         const userIndex = users_list.findIndex((user) => {
           return user.id === player.user_id;
         });

@@ -83,20 +83,7 @@ export class SocketController {
         this.player_id = null;
         break;
       }
-      case CLIENT_EVENTS.PUT_THE_ORIGIN: {
-        this.current_party?.send(COMMANDS.UPDATE_QUESTION, message.payload);
-        break;
-      }
-      case CLIENT_EVENTS.PUT_THE_FAKE: {
-        await this.current_party?.maybeStartToGuess();
-        break;
-      }
-      case CLIENT_EVENTS.MAKE_GUESS: {
-        await this.current_party?.maybeCountResults();
-        break;
-      }
       case CLIENT_EVENTS.START_NEW_ROUND: {
-        await this.current_party?.removeNewRoundTimeout();
         await this.current_party?.newRound();
         break;
       }

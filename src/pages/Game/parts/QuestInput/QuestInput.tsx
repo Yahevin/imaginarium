@@ -37,10 +37,6 @@ export const QuestInput = () => {
         // remove selectedHand card from hand
         dispatch(CardsAction.putToTable(selectedHand));
         dispatch(PartyAction.setQuestion(question));
-
-        // after this action, will come command
-        // to update game_action and question
-        SocketAction.putTheOrigin(question);
       }
     } catch (error) {
       setAwaitDeal(false);

@@ -13,14 +13,14 @@ module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
         authToken(req);
         const { room_id } = req.body;
 
-        const { playersList } = await Party.getPlayersList({
+        const { activePlayersList } = await Party.getPlayersList({
           app,
           db,
           room_id,
           roomsMap,
         });
 
-        return playersList.map((item) => {
+        return activePlayersList.map((item) => {
           return item.user_id;
         });
       } catch (error) {
