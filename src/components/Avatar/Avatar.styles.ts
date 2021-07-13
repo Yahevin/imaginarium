@@ -39,4 +39,5 @@ export const Level = styled.div`
   font-size: 12px;
   line-height: 24px;
   background: ${COLOR.active};
+  color: ${COLOR.white};
 `;

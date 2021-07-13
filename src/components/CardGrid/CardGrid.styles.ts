@@ -23,8 +23,7 @@ export const Grid = styled.div`
 export const Grid__Item = styled.div<{ isActive: boolean }>`
   ${CardWrapStyle};
   width: 100%;
-  box-shadow: ${(props) => (props.isActive ? '0 0 6px 4px gold' : 'none')};
-  border-radius: 10px;
+  box-shadow: ${(props) => (props.isActive ? `0 0 10px 6px ${COLOR.main}` : 'none')};
 `;
 
 export const CardImg = styled.img`

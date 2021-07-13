@@ -24,7 +24,8 @@ export const PageBtn = css`
 
   &:hover {
     & > ${SideTitle} {
-      color: ${COLOR.green};
+      color: ${COLOR.main};
+      opacity: 1;
     }
   }
 `;
