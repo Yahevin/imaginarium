@@ -18,12 +18,12 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
   const submitBlocked = useRef(false);
   const [isValid, setValid] = useState(false);
 
-  const pass = useRef('');
-  const name = useRef('');
+  const [pass, setPass] = useState('');
+  const [name, setName] = useState('');
 
   const validate = () => {
     // eslint-disable-next-line no-magic-numbers
-    setValid(name.current.length > 3 && pass.current.length > 5);
+    setValid(name.length > 3 && pass.length > 5);
   };
 
   const login = useCallback(
@@ -32,19 +32,19 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
       submitBlocked.current = true;
 
       const body = {
-        nick_name: name.current,
-        password: pass.current,
+        nick_name: name,
+        password: pass,
       };
       try {
         const { id: user_id, experience, token } = await deal<TAuthentication>({ url: api, body });
         document.cookie = `imaginarium_token=${token}`;
         localStorage.setItem('token', token);
-
+        console.log('name', name);
         dispatch(
           UserAction.setUser({
             user_id,
             experience,
-            nick_name: name.current,
+            nick_name: name,
           }),
         );
         SocketAction.auth(user_id);
@@ -54,7 +54,7 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
         console.log(error);
       }
     },
-    [dispatch, history],
+    [dispatch, history, name, pass],
   );
 
   const submitHandler = useCallback(() => {
@@ -82,9 +82,9 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
         type="text"
         name="nick_name"
         placeholder="Login"
-        defaultValue={name.current}
+        value={name}
         onChangeEvent={(event: React.ChangeEvent<HTMLInputElement>) => {
-          name.current = event.target.value;
+          setName(event.currentTarget.value);
           validate();
         }}
       />
@@ -93,9 +93,9 @@ export const Auth: React.FC<TAuth> = ({ action, setAction }) => {
         type="password"
         name="password"
         placeholder="Password"
-        defaultValue={pass.current}
+        value={pass}
         onChangeEvent={(event: React.ChangeEvent<HTMLInputElement>) => {
-          pass.current = event.target.value;
+          setPass(event.currentTarget.value);
           validate();
         }}
       />

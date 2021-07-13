@@ -8,7 +8,7 @@ import { INPUT_THEME } from '@imaginarium/packages/constants';
 export const Input = ({
   theme = INPUT_THEME.LIGHT,
   disabled = false,
-  defaultValue = '',
+  value,
   type = 'text',
   width = 'auto',
   name,
@@ -17,6 +17,8 @@ export const Input = ({
   onChangeEvent,
   onFocusEvent,
   onBlurEvent,
+  onEnterEvent,
+  onEscapeEvent,
 }: TInput) => {
   const colorScheme: TColorScheme = getInputTheme(theme, disabled);
 
@@ -26,7 +28,16 @@ export const Input = ({
       name={name}
       className={className}
       placeholder={placeholder}
-      defaultValue={defaultValue ?? ''}
+      value={value ?? ''}
+      onKeyDown={(event) => {
+        switch (event.key) {
+          case 'Enter':
+            return onEnterEvent && onEnterEvent(event);
+          case 'Escape':
+            return onEscapeEvent && onEscapeEvent(event);
+          default:
+        }
+      }}
       onChange={onChangeEvent}
       onFocus={onFocusEvent}
       onBlur={onBlurEvent}

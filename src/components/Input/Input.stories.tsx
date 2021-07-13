@@ -7,6 +7,7 @@ export default {
   title: 'Component/Input',
   component: Input,
 };
+let value = '';
 
 const Template = (args: TInput) => <Input {...args} />;
 // @ts-ignore
@@ -15,8 +16,10 @@ Primary.args = {
   disabled: false,
   name: 'test_input',
   className: '',
+  value,
   onChangeEvent: (e) => {
     console.log(e);
+    value = e.currentTarget.value;
   },
   placeholder: 'placeholder',
   theme: INPUT_THEME.LIGHT,

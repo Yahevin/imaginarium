@@ -40,6 +40,7 @@ export const MessagesScroll = styled.div`
 
 export const MessagesField = styled.div`
   display: grid;
+  grid-template-rows: 1fr;
   grid-auto-rows: auto;
   grid-gap: 12px;
   width: 100%;

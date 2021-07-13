@@ -50,13 +50,7 @@ export const QuestInput = () => {
 
   return (
     <QuestWrap>
-      <Input
-        type="text"
-        name="question"
-        placeholder="Ассоциация"
-        defaultValue={question}
-        onChangeEvent={inputHandler}
-      />
+      <Input type="text" name="question" placeholder="Ассоциация" value={question} onChangeEvent={inputHandler} />
       <Button callback={quest_submit} disabled={submit_disabled} theme={BUTTON_THEME.GREEN} width="auto">
         Submit
       </Button>

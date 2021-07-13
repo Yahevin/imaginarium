@@ -63,13 +63,7 @@ export const HubPage = () => {
       <HubContent>
         <Menu>
           <JoinPanel>
-            <Input
-              type="text"
-              name="connect"
-              placeholder="Room_id"
-              onChangeEvent={inputHandler}
-              defaultValue={partyId}
-            />
+            <Input type="text" name="connect" placeholder="Room_id" onChangeEvent={inputHandler} value={partyId} />
 
             <Button callback={joinToParty} theme={BUTTON_THEME.LIGHT} disabled={!partyId?.length}>
               Присоединиться

@@ -189,7 +189,7 @@ export class RoomController {
 
   async playerLeave(player_id: number) {
     const leaverIndex = this.players.findIndex((item) => item.controller.player_id === player_id);
-    const isLeaverGm = this.players[leaverIndex].controller.game_master;
+    const isLeaverGm = this.players[leaverIndex]?.controller.game_master;
 
     if (isLeaverGm) {
       await this.changeGM();
