@@ -12,6 +12,7 @@ export const COLOR = {
   passive: '#C4C4C4' as const,
   dark_bg: '#682424' as const,
   light_bg: '#f0efef' as const,
+  light_blue: '#1ba3e6' as const,
   transparent: 'transparent' as const,
 };
 

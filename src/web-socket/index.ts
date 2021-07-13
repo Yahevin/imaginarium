@@ -9,6 +9,8 @@ import updateAction from '@/api-actions/updateAction';
 import updateTable from '@/api-actions/updateTable';
 import { CardsAction } from '@/store/cards/action';
 import updateQuestion from '@/api-actions/updateQuestion';
+import { TCommands } from '@imaginarium/packages/types/parts/TCommands';
+import { Chat } from '@/web-socket/controllers';
 
 const socket = new WebSocket('ws://localhost:8000');
 
@@ -17,7 +19,7 @@ socket.onopen = () => {
 };
 
 socket.onmessage = async function (event) {
-  const message = JSON.parse(event.data);
+  const message = JSON.parse(event.data) as { type: TCommands; payload?: any };
 
   const endGame = () => {
     store.dispatch(PartyAction.setQuestion(null));
@@ -74,6 +76,11 @@ socket.onmessage = async function (event) {
       console.log('[message] SHOW_THE_END');
       store.dispatch(PartyAction.setGAction(GAME_ACTION.END_GAME));
       endGame();
+      break;
+    }
+    case COMMANDS.GET_MESSAGE: {
+      console.log('[message] GET_MESSAGE');
+      Chat.getMessage(message.payload);
       break;
     }
     default: {

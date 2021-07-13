@@ -87,6 +87,9 @@ export class SocketController {
         await this.current_party?.newRound();
         break;
       }
+      case CLIENT_EVENTS.SEND_MESSAGE: {
+        this.current_party?.sendMessage(message.payload);
+      }
     }
   }
 
