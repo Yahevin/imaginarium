@@ -6,7 +6,7 @@ import { InputRef } from '@/components/Input/Input';
 import { ButtonRef } from '@/components/Button/Button';
 
 export const HubHeader = styled.header`
-  background-color: ${COLOR.dark_bg};
+  background-color: ${COLOR.main};
 `;
 
 export const HubContent = styled.div`

@@ -1,6 +1,7 @@
 import { DB_user, DB_user_room } from '@imaginarium/packages/interfaces';
 import { TQuery } from '@imaginarium/packages/types';
 import { isNotEmpty, dbQuery, sqlCommands as sql } from '../../utils';
+import { Party } from './Party';
 
 export const User = {
   async create({ db, nick_name, password }: TQuery<{ nick_name: string; password: string }>) {
@@ -25,10 +26,9 @@ export const User = {
     throw 'Such user not found';
   },
   async getList({ db, room_id }: TQuery<{ room_id: number }>) {
-    const format1 = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
-    const results: DB_user_room[] = await dbQuery(format1, db);
+    const { playersList } = await Party.getPlayers({ db, room_id });
 
-    const users_id_list = results.map((item) => {
+    const users_id_list = playersList.map((item) => {
       return item.user_id;
     });
 

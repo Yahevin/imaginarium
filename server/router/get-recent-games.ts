@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { ROUTES } from '@imaginarium/packages/constants';
+import { ERROR, ROUTES } from '@imaginarium/packages/constants';
 import { DB_room, DB_user_room, IGameAbout, IPlayer } from '@imaginarium/packages/interfaces';
 import { TResponseFunc } from '@imaginarium/packages/types/parts/TResponse';
 import { TGetRecent } from '@imaginarium/packages/interfaces/parts/routes/TGetRecent';
@@ -11,34 +11,43 @@ import { RoomControllersPull } from '../types';
 module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
   app.post(ROUTES.GET_RECENT_GAMES, async (req: TRequest<TGetRecent>, res: TResponseFunc<TGetRecent>) => {
     const getRoomData = async (room: DB_room): Promise<IGameAbout> => {
-      const { activePlayersList } = await Party.getPlayersList({
-        app,
-        db,
-        roomsMap,
-        room_id: room.id,
-      });
-      const users_list = await User.getList({ app, db, room_id: room.id });
+      const getPlayersList = async (): Promise<IPlayer[]> => {
+        try {
+          const { activePlayersList } = await Party.getActivePlayers({
+            app,
+            db,
+            roomsMap,
+            room_id: room.id,
+          });
+          const users_list = await User.getList({ app, db, room_id: room.id });
 
-      const full_players_list: IPlayer[] = users_list.map((user) => {
-        const current_player = activePlayersList.filter((player) => {
-          return player.user_id === user.id;
-        });
-        if (current_player.length !== 1) throw 'Failed to build players map';
+          return users_list.map((user) => {
+            const current_player = activePlayersList.filter((player) => {
+              return player.user_id === user.id;
+            });
+            if (current_player.length !== 1) throw 'Failed to build players map';
 
-        return {
-          id: current_player[0].id,
-          nick_name: user.nick_name,
-          experience: user.experience,
-          score: current_player[0].score,
-          game_master: current_player[0].game_master,
-        };
-      });
+            return {
+              id: current_player[0].id,
+              nick_name: user.nick_name,
+              experience: user.experience,
+              score: current_player[0].score,
+              game_master: current_player[0].game_master,
+            };
+          });
+        } catch (error) {
+          if (error === ERROR.ROOM_ID_INCORRECT) {
+            return [];
+          }
+          throw error;
+        }
+      };
 
       return {
         id: room.id,
         created_at: room.created_at,
         game_name: room.game_name,
-        players: full_players_list,
+        players: await getPlayersList(),
       };
     };
 

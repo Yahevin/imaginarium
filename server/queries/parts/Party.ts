@@ -1,6 +1,6 @@
 import { TQuery } from '@imaginarium/packages/types';
 import { DB_room, DB_user_room } from '@imaginarium/packages/interfaces';
-import { GAME_ACTION, T_GAME_ACTION } from '@imaginarium/packages/constants';
+import { ERROR, GAME_ACTION, T_GAME_ACTION } from '@imaginarium/packages/constants';
 import { isNotEmpty, dbQuery, sqlCommands as sql, getRandomPartyName, findActivePlayers } from '../../utils';
 import { RoomControllersPull } from '../../types';
 
@@ -50,23 +50,29 @@ export const Party = {
 
     return { success: true };
   },
-  async getPlayersList({ db, room_id, roomsMap }: TQuery<{ room_id: number; roomsMap: RoomControllersPull }>) {
-    const currentParty = roomsMap.get(room_id);
-    if (!currentParty) {
-      throw 'Room id incorrect';
-    }
-
+  async getPlayers({ db, room_id }: TQuery<{ room_id: number }>) {
     const format = db.format(sql.sfw, ['user__room', 'room_id', room_id]);
     const playersList: DB_user_room[] = await dbQuery(format, db);
+    const playersIdList = playersList.map((item) => item.id);
+
+    return {
+      playersList,
+      playersIdList,
+    };
+  },
+  async getActivePlayers({ db, room_id, roomsMap }: TQuery<{ room_id: number; roomsMap: RoomControllersPull }>) {
+    const currentParty = roomsMap.get(room_id);
+    if (!currentParty) {
+      throw ERROR.ROOM_ID_INCORRECT;
+    }
+
+    const { playersList } = await this.getPlayers({ db, room_id });
 
     if (isNotEmpty(playersList)) {
-      const playersIdList = playersList.map((item) => item.id);
       const activePlayersIdList = currentParty.players.map((item) => item.controller.player_id);
       const activePlayersList = findActivePlayers({ playersList, activePlayersIdList });
 
       return {
-        playersList,
-        playersIdList,
         activePlayersList,
         activePlayersIdList,
       };

@@ -99,14 +99,13 @@ export class RoomController {
 
   async countResults() {
     console.log('countResults');
-    const { app, db, room_id, roomsMap } = this.extract();
+    const { app, db, room_id } = this.extract();
 
     try {
-      const { playersIdList, playersList } = await Party.getPlayersList({
+      const { playersIdList, playersList } = await Party.getPlayers({
         app,
         db,
         room_id,
-        roomsMap,
       });
 
       const marks = await Guess.getVoteList({ app, db, players_id_list: playersIdList });

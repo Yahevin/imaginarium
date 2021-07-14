@@ -10,7 +10,7 @@ export const GamesList__item = styled.section`
   width: 100%;
   max-width: 600px;
   padding: 16px 12px;
-  background: ${COLOR.light_bg};
+  background: ${COLOR.white};
   border-radius: 12px;
 
   & + & {
@@ -38,7 +38,7 @@ export const PartnersList__item = styled.div<{ isGameMaster: boolean }>`
   width: 100%;
   padding: 6px 12px;
   color: ${COLOR.white};
-  background: ${COLOR.dark_bg};
+  background: ${COLOR.main};
   box-shadow: ${(props) => (props.isGameMaster ? `0 0 2px 2px ${COLOR.passive}` : 'none')};
   border-radius: 8px;
   text-align: center;

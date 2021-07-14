@@ -33,10 +33,10 @@ export const ModalContent = styled.section`
   flex: 0 0 auto;
   width: auto;
   min-width: 600px;
-  padding: 30px 20px 40px 20px;
+  padding: 20px;
   border-radius: 10px;
-  background: ${COLOR.light_bg};
-  box-shadow: 0 0 2px 4px ${COLOR.dark_bg};
+  background: ${COLOR.white};
+  box-shadow: 0 0 2px 4px ${COLOR.main};
 
   ${MEDIA_QUERY.PHONE} {
     width: 100%;

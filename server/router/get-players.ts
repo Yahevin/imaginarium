@@ -11,7 +11,7 @@ module.exports = (app: any, db: any, roomsMap: RoomControllersPull) => {
       authToken(req);
       const { room_id } = req.body;
 
-      const { activePlayersList } = await Party.getPlayersList({
+      const { activePlayersList } = await Party.getActivePlayers({
         app,
         db,
         room_id,
