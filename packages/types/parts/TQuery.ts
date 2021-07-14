@@ -1,1 +1,1 @@
-export type TQuery<A> = { app: any; db: any } & A;
+export type TQuery<A> = { app?: any; db: any } & A;
