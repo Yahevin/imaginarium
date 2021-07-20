@@ -1,5 +1,6 @@
 import { TInputHandler, TKeyInputHandler } from '@imaginarium/packages/interfaces';
 import { T_INPUT_THEME } from '@imaginarium/packages/constants';
+import { MutableRefObject } from 'react';
 
 export type TInput = {
   name: string;
@@ -8,6 +9,7 @@ export type TInput = {
   type?: 'text' | 'password';
   width?: 'auto' | '100%';
   theme?: T_INPUT_THEME;
+  refObj?: MutableRefObject<HTMLInputElement | undefined>;
   disabled?: boolean;
   className?: string;
   placeholder?: string;

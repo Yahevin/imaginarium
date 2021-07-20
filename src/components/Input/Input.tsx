@@ -8,10 +8,11 @@ import { INPUT_THEME } from '@imaginarium/packages/constants';
 export const Input = ({
   theme = INPUT_THEME.LIGHT,
   disabled = false,
+  name,
   value,
+  refObj,
   type = 'text',
   width = 'auto',
-  name,
   className,
   placeholder,
   onChangeEvent,
@@ -44,6 +45,12 @@ export const Input = ({
       colorScheme={colorScheme}
       disabled={disabled}
       width={width}
+      ref={(node: HTMLInputElement) => {
+        if (refObj) {
+          // eslint-disable-next-line no-param-reassign
+          refObj.current = node;
+        }
+      }}
     />
   );
 };
