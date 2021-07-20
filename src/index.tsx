@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import store from '@/store';
 import '@/global-styles/reset.css';
 import '@/global-styles/base.css';
-import IndexPage from '@/pages/IndexPage';
+import IndexPage from '@/pages/IndexPage/IndexPage';
 
 ReactDOM.render(
   <Provider store={store}>
