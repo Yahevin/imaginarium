@@ -8,15 +8,18 @@ import { INPUT_THEME } from '@imaginarium/packages/constants';
 export const Input = ({
   theme = INPUT_THEME.LIGHT,
   disabled = false,
-  defaultValue = '',
+  name,
+  value,
+  refObj,
   type = 'text',
   width = 'auto',
-  name,
   className,
   placeholder,
   onChangeEvent,
   onFocusEvent,
   onBlurEvent,
+  onEnterEvent,
+  onEscapeEvent,
 }: TInput) => {
   const colorScheme: TColorScheme = getInputTheme(theme, disabled);
 
@@ -26,13 +29,28 @@ export const Input = ({
       name={name}
       className={className}
       placeholder={placeholder}
-      defaultValue={defaultValue ?? ''}
+      value={value ?? ''}
+      onKeyDown={(event) => {
+        switch (event.key) {
+          case 'Enter':
+            return onEnterEvent && onEnterEvent(event);
+          case 'Escape':
+            return onEscapeEvent && onEscapeEvent(event);
+          default:
+        }
+      }}
       onChange={onChangeEvent}
       onFocus={onFocusEvent}
       onBlur={onBlurEvent}
       colorScheme={colorScheme}
       disabled={disabled}
       width={width}
+      ref={(node: HTMLInputElement) => {
+        if (refObj) {
+          // eslint-disable-next-line no-param-reassign
+          refObj.current = node;
+        }
+      }}
     />
   );
 };

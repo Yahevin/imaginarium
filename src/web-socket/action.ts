@@ -1,5 +1,6 @@
 import socket from '@/web-socket/index';
 import { CLIENT_EVENTS } from '@imaginarium/packages/constants';
+import { TMessage } from '@imaginarium/packages/types';
 
 const SocketAction = {
   auth(user_id: number): void {
@@ -29,6 +30,14 @@ const SocketAction = {
     socket.send(
       JSON.stringify({
         type: CLIENT_EVENTS.START_NEW_ROUND,
+      }),
+    );
+  },
+  sendMessage(msg: TMessage): void {
+    socket.send(
+      JSON.stringify({
+        type: CLIENT_EVENTS.SEND_MESSAGE,
+        payload: msg,
       }),
     );
   },

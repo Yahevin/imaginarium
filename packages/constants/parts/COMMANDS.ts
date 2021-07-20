@@ -8,6 +8,5 @@ export const COMMANDS = {
   UPDATE_PARTY: 'UPDATE_PARTY' as const,
   UPDATE_QUESTION: 'UPDATE_QUESTION' as const,
   UPDATE_ACTION: 'UPDATE_ACTION' as const,
+  GET_MESSAGE: 'GET_MESSAGE' as const,
 };
-
-export type T_COMMANDS = keyof typeof COMMANDS;

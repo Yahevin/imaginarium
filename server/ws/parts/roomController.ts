@@ -1,14 +1,19 @@
-import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT, T_COMMANDS } from '@imaginarium/packages/constants';
+/* eslint-disable class-methods-use-this */
+import { COMMANDS, GAME_ACTION, GAME_MAX_SCORE, MIN_PLAYERS_COUNT } from '@imaginarium/packages/constants';
+import { TMessage } from '@imaginarium/packages/types/parts/TMessage';
+import { TCommands } from '@imaginarium/packages/types';
 import { Basket, Cards, Guess, Party, Player, Score, Table } from '../../queries';
 import { getNewGmIndex, countRewards } from '../../utils';
 import { Client, RoomControllersPull } from '../../types';
 
 export class RoomController {
-  private room_id: number;
-
   private timer: null | NodeJS.Timeout;
 
   readonly players: Client[];
+
+  private readonly chat: TMessage[];
+
+  private readonly room_id: number;
 
   private readonly roomsMap: RoomControllersPull;
 
@@ -26,11 +31,13 @@ export class RoomController {
     this.room_id = room_id;
     this.roomsMap = roomsMap;
     this.timer = null;
+    this.chat = [];
   }
 
   addPlayer(client: Client) {
     this.players.push(client);
 
+    this.sendToOne(client, COMMANDS.GET_MESSAGE, this.chat);
     this.send(COMMANDS.UPDATE_PARTY);
   }
 
@@ -181,7 +188,7 @@ export class RoomController {
 
   async playerLeave(player_id: number) {
     const leaverIndex = this.players.findIndex((item) => item.controller.player_id === player_id);
-    const isLeaverGm = this.players[leaverIndex].controller.game_master;
+    const isLeaverGm = this.players[leaverIndex]?.controller.game_master;
 
     if (isLeaverGm) {
       await this.changeGM();
@@ -189,6 +196,8 @@ export class RoomController {
 
     this.players.splice(leaverIndex, 1);
     this.send(COMMANDS.UPDATE_PARTY);
+
+    // TODO terminate party
   }
 
   removeNewRoundTimeout() {
@@ -201,7 +210,7 @@ export class RoomController {
     this.timer = null;
   }
 
-  send(type: T_COMMANDS, payload?: any) {
+  send(type: TCommands, payload?: any) {
     try {
       const command = JSON.stringify({ type, payload });
 
@@ -211,6 +220,22 @@ export class RoomController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  sendToOne(target: Client, type: TCommands, payload?: any) {
+    try {
+      const command = JSON.stringify({ type, payload });
+
+      target.send(command);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  sendMessage(msg: TMessage) {
+    this.chat.push(msg);
+
+    this.send(COMMANDS.GET_MESSAGE, msg);
   }
 
   extract() {

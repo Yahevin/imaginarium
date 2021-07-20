@@ -3,6 +3,8 @@ export * from './parts/InferResultType';
 export * from './parts/InferReducerType';
 export * from './parts/InferArgumentsType';
 export * from './parts/TResponse';
+export * from './parts/TCommands';
+export * from './parts/TMessage';
 export * from './parts/TRequest';
 export * from './parts/InferProp';
 export * from './parts/MergeTypes';
